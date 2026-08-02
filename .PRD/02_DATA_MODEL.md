@@ -214,10 +214,36 @@ data/graph.json  ──요약 발행──▶  ~/.sodam/graph-state.json
 |------|------|------|
 | `folder_path` | 이번 스캔에서 찾은 폴더 | `D:\AI_Dev_Work\2026y\26y_06m_27d_SoDam-Loop-Eng` |
 | `repo_root` | git 저장소의 진짜 루트 (folder_path와 다를 수 있음) | `...\26y_06m_27d_SoDam-Loop-Eng\sodamloop` |
-| `prd_path` / `checkpoint_path` / `plugin_cache_path` | 발견된 문서·추적파일·플러그인 위치 | `.PRD` / `null` / `...\sodam-loop\0.1.0` |
+| `prd_path` / `checkpoint_path` | 발견된 문서·추적 파일 위치 | `.PRD` / `null` |
+| 🆕 **`plugin_cache_path`** | **설치된 플러그인 캐시 위치** — 없으면 `null` | `...\sodam-loop\0.1.0` |
+| 🆕 **`installed`** | 위 캐시가 발견되면 `true` | `true` / `false` |
 | `resolve_status` | 찾기 결과 | `found_by_remote` / `found_by_marker` / **`lost`** / 🔒 **`rejected_path`** |
 
 > 🔒 **`rejected_path`**: 정규화한 경로가 `search_roots` 하위가 아니거나 `markers[].file` 이 `..`·절대경로일 때 (`08_SECURITY_SPEC.md` S-2). **조용히 통과시키지 않고 명시적으로 거부**합니다.
+
+#### 🟢 `plugin_cache_path` 활용 — 마켓플레이스 도입이 살려내는 기능 (2026-08-02 신설)
+
+**초안에서 이 필드는 정의만 되고 어디서도 쓰이지 않았습니다.** 7형제를 마켓플레이스+플러그인 형태로 통일하면 실제 값이 생기고, **판정이 한 단계 강해집니다.**
+
+| | 저장소만 볼 때 | **+ 설치 캐시까지 볼 때** |
+|---|---|---|
+| 답할 수 있는 것 | "형제가 **어디 있는가**" | "형제가 어디 있고 **실제로 설치돼 동작 가능한가**" |
+| 정본 계약 충족도 | `isFamilyAlive` 의 절반 | **`isFamilyAlive` 의 의도 그대로** |
+
+**왜 중요한가**: 정본 `family-synergy.md` §3 규약 D는 현재 `isHarnessAlive()` 가 **"파일 존재만 확인"** 해서 *"껍데기·깨진 Harness에 위임하면 무방비가 되는 **fail-open**"* 을 경고합니다.
+→ `repo_remote` 대조(1겹) + **설치 캐시 확인(2겹)** 이면 그 fail-open을 **구조적으로 더 줄입니다.**
+
+**규격**
+
+| 항목 | 규정 |
+|------|------|
+| 탐색 위치 | Claude Code 플러그인 캐시 루트 아래 `{플러그인 이름}/{버전}` (예: `sodam-loop/0.1.0`) |
+| 판정 | 폴더가 있으면 `installed=true` + 경로 기록, 없으면 `installed=false` + `null` |
+| 🔴 실패 시 | **판정을 막지 않습니다.** 캐시 루트를 못 찾아도 `installed=false` 로 두고 진행 — 이 값은 **보조 정보**이지 `resolve` 의 성공 조건이 아닙니다 |
+| 공유 발행 | **`graph-state.json` 에는 넣지 않습니다** — `08` S-6.1이 필드 6개 화이트리스트를 못 박았고, 필드를 늘리면 유출 반경이 넓어집니다 |
+| 보안 | 캐시 경로도 `path.resolve()` 후 검증 (S-2). 캐시 안의 **파일 내용은 읽지 않습니다** — 폴더 존재만 확인 |
+
+> ⚠️ **가정(미검증)**: 플러그인 캐시 경로 구조는 형제 실측 예시(`...\sodam-loop\0.1.0`)에서 추론했습니다. **M2 구현 시 실제 경로를 먼저 확인**하고, 다르면 이 절을 고치십시오. **틀렸어도 `installed=false` 로 떨어질 뿐 본체는 정상 동작합니다.**
 
 ---
 
@@ -238,6 +264,10 @@ data/graph.json  ──요약 발행──▶  ~/.sodam/graph-state.json
 
 1. `search_roots` 아래를 훑어 각 git 저장소의 `remote get-url origin` 을 읽는다 → **정규화 후** `repo_remote` 와 일치하면 **확정** (`found_by_remote`)
 2. 원격이 없거나 안 맞으면 `markers` 의 파일·문자열로 대조 → 일치하면 **확정** (`found_by_marker`)
+   - 🔴 **판정 규칙 = OR (하나라도 일치하면 확정)** — 초안은 *"일치하면"* 이라고만 써서 **AND인지 OR인지 미정의**였고, 구현이 갈리는 지점이었습니다
+   - **OR를 택한 이유**: 이 프로젝트의 목적이 **개명·구조 변경에 안 깨지는 것**입니다. AND면 마커 파일 **하나만 사라져도 `lost`** 가 되어 목적에 반합니다
+   - **오탐 위험이 낮은 이유**: `markers` 는 **2순위 폴백**이고(1순위는 `repo_remote`), `contains` 값이 `sodam-loop` 처럼 형제 고유 문자열입니다
+   - 여러 후보 폴더가 동시에 일치하면 **`lost` 로 처리하고 후보 목록을 표시**합니다 — 못 찾은 것보다 **잘못 찾은 것이 더 위험**하기 때문입니다(`01 §1` 통증 ①)
 3. 둘 다 실패 → **`lost`**. 옛 경로를 조용히 재사용하지 않고 **"경로 유실 — 재탐색 필요"** 라고 표시한다
 
 > 3번이 핵심입니다. 못 찾았는데 찾은 척하는 것이 경로 혼동의 본질이기 때문입니다.

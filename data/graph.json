@@ -81,6 +81,7 @@
       "name_en": "SoDam-Graph-Eng",
       "repo_remote": "sodam-ai/SoDam-Graph-Eng",
       "markers": [
+        { "file": ".claude-plugin/plugin.json", "contains": "sodam-graph" },
         { "file": "NOTICE", "contains": "SoDam-Graph-Eng" },
         { "file": ".PRD/01_PRD.md", "contains": "소담그래프엔지니어링" }
       ],

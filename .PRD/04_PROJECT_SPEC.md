@@ -29,6 +29,7 @@
 ```
 sodam-graph-eng/
 ├── .claude-plugin/
+│   ├── marketplace.json     # 🆕 마켓플레이스 매니페스트 (이게 없으면 설치 자체가 안 됨)
 │   └── plugin.json          # 플러그인 매니페스트
 ├── commands/
 │   ├── graph-where.md       # 지금 어디
@@ -39,6 +40,7 @@ sodam-graph-eng/
 │   ├── graph-reject.md      # done 승격 거부 (승격 전)
 │   └── graph-undo.md        # done 되돌리기 (승격 후)
 ├── hooks/
+│   ├── hooks.json           # 🆕 훅 등록 파일 (이게 없으면 M6 세션훅이 등록조차 안 됨)
 │   └── session-start.mjs    # 세션 시작 자동 주입 (끌 수 있음, 1초 예산)
 ├── lib/
 │   ├── safeWrite.mjs        # 🔒 모든 파일 쓰기의 유일한 통로 (08 S-3 ②겹)
@@ -90,6 +92,99 @@ Phase 1은 **Node.js 기본 기능 + `child_process` 로 부르는 `git` 뿐**�
 `critical.mjs` 의 순환 탐지·위상 정렬은 노드 7개 규모라 **직접 구현이 라이브러리보다 짧습니다** (`RESEARCH_SOURCES.md` §12-1 NetworkX는 Python이고 규모도 과합니다 — 사상만 차용).
 
 > ⚠️ 주의 — `plugin.json` 의 `agents` 필드는 **개별 `.md` 파일 경로를 나열해야 합니다** (디렉터리 지정은 거부됨). 형제 프로젝트에서 공통으로 겪은 오류입니다. `skills`/`commands` 는 디렉터리로도 됩니다. 경로는 `./` 로 시작해야 합니다.
+
+---
+
+## 🆕 마켓플레이스 + 플러그인 규격 (2026-08-02 신설)
+
+> **왜 신설했나**: 초안은 *"완성 형태 = Claude Code 플러그인 + PRIVATE 마켓플레이스"*(가정 3)를 **선언만** 하고, **그걸 만드는 규격이 없었습니다.** 구조도에 `marketplace.json` 이 빠져 있어 **M8까지 다 만들어도 설치가 안 되는 상태**였습니다.
+> 아래는 전부 **형제 6곳의 실제 파일을 열어 확인한 공통 구조**입니다(2026-08-02 실측).
+
+### 형제 6곳 실측 공통 규격
+
+| 항목 | 실측 결과 |
+|------|----------|
+| 매니페스트 | `.claude-plugin/` 안에 **`marketplace.json` + `plugin.json` 둘 다** (6/6) |
+| 자산 로딩 | **4/6이 무선언 자동 로드** (`commands`·`hooks`·`skills` 필드를 안 씀) |
+| 훅 등록 | `hooks/hooks.json` (하네스·루프 확인) |
+| 버전 | 전부 `0.1.0` 으로 시작 |
+| 라이선스 | 전부 `Apache-2.0` |
+
+### 이름 (🔴 변경 지점은 여기 한 곳입니다)
+
+| 대상 | 값 | 근거 |
+|------|---|------|
+| **플러그인 이름** | **`sodam-graph`** | 형제 6/6이 `sodam-{X}` 형식 — 사실상 확정 |
+| **마켓플레이스 이름** | **`sodamgraph-marketplace`** ⬜ | **실측 관례가 3갈래**라 다수파를 기본값으로 채택: `sodamharness-marketplace`·`sodamcontext-marketplace`·`sodamreverse-marketplace` **3곳**. (대안: 에이전틱형 `sodam-graph` 1곳 / 프롬프트형 `sodam-graph-marketplace` 1곳 / 루프형 `sodam-loop-local` 1곳) |
+| **호출 형태** | `/sodam-graph:graph-where` | `07` §3 규정 |
+
+> ⬜ **마켓플레이스 이름은 사용자 확정 대기 항목입니다.** 바꾸시려면 **`marketplace.json` 의 `name` 한 줄**만 고치면 됩니다(설치 전이면 흔적도 안 남습니다).
+> 🔴 **정본 `family-synergy.md` §5(2026-08-02 정정)가 "형제마다 고유한 마켓플레이스·플러그인 이름"을 표준으로 못 박았습니다.** 공용 `sodam` 이름 재사용은 **실제 이름 충돌 사고**를 냈기 때문에 폐기됐습니다 — 절대 재사용하지 마십시오.
+
+### `marketplace.json` (형제 구조 그대로)
+
+```json
+{
+  "name": "sodamgraph-marketplace",
+  "owner": { "name": "SoDam AI Studio" },
+  "description": "소담그래프엔지니어링 — 소담 7형제의 위치·진행 단계를 지도 하나로 보는 플러그인 마켓플레이스.",
+  "plugins": [
+    {
+      "name": "sodam-graph",
+      "source": "./",
+      "description": "7형제가 지금 어느 단계인지 판정하고 다음 할 일 하나를 지목합니다. 형제 저장소는 읽기만 합니다."
+    }
+  ]
+}
+```
+
+### `plugin.json` (형제 구조 그대로)
+
+```json
+{
+  "name": "sodam-graph",
+  "description": "소담 7형제의 위치·진행 단계·의존 관계를 지도로 만들어 다음 할 일을 판정합니다. 형제 저장소는 100% 읽기 전용.",
+  "version": "0.1.0",
+  "author": { "name": "SoDam AI Studio" },
+  "homepage": "https://github.com/sodam-ai/SoDam-Graph-Eng",
+  "license": "Apache-2.0",
+  "keywords": ["graph", "milestone", "read-only", "korean", "sessionstart", "monorepo-map"]
+}
+```
+
+🔴 **`hooks`·`commands`·`skills`·`agents` 필드를 넣지 마십시오.**
+- `hooks` — `07` §3이 *"`plugin.json` 에 hooks를 중복 선언하지 않기(자동 로드됨)"* 로 이미 금지. 실측도 4/6이 무선언
+- `agents` — 소담그래프엔지니어링은 에이전트를 만들지 않으므로 **필드 자체가 불필요**. (넣을 일이 생기면 **개별 `.md` 경로**여야 하며 디렉터리는 거부됩니다 — 형제 공통 오류)
+
+### `hooks/hooks.json`
+
+`hooks/session-start.mjs` 만 있고 이 파일이 없으면 **훅이 등록되지 않아 M6이 무효**가 됩니다.
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          { "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/session-start.mjs\"" }
+        ]
+      }
+    ]
+  }
+}
+```
+
+> `${CLAUDE_PLUGIN_ROOT}` 를 쓰는 이유: 설치되면 플러그인이 **캐시 폴더로 복사**되므로 저장소 경로를 하드코딩하면 깨집니다. **이 프로젝트가 풀려는 경로 혼동 문제가 자기 자신에게 적용되는 지점**입니다.
+
+### `skills/` — 의도적으로 만들지 않습니다
+
+형제 6/6이 `skills/` 를 가지고 있지만 **소담그래프엔지니어링 Phase 1은 만들지 않습니다.**
+
+- **이유 1**: 명령 7개(`graph-*`)가 이미 진입점이고, 세션 시작 훅이 자동 안내를 담당합니다. 스킬이 하는 일이 남아 있지 않습니다
+- **이유 2**: 스킬은 **트리거 단어로 자동 발동**하므로 오발동 위험이 있습니다. `06` §3-B가 경고한 *"틀린 지목이 반복되면 도구를 안 믿게 된다"* 와 같은 실패 유형입니다
+- **이유 3**: `01 §6` Out of Scope 원칙 — 범위를 넓히지 않습니다
+
+> 🔴 **이 "의도적 제외"를 문서에 남기는 이유**: 안 적으면 다음 세션이 *"형제는 다 있는데 왜 없지? 빠뜨렸나?"* 하고 **또 검토합니다.** `04` 가 그림자 예외를 명시하지 않아 M10이 안 만들어질 뻔했던 것과 같은 대비책입니다.
 
 ---
 
@@ -236,11 +331,28 @@ cd ../../
 
 ## 설치 방법
 
+> 형제 하네스 `README.md` 의 7단계 절차를 그대로 승계합니다(실측). `10_README_SPEC.md` §6이 이 절차를 왕초보용으로 풀어 씁니다.
+
 ```
-1. GitHub 저장소를 마켓플레이스로 추가
-2. 플러그인 설치
-3. Claude Code 완전 재시작 (필수 — 재시작 없으면 옛 버전이 캐시됨)
+1. Claude Code 를 켠다
+2. /plugin 을 입력한다
+3. "마켓플레이스 추가(Add marketplace)" 를 고른다
+4. 설치 소스를 입력한다 — 아래 둘 중 하나
+
+   (A) 내 컴퓨터 폴더로 설치  ← 🔴 현재 권장
+       D:\AI_Dev_Work\2026y\26y_06m_30d_SoDam-Graph-Eng
+
+   (B) GitHub 에서 설치
+       sodam-ai/SoDam-Graph-Eng
+
+5. 목록에서 sodam-graph 를 찾아 설치(Install) 를 누른다
+6. Claude Code 를 완전히 끄고 다시 켠다
+   (/exit → 터미널 창도 닫기 → 새 터미널 → claude)
+7. 입력칸에 /sodam-graph: 를 친다. 명령 목록이 뜨면 설치 성공
 ```
+
+🔴 **(A) 로컬 폴더를 1순위로 두는 이유**: 저장소가 **PRIVATE** 이라(가정 4) GitHub 방식은 **인증 상태에 따라 `repository not found` 로 실패**할 수 있습니다. 하네스 `README.md` 도 같은 이유로 로컬 방식을 *"현재 방법"* 으로 안내합니다(실측).
+🔴 **6번이 가장 많이 빠뜨리는 단계입니다.** 재시작하지 않으면 명령이 목록에 아예 안 보입니다 — `10` §17-1이 이걸 *"가장 흔한 증상"* 으로 규정합니다.
 
 > ⚠️ 가정 12: `SoDam_Family` 우산 저장소 문서 갱신은 AI가 편집까지 하고, **최종 push는 사용자가 직접** 합니다.
 

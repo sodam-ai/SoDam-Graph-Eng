@@ -120,6 +120,8 @@
 
 | 항목 | 소담그래프엔지니어링의 몫 | 규칙 |
 |------|----------------------|------|
+| **플러그인 이름** | **`sodam-graph`** | 형제 6/6이 `sodam-{X}` 형식 (실측). 정본 §5 2026-08-02 정정 — **형제마다 고유 이름 필수** |
+| **마켓플레이스 이름** | **`sodamgraph-marketplace`** ⬜ | 실측 관례 3갈래 중 **다수파**(하네스·컨텍스트·리버스). 사용자 확정 대기 — 변경 시 `marketplace.json` `name` 한 줄 |
 | 명령어 | `graph-where` `graph-next` `graph-map` `graph-why` `graph-shadow` `graph-reject` `graph-undo` | **전부 `graph-` 접두사.** 짧은 일반명(`status`·`start`·`log`) **절대 금지** |
 | 호출 형태 | `/sodam-graph:graph-where` (플러그인 네임스페이스) | 정본 §6 예시(`/sodam-agentic:start`)와 동일 방식 |
 | 데이터 폴더 | `data/` (자기 저장소 안) | 형제 저장소에 파일 안 만듦 |
@@ -129,7 +131,21 @@
 
 ### 충돌 실측 (2026-08-02) — ✅ 0건
 
-6형제 명령 41개 전수 대조 + 설치된 플러그인 캐시 전체 검색 결과, **`graph` 로 시작하는 명령이 하나도 없습니다.**
+6형제 명령 **43개**(2026-08-02 재실측 — 하네스 7·컨텍스트 5·에이전틱 4·루프 9·프롬프트 11·리버스 7) 전수 대조 + 설치된 플러그인 캐시 전체 검색 결과, **`graph` 로 시작하는 명령이 하나도 없습니다.**
+
+**이름 충돌 재실측 (2026-08-02) — 매니페스트까지 확인**
+
+| 형제 | 플러그인 이름 | 마켓플레이스 이름 |
+|------|-------------|-----------------|
+| 소담하네스엔지니어링 | `sodam-harness` | `sodamharness-marketplace` |
+| 소담컨텍스트엔지니어링 | `sodam-context` | `sodamcontext-marketplace` |
+| 소담에이전틱엔지니어링 | `sodam-agentic` | `sodam-agentic` |
+| 소담루프엔지니어링 | `sodam-loop` | `sodam-loop-local` |
+| 소담프롬프트엔지니어링 | `sodam-prompt` | `sodam-prompt-marketplace` |
+| 소담리버스엔지니어링 | `sodam-reverse` | `sodamreverse-marketplace` |
+| **소담그래프엔지니어링** | **`sodam-graph`** | **`sodamgraph-marketplace`** ⬜ |
+
+→ **플러그인·마켓플레이스 이름 충돌 0건 확인.** 🟡 다만 **마켓플레이스 이름 형식이 6곳에서 4갈래로 갈립니다**(`{X}-marketplace` 3 · 무접미 1 · `-marketplace` 하이픈형 1 · `-local` 1). 정본 §5는 *"형제마다 고유 이름"* 만 규정하고 **형식은 규정하지 않았습니다.** 소담그래프엔지니어링은 다수파를 따르되, 이 사실을 M8 보고서에 **여섯 번째 발견 사항**으로 전달합니다(고칠 권한 없음).
 
 > **`plugin.json` 함정 (형제 공통 오류, 실측)**: `agents` 필드는 **개별 `.md` 파일 경로를 나열**해야 합니다. 디렉터리 지정은 거부됩니다. `skills`/`commands` 는 디렉터리도 됩니다. 경로는 `./` 로 시작.
 

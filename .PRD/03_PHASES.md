@@ -15,20 +15,27 @@ Phase 1이 끝나면, **새 세션을 열었을 때 아무 설명 없이 "지금
 
 ### 기능
 
-- [x] **M0 — 저장소 준비** ★신규 — ✅ **완료 (2026-08-02, 커밋 `a02f7cf`)** · `done_when` 5/5 통과 · `licenseInfo.key=apache-2.0` 확인(형제 3곳의 `other` 불일치를 7번째는 반복하지 않음) · 시크릿 0건
+- [ ] **M0 — 저장소 준비 + 마켓플레이스 매니페스트** ★신규 — 🟡 **부분 완료 (2026-08-02, 커밋 `a02f7cf`)**
+  - ✅ `done_when` **1~5 통과** · `licenseInfo.key=apache-2.0` 확인(형제 3곳의 `other` 불일치를 7번째는 반복하지 않음) · 시크릿 0건
+  - ⬜ **`done_when` 6~7 미완** — 2026-08-02 11차 보강에서 신설된 매니페스트 2종. **이게 없으면 마켓플레이스로 설치할 수 없습니다**
   - `git init` → GitHub `sodam-ai/SoDam-Graph-Eng` 생성 → remote 연결 → `.gitignore` 작성
   - **왜 필요한가**: 2026-08-02 실측 결과 `26y_06m_30d_SoDam-Graph-Eng` 는 **git 저장소가 아닙니다.** 그런데 `graph.json` 은 자기 자신을 7번째 형제로 포함해야 하고, 식별 열쇠가 `repo_remote` 입니다. 저장소가 없으면 **자기 참조가 성립하지 않습니다**
   - 저장소 이름은 **`SoDam-Graph-Eng`** — 6형제 전부 `sodam-ai/SoDam-{X}-Eng` 형식임이 실측으로 확인됨 (소문자 `sodam-graph-eng` 는 관례 위반)
   - ⚖️ **`LICENSE`·`NOTICE` 를 이 단계에서 만듭니다** ([`09_LEGAL_LICENSE_SPEC.md`](./09_LEGAL_LICENSE_SPEC.md) L-1~L-3)
     - **Apache License, Version 2.0 전문 그대로** (발췌·수정 금지) — 형제 6/6 실측 관례
     - `NOTICE` 에 `Copyright 2026 SoDam AI Studio` + **상표 고지**
-  - `done_when` (4개 전부):
+  - `done_when` (**7개 전부** — 초안의 "4개" 표기는 실제 항목 수와 어긋났고, 11차에서 매니페스트 2건이 추가됐습니다):
     1. `git remote get-url origin` 이 `https://github.com/sodam-ai/SoDam-Graph-Eng.git` 반환
     2. ⚖️ `LICENSE` 존재 + `Apache License`·`Version 2.0` 포함
     3. ⚖️ `NOTICE` 존재 + `Copyright 2026 SoDam AI Studio` 포함
     4. ⚖️ **`gh repo view sodam-ai/SoDam-Graph-Eng --json licenseInfo` 결과가 `apache-2.0`**
        — 형제 3곳이 로컬은 Apache-2.0인데 GitHub은 `other` 로 인식하는 불일치가 실측됨(`09` F-6). **같은 실수를 반복하지 않습니다**
     5. ⚖️ `git ls-files` 에 `.env`·`*.key`·`*.pem` **0건** (`08` §5)
+    6. 🆕 **`.claude-plugin/marketplace.json` + `.claude-plugin/plugin.json` 둘 다 존재**하고, 규격이 `04_PROJECT_SPEC.md` §마켓플레이스+플러그인 규격의 예시와 일치
+       - `marketplace.json.plugins[0].name` == `plugin.json.name` == **`sodam-graph`** (불일치하면 설치 목록에 안 뜸)
+       - `plugin.json` 에 **`hooks`·`agents` 필드가 없음** (`07` §3 중복 선언 금지 · 실측 4/6이 무선언)
+       - `hooks/hooks.json` 이 존재하고 `SessionStart` 를 등록하며 경로에 **`${CLAUDE_PLUGIN_ROOT}`** 를 사용 (저장소 경로 하드코딩 금지)
+    7. 🆕 **`claude plugin validate .` 통과** — 매니페스트 오류는 이 명령으로만 잡힙니다. `04` §테스트 방법에만 있고 검수 기준에 없어서 **오류가 M8까지 안 잡힐 수 있었습니다**
 
 - [x] **M1 — `graph.json` 스키마 확정 + 7형제 초기 데이터 작성** — ✅ **완료 (2026-08-02, 커밋 `680dc87`)** · `done_when` 5/5 + 무결성 7개 통과 · projects 7 · milestones 19 · edges 18 · **드라이브 경로 1건(`config.search_roots`)만** · 초기 데이터는 PRD 표가 아닌 **13:30 실측**으로 채움
   - 범위: **엔지니어링 7형제만** (2026-08-02 확정). 다른 소담 프로젝트는 넣지 않음
@@ -107,8 +114,15 @@ Phase 1이 끝나면, **새 세션을 열었을 때 아무 설명 없이 "지금
   | 6 | `SoDam-Harness-Eng/.PRD/SODAM_FAMILY_COEXIST.md` §1 | 7번째 행 추가 |
   | **7** | **`26y_06m_31d_SoDam_Family` 우산 저장소 문서** | **6팀 → 7팀 갱신.** `04` 가정 12와 `01 §1` 이 이 저장소의 존재를 전제하는데 초안 갱신 대상에서 빠져 있었음 (2026-07-15 이후 정지 상태라 더 필요) |
 
-  - `done_when` ③: **발견한 형제 간 불일치 3건 보고서** 작성 (`07_FAMILY_COEXIST.md` §1)
-    — 설치 순서 상충 · 소담프롬프트엔지니어링 역할 낡음 · 명령어 중복 6건
+  - `done_when` ③: **발견한 형제 간 불일치 5건 보고서** 작성 (`07_FAMILY_COEXIST.md` §1)
+    — ① 설치 순서 상충 · ② 소담프롬프트엔지니어링 역할 낡음 · ③ 명령어 중복 6건 · ④ GitHub 라이선스 인식 3곳 `other` · ⑤ 정본 서명일과 실제 수정일 불일치
+  - 🆕 `done_when` ④: **실제 설치 검증 (새 세션)** — 아래 4개를 전부 눈으로 확인하고 결과를 보고
+    1. `/plugin` → 마켓플레이스 추가(로컬 폴더 경로) → **`sodam-graph` 가 목록에 뜸**
+    2. 설치 → **Claude Code 완전 재시작**
+    3. `/sodam-graph:` 입력 시 **명령 7개가 전부 노출**(`graph-where`·`next`·`map`·`why`·`shadow`·`reject`·`undo`)
+    4. 새 세션 시작 시 **SessionStart 훅이 실제로 발동**(3줄 이내·1초 이내)
+    - 🔴 **같은 세션 셀프테스트는 검증으로 치지 않습니다**(`04` §테스트 방법). 설치는 **재시작 후에만** 반영됩니다
+    - 🔴 **이 항목이 없으면 "다 만들었는데 설치가 안 되는" 상태로 Phase 1이 끝납니다.** 초안 M8에는 문서 작성만 있었습니다
   - 🔴 **작성은 AI가, 형제 저장소 push는 사용자가 직접** (읽기 전용 결정 불변 — 갱신안은 파일로 제출)
 
 **아래 3개가 이번 개정에서 Phase 1으로 올라온 항목입니다. 이유는 `06_ANTI_STALL_SPEC.md` 참조.**
@@ -247,6 +261,9 @@ grep -c 'make-fixture\|git remote add' 04_PROJECT_SPEC.md   # ≥1 — 픽스처
 
 Phase 1 범위: M0 ~ M11 (03_PHASES.md 참조)
 - M0 git init + GitHub sodam-ai/SoDam-Graph-Eng 생성 + remote 연결
+     + LICENSE(Apache-2.0 전문 201줄) + NOTICE
+     + .claude-plugin/marketplace.json + plugin.json + hooks/hooks.json
+     ★ 매니페스트가 없으면 마켓플레이스로 설치 자체가 안 됨
 - M1 graph.json 스키마 + 7형제 초기 데이터 (★경로를 정본에 쓰지 말 것)
 - M2 읽기전용 스캐너 + resolve + ~/.sodam/graph-state.json 공유 발행
 - M3 /graph-where   M4 /graph-next   M5 /graph-map
@@ -292,6 +309,18 @@ Phase 1 범위: M0 ~ M11 (03_PHASES.md 참조)
 - 타사 상표는 기능 설명 목적으로만, 로고·제휴 암시 금지
 - 픽스처·예시에 실제 개인정보·사용자명·비공개 정보 넣지 말 것
 - "완전히 안전"·"법적으로 문제없음" 같은 표현 금지
+
+★ 마켓플레이스 + 플러그인 (04_PROJECT_SPEC.md §마켓플레이스+플러그인 규격):
+- 형제 6/6 실측 구조 그대로 — .claude-plugin/ 안에 marketplace.json + plugin.json 둘 다
+- 플러그인 이름 = sodam-graph / 마켓플레이스 이름 = sodamgraph-marketplace
+  (마켓플레이스 이름은 사용자 확정 대기 — 바꾸려면 marketplace.json 의 name 한 줄)
+- marketplace.json.plugins[0].name 과 plugin.json.name 이 같아야 목록에 뜸
+- plugin.json 에 hooks·agents 필드 넣지 말 것 (자동 로드, 07 §3 중복 선언 금지)
+- hooks/hooks.json 으로 SessionStart 등록, 경로는 ${CLAUDE_PLUGIN_ROOT} 사용
+  (저장소 경로 하드코딩 금지 — 설치되면 캐시 폴더로 복사됨)
+- skills/ 는 만들지 말 것 (04 에 의도적 제외 사유 명시됨)
+- 설치 안내는 로컬 폴더 경로를 1순위로 (PRIVATE 저장소라 GitHub 방식은 실패 가능)
+- 매니페스트 작성 후 claude plugin validate . 로 검수
 
 ★ README (10_README_SPEC.md, M8에서 작성):
 - 대상 = 코딩 한 번도 안 해본 사람, IT 기기 처음 다루는 사람
