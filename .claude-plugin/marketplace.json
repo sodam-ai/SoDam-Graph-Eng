@@ -1,0 +1,14 @@
+{
+  "name": "sodamgraph-marketplace",
+  "owner": {
+    "name": "SoDam AI Studio"
+  },
+  "description": "소담그래프엔지니어링 — 소담 7형제의 위치·진행 단계를 지도 하나로 보는 플러그인 마켓플레이스.",
+  "plugins": [
+    {
+      "name": "sodam-graph",
+      "source": "./",
+      "description": "7형제가 지금 어느 단계인지 판정하고 다음 할 일 하나를 지목합니다. 형제 저장소는 읽기만 합니다."
+    }
+  ]
+}
