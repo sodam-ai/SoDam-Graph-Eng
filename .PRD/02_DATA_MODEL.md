@@ -237,13 +237,15 @@ data/graph.json  ──요약 발행──▶  ~/.sodam/graph-state.json
 
 | 항목 | 규정 |
 |------|------|
-| 탐색 위치 | Claude Code 플러그인 캐시 루트 아래 `{플러그인 이름}/{버전}` (예: `sodam-loop/0.1.0`) |
+| 탐색 위치 | 🟢 **2026-08-02 실측 확정** — `{CLAUDE_CONFIG_DIR}/plugins/cache/{마켓플레이스 이름}/{플러그인 이름}/{버전}`<br>예: `.../plugins/cache/sodamgraph-marketplace/sodam-graph/0.1.0`<br>`CLAUDE_CONFIG_DIR` 미설정이면 `~/.claude` 도 함께 확인(옛 구조가 남아 있음 — 실측상 `~/.claude/plugins/sodam-context` 형태 공존) |
 | 판정 | 폴더가 있으면 `installed=true` + 경로 기록, 없으면 `installed=false` + `null` |
 | 🔴 실패 시 | **판정을 막지 않습니다.** 캐시 루트를 못 찾아도 `installed=false` 로 두고 진행 — 이 값은 **보조 정보**이지 `resolve` 의 성공 조건이 아닙니다 |
 | 공유 발행 | **`graph-state.json` 에는 넣지 않습니다** — `08` S-6.1이 필드 6개 화이트리스트를 못 박았고, 필드를 늘리면 유출 반경이 넓어집니다 |
 | 보안 | 캐시 경로도 `path.resolve()` 후 검증 (S-2). 캐시 안의 **파일 내용은 읽지 않습니다** — 폴더 존재만 확인 |
 
-> ⚠️ **가정(미검증)**: 플러그인 캐시 경로 구조는 형제 실측 예시(`...\sodam-loop\0.1.0`)에서 추론했습니다. **M2 구현 시 실제 경로를 먼저 확인**하고, 다르면 이 절을 고치십시오. **틀렸어도 `installed=false` 로 떨어질 뿐 본체는 정상 동작합니다.**
+> 🟢 **검증 완료 (2026-08-02, M0 `done_when` 8)**: 소담그래프엔지니어링을 실제로 설치해 경로를 확인했습니다.
+> 초안 가정(`...\sodam-loop\0.1.0`)은 **뒤 두 겹(플러그인/버전)이 맞았고, 앞에 마켓플레이스 이름이 한 겹 더** 있었습니다. 위 표의 값이 확정본입니다.
+> 그래도 **`installed` 는 보조 정보**라는 원칙은 유지합니다 — 경로 구조가 다른 버전의 Claude Code에서 못 찾아도 `installed=false` 로 떨어질 뿐 본체는 정상 동작합니다.
 
 ---
 

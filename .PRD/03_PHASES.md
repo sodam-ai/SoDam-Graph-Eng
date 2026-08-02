@@ -15,9 +15,32 @@ Phase 1이 끝나면, **새 세션을 열었을 때 아무 설명 없이 "지금
 
 ### 기능
 
-- [ ] **M0 — 저장소 준비 + 마켓플레이스 매니페스트** ★신규 — 🟡 **부분 완료 (2026-08-02, 커밋 `a02f7cf`)**
-  - ✅ `done_when` **1~5 통과** · `licenseInfo.key=apache-2.0` 확인(형제 3곳의 `other` 불일치를 7번째는 반복하지 않음) · 시크릿 0건
-  - ⬜ **`done_when` 6~8 미완** — 11차 신설 매니페스트 2종(6·7) + 12차 신설 **GitHub 설치 실측**(8). **이게 없으면 마켓플레이스로 설치할 수 없고, 8번 없이는 설치 방법을 문서에 못 씁니다**
+- [x] **M0 — 저장소 준비 + 마켓플레이스 매니페스트** ★신규 — ✅ **완료 (2026-08-02, 커밋 `a02f7cf` + `51c788d`)** · **`done_when` 8/8 통과**
+  - ✅ **1~5**: remote · `LICENSE`(201줄 표준 전문) · `NOTICE` · **`licenseInfo.key=apache-2.0`**(형제 3곳의 `other` 불일치를 7번째는 반복하지 않음) · 시크릿 0건
+  - ✅ **6~7**: 매니페스트 2종 + `hooks/hooks.json` 생성, **`claude plugin validate` ✔ Validation passed**, 정합성 9항목 통과
+  - ✅ **8**: 🟢 **PRIVATE 저장소 GitHub 설치 — 성공**. 아래 실측 결과 참조
+
+  #### 🟢 `done_when` 8 실측 결과 (2026-08-02) — **패밀리 최초 검증**
+
+  ```
+  claude plugin marketplace add sodam-ai/SoDam-Graph-Eng
+    → SSH not configured, cloning via HTTPS
+    → ✔ Successfully added marketplace: sodamgraph-marketplace
+
+  claude plugin install sodam-graph@sodamgraph-marketplace
+    → ✔ Successfully installed plugin (scope: user)  ·  Status: ✔ enabled
+  ```
+
+  | 쟁점 | 결론 |
+  |------|------|
+  | **PRIVATE 저장소를 GitHub 마켓플레이스로 쓸 수 있는가** | 🟢 **된다** (인증된 계정 기준). `gh auth` 로그인 상태에서 HTTPS 클론으로 처리됨 |
+  | 소담프롬프트엔지니어링 README의 *"PRIVATE이므로 권한 있는 계정 필요"* | **맞았습니다** |
+  | 소담하네스엔지니어링 README의 *"GitHub 공개 후(권장)"* | **불필요하게 보수적이었습니다** — 공개 없이도 됩니다 |
+  | **공개 전환 필요성** | 🟢 **불필요.** `09` §10 법무 게이트 **미발동 유지**, 미결 3번(공개 범위)은 **PRIVATE 유지로 사실상 해소** |
+
+  🔴 **부수 발견 2건 (M2·M6에 영향)**
+  - **`plugin_cache_path` 실경로 확정** — `{CLAUDE_CONFIG_DIR}/plugins/cache/{마켓플레이스}/{플러그인}/{버전}` (예: `.../sodamgraph-marketplace/sodam-graph/0.1.0`). `02` 의 가정은 **뒤 두 겹이 맞았고 앞에 마켓플레이스 이름이 한 겹 더** 있었습니다 → `02` 확정 반영
+  - ⚠️ **`.PRD/` 가 설치본에 함께 배포됩니다** (`.git` 은 미배포). 지금은 PRIVATE·본인 전용이라 무해하지만, **공개 배포 시 설계 문서 12개가 그대로 나갑니다** → `09` §10-B에 E-4로 추가
   - `git init` → GitHub `sodam-ai/SoDam-Graph-Eng` 생성 → remote 연결 → `.gitignore` 작성
   - **왜 필요한가**: 2026-08-02 실측 결과 `26y_06m_30d_SoDam-Graph-Eng` 는 **git 저장소가 아닙니다.** 그런데 `graph.json` 은 자기 자신을 7번째 형제로 포함해야 하고, 식별 열쇠가 `repo_remote` 입니다. 저장소가 없으면 **자기 참조가 성립하지 않습니다**
   - 저장소 이름은 **`SoDam-Graph-Eng`** — 6형제 전부 `sodam-ai/SoDam-{X}-Eng` 형식임이 실측으로 확인됨 (소문자 `sodam-graph-eng` 는 관례 위반)
