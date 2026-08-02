@@ -1,0 +1,342 @@
+{
+  "version": 1,
+  "config": {
+    "search_roots": ["D:\\AI_Dev_Work\\2026y"],
+    "scan_filter": "*SoDam-*-Eng*",
+    "stall_days": 7,
+    "coarse_confidence": 0.7,
+    "session_output_max_lines": 3,
+    "session_budget_ms": 1000
+  },
+  "projects": [
+    {
+      "id": "sodam-harness-eng",
+      "name_ko": "소담하네스엔지니어링",
+      "name_en": "SoDam-Harness-Eng",
+      "repo_remote": "sodam-ai/SoDam-Harness-Eng",
+      "markers": [
+        { "file": ".claude-plugin/plugin.json", "contains": "sodam-harness" }
+      ],
+      "role": "위험 차단·백업·되돌리기",
+      "status": "active"
+    },
+    {
+      "id": "sodam-context-eng",
+      "name_ko": "소담컨텍스트엔지니어링",
+      "name_en": "SoDam-Context-Eng",
+      "repo_remote": "sodam-ai/SoDam-Context-Eng",
+      "markers": [
+        { "file": ".claude-plugin/plugin.json", "contains": "sodam-context" }
+      ],
+      "role": "AGENTS.md·CLAUDE.md 건강검진",
+      "status": "active"
+    },
+    {
+      "id": "sodam-agentic-eng",
+      "name_ko": "소담에이전틱엔지니어링",
+      "name_en": "SoDam-Agentic-Eng",
+      "repo_remote": "sodam-ai/SoDam-Agentic-Eng",
+      "markers": [
+        { "file": ".claude-plugin/plugin.json", "contains": "sodam-agentic" }
+      ],
+      "role": "진입점·계획먼저·검토 (패밀리 정본 소유자)",
+      "status": "active"
+    },
+    {
+      "id": "sodam-loop-eng",
+      "name_ko": "소담루프엔지니어링",
+      "name_en": "SoDam-Loop-Eng",
+      "repo_remote": "sodam-ai/SoDam-Loop-Eng",
+      "markers": [
+        { "file": ".claude-plugin/plugin.json", "contains": "sodam-loop" }
+      ],
+      "role": "다음 단계 실행·반복 (make→check→fix)",
+      "status": "active"
+    },
+    {
+      "id": "sodam-prompt-eng",
+      "name_ko": "소담프롬프트엔지니어링",
+      "name_en": "SoDam-Prompt-Eng",
+      "repo_remote": "sodam-ai/SoDam-Prompt-Eng",
+      "markers": [
+        { "file": ".claude-plugin/plugin.json", "contains": "sodam-prompt" }
+      ],
+      "role": "프롬프트 입문 (플러그인 전용 — 정본 §1 정정 필요)",
+      "status": "active"
+    },
+    {
+      "id": "sodam-reverse-eng",
+      "name_ko": "소담리버스엔지니어링",
+      "name_en": "SoDam-Reverse-Eng",
+      "repo_remote": "sodam-ai/SoDam-Reverse-Eng",
+      "markers": [
+        { "file": ".claude-plugin/plugin.json", "contains": "sodam-reverse" }
+      ],
+      "role": "코드·앱 분석 → 한국어 보고서",
+      "status": "active"
+    },
+    {
+      "id": "sodam-graph-eng",
+      "name_ko": "소담그래프엔지니어링",
+      "name_en": "SoDam-Graph-Eng",
+      "repo_remote": "sodam-ai/SoDam-Graph-Eng",
+      "markers": [
+        { "file": "NOTICE", "contains": "SoDam-Graph-Eng" },
+        { "file": ".PRD/01_PRD.md", "contains": "소담그래프엔지니어링" }
+      ],
+      "role": "7형제 위치·진행 판정 (읽기 전용)",
+      "status": "active"
+    }
+  ],
+  "milestones": [
+    {
+      "id": "sodam-harness-eng.current",
+      "project_id": "sodam-harness-eng",
+      "seq": 1,
+      "title": "진행 단계 미파악 (추적 파일 없음)",
+      "state": "coarse",
+      "done_when": "/graph-shadow 로 마지막 완료 항목과 다음 할 일을 1회 기록하면 정상 판정으로 전환",
+      "verify_cmd": null,
+      "evidence": "2026-08-02 실측 — CHECKPOINT.md·AUDIT.log·progress.txt 전부 없음. git 활동만 확인 가능(최종 커밋 2026-08-02 71ca1f8 feat(guard), 미커밋 1건). 7형제 중 유일하게 추적 파일 0개",
+      "owner": "human",
+      "last_moved_at": "2026-08-02"
+    },
+    {
+      "id": "sodam-context-eng.current",
+      "project_id": "sodam-context-eng",
+      "seq": 1,
+      "title": "진행 단계 거친 판정 (마일스톤 상세 미추출)",
+      "state": "coarse",
+      "done_when": "/graph-shadow 로 현재 마일스톤 이름·state·done_when 을 1회 기록",
+      "verify_cmd": null,
+      "evidence": "2026-08-02 실측 1층 추출 — CHECKPOINT.md 1,126줄 · 완료 표시 144 · 미완료 체크박스 0 · 최종 수정 2026-08-02. 접두사 체계가 C1 형식이라 형제 공통 파서로는 마일스톤 상세 분리 불가",
+      "owner": "human",
+      "last_moved_at": "2026-08-02"
+    },
+    {
+      "id": "sodam-agentic-eng.current",
+      "project_id": "sodam-agentic-eng",
+      "seq": 1,
+      "title": "진행 단계 거친 판정 (마일스톤 구조 자체가 없음)",
+      "state": "coarse",
+      "done_when": "/graph-shadow 로 현재 마일스톤 이름·state·done_when 을 1회 기록",
+      "verify_cmd": null,
+      "evidence": "2026-08-02 실측 1층 추출 — CHECKPOINT.md 1,044줄 · 완료 표시 193 · 미완료 2 · 최종 수정 2026-08-02. 날짜 로그형(0-40. 2026-08-02 — ...)이라 마일스톤 개념이 없어 그림자 필수",
+      "owner": "human",
+      "last_moved_at": "2026-08-02"
+    },
+    {
+      "id": "sodam-loop-eng.current",
+      "project_id": "sodam-loop-eng",
+      "seq": 1,
+      "title": "진행 단계 거친 판정 (마일스톤 상세 미추출)",
+      "state": "coarse",
+      "done_when": "/graph-shadow 로 현재 마일스톤 이름·state·done_when 을 1회 기록",
+      "verify_cmd": null,
+      "evidence": "2026-08-02 실측 1층 추출 — 저장소 루트가 한 겹 안쪽(sodamloop/)이며 그 안에 CHECKPOINT.md 1,349줄 · 완료 표시 122 · 미완료 7 · 최종 수정 2026-08-02. PRD 02·06의 '추적 파일 0개' 기재는 낡은 값이라 실측으로 교체함",
+      "owner": "human",
+      "last_moved_at": "2026-08-02"
+    },
+    {
+      "id": "sodam-prompt-eng.current",
+      "project_id": "sodam-prompt-eng",
+      "seq": 1,
+      "title": "진행 단계 거친 판정 (마일스톤 상세 미추출)",
+      "state": "coarse",
+      "done_when": "/graph-shadow 로 현재 마일스톤 이름·state·done_when 을 1회 기록",
+      "verify_cmd": null,
+      "evidence": "2026-08-02 실측 1층 추출 — CHECKPOINT.md 342줄 · 완료 표시 120 · 미완료 3 · 최종 수정 2026-07-27 · AUDIT.log 보유(7형제 중 유일). 최종 커밋 2026-07-27 27f4729 docs 이후 무활동",
+      "owner": "human",
+      "last_moved_at": "2026-07-27"
+    },
+    {
+      "id": "sodam-reverse-eng.current",
+      "project_id": "sodam-reverse-eng",
+      "seq": 1,
+      "title": "진행 단계 거친 판정 (마일스톤 상세 미추출)",
+      "state": "coarse",
+      "done_when": "/graph-shadow 로 현재 마일스톤 이름·state·done_when 을 1회 기록",
+      "verify_cmd": null,
+      "evidence": "2026-08-02 실측 1층 추출 — CHECKPOINT.md 1,395줄 · 완료 표시 183 · 미완료 7 · 최종 수정 2026-08-02(미커밋 8건). 최종 커밋은 2026-07-27 d2af401 docs 이라 문서는 움직였으나 커밋은 6일째 없음",
+      "owner": "human",
+      "last_moved_at": "2026-07-27"
+    },
+    {
+      "id": "sodam-graph-eng.M0",
+      "project_id": "sodam-graph-eng",
+      "seq": 0,
+      "title": "저장소 준비 (git init + GitHub + LICENSE/NOTICE)",
+      "state": "done",
+      "done_when": "remote 가 https://github.com/sodam-ai/SoDam-Graph-Eng.git · LICENSE 에 Apache License/Version 2.0 · NOTICE 에 Copyright 2026 SoDam AI Studio · gh licenseInfo 가 apache-2.0 · git ls-files 시크릿 0건",
+      "verify_cmd": "gh repo view sodam-ai/SoDam-Graph-Eng --json licenseInfo",
+      "evidence": "2026-08-02 커밋 a02f7cf · 5개 조건 전부 통과 · licenseInfo.key=apache-2.0 · isPrivate=true · 추적 15파일 · 시크릿 0건",
+      "owner": "ai",
+      "last_moved_at": "2026-08-02"
+    },
+    {
+      "id": "sodam-graph-eng.M1",
+      "project_id": "sodam-graph-eng",
+      "seq": 1,
+      "title": "graph.json 스키마 확정 + 7형제 초기 데이터",
+      "state": "done",
+      "done_when": "최상위 6키(version·config·projects·milestones·edges·blockers) + config 규격 수치 6개 · 7형제 전부 id/name_ko/name_en/repo_remote/markers · 드라이브 문자로 시작하는 문자열이 search_roots 외 0개 · repo_remote 가 실측 표기 · 추적 파일 없는 형제가 coarse 이고 evidence 보유",
+      "verify_cmd": "node -e \"const g=require('./data/graph.json');console.log(Object.keys(g).length,g.projects.length)\"",
+      "evidence": "2026-08-02 검증 — done_when 5개 전부 PASS + 추가 무결성 7개 PASS(id 정규식·state 열거값·날짜 형식·edge 참조 무결성 0 끊김·project_id 참조·edge type 열거값·markers 상대경로). 드라이브 경로 1건(config.search_roots)만 존재. projects 7 · milestones 19 · edges 18 · blockers 0",
+      "owner": "ai",
+      "last_moved_at": "2026-08-02"
+    },
+    {
+      "id": "sodam-graph-eng.M2",
+      "project_id": "sodam-graph-eng",
+      "seq": 2,
+      "title": "상태 스캐너 + resolve + 공유 발행 (읽기 전용)",
+      "state": "todo",
+      "done_when": "snapshot.json 생성 + resolve_status 7/7 found_by_* · 형제 git status 변경 0건 · graph-state.json 원자적 교체 100회 파싱 실패 0 · S-1~S-5 보안 수용 기준 5개 전부 통과",
+      "verify_cmd": "node lib/scan.mjs",
+      "evidence": null,
+      "owner": "ai",
+      "last_moved_at": "2026-08-02"
+    },
+    {
+      "id": "sodam-graph-eng.M3",
+      "project_id": "sodam-graph-eng",
+      "seq": 3,
+      "title": "/graph-where 명령",
+      "state": "todo",
+      "done_when": "형제 이름(한글·영문·폴더명)을 주면 resolve 로 찾은 repo_root 를 7/7 정확히 답함 (소담루프엔지니어링의 sodamloop 하위 경로 포함)",
+      "verify_cmd": null,
+      "evidence": null,
+      "owner": "ai",
+      "last_moved_at": "2026-08-02"
+    },
+    {
+      "id": "sodam-graph-eng.M4",
+      "project_id": "sodam-graph-eng",
+      "seq": 4,
+      "title": "/graph-next 명령",
+      "state": "todo",
+      "done_when": "7형제 각각에 다음 할 일 1개 문장 출력 · coarse 형제는 1층 요약(미완료 N건·마지막 갱신일)과 /graph-shadow 안내를 함께 출력",
+      "verify_cmd": null,
+      "evidence": null,
+      "owner": "ai",
+      "last_moved_at": "2026-08-02"
+    },
+    {
+      "id": "sodam-graph-eng.M5",
+      "project_id": "sodam-graph-eng",
+      "seq": 5,
+      "title": "/graph-map 명령 (Mermaid graph LR)",
+      "state": "todo",
+      "done_when": "graph LR 규격(노드 ID=Project.id, 라벨=name_ko+state+정지일수, depends_on/next=실선, conflicts/shares=점선, coarse=(추정), 순환=:::cycle)대로 출력되고 GitHub 프리뷰·VS Code 미리보기 둘 다에서 렌더링됨",
+      "verify_cmd": null,
+      "evidence": null,
+      "owner": "ai",
+      "last_moved_at": "2026-08-02"
+    },
+    {
+      "id": "sodam-graph-eng.M6",
+      "project_id": "sodam-graph-eng",
+      "seq": 6,
+      "title": "세션 시작 자동 주입 (SessionStart hook)",
+      "state": "todo",
+      "done_when": "새 세션에서 사람 개입 없이 표시 · 출력 3줄 이하(wc -l 측정) · 실행 1초 미만(time 측정, 72폴더 실환경) · SODAM_GRAPH_SILENT=1 이면 0줄",
+      "verify_cmd": "time node hooks/session-start.mjs",
+      "evidence": null,
+      "owner": "ai",
+      "last_moved_at": "2026-08-02"
+    },
+    {
+      "id": "sodam-graph-eng.M7",
+      "project_id": "sodam-graph-eng",
+      "seq": 7,
+      "title": "불일치 표시",
+      "state": "todo",
+      "done_when": "graph.json 상태와 실측이 어긋나는 형제가 있으면 경고 문구가 출력됨 (조용히 통과하지 않음)",
+      "verify_cmd": null,
+      "evidence": null,
+      "owner": "ai",
+      "last_moved_at": "2026-08-02"
+    },
+    {
+      "id": "sodam-graph-eng.M8",
+      "project_id": "sodam-graph-eng",
+      "seq": 8,
+      "title": "README.md (한국어) + 형제 계약 갱신안 7건",
+      "state": "todo",
+      "done_when": "10_README_SPEC.md §5 수용 기준 9개 충족(목차 19·문제대처 19·FAQ 12·토글·그림·출력예시·라이선스 7항목·개인정보 미노출·새 세션에서 README만 보고 설치 성공) · 갱신안 7건 작성 · 형제 간 불일치 보고서 작성",
+      "verify_cmd": null,
+      "evidence": null,
+      "owner": "both",
+      "last_moved_at": "2026-08-02"
+    },
+    {
+      "id": "sodam-graph-eng.M9",
+      "project_id": "sodam-graph-eng",
+      "seq": 9,
+      "title": "/graph-why (순환 탐지 → 사이클 제외 → 임계 경로)",
+      "state": "todo",
+      "done_when": "지목 결과에 근거 문장이 붙고, 일부러 만든 순환 픽스처에서 무한 루프 없이 경고가 출력됨. 점수 = 정지일수 × (1 + 막고 있는 형제 수) × 신뢰도",
+      "verify_cmd": null,
+      "evidence": null,
+      "owner": "ai",
+      "last_moved_at": "2026-08-02"
+    },
+    {
+      "id": "sodam-graph-eng.M10",
+      "project_id": "sodam-graph-eng",
+      "seq": 10,
+      "title": "그림자 추적 (data/shadow/)",
+      "state": "todo",
+      "done_when": "coarse 형제가 그림자로 정상 상태 전환되고, 해당 형제 저장소의 git status 가 무변경. 사용자가 답하지 않아도 coarse 와 그 이유가 표시되면 통과",
+      "verify_cmd": null,
+      "evidence": null,
+      "owner": "both",
+      "last_moved_at": "2026-08-02"
+    },
+    {
+      "id": "sodam-graph-eng.M11",
+      "project_id": "sodam-graph-eng",
+      "seq": 11,
+      "title": "done 자동 승격(E1|E2 필수) + 정체 감지 + /graph-undo",
+      "state": "todo",
+      "done_when": "승격 제안 출력 · 7일 규칙 발동 · /graph-undo 로 복귀 가능 · 두 세션 동시 승격에도 graph.json 무손상(data/.lock)",
+      "verify_cmd": null,
+      "evidence": null,
+      "owner": "ai",
+      "last_moved_at": "2026-08-02"
+    },
+    {
+      "id": "sodam-graph-eng.M16",
+      "project_id": "sodam-graph-eng",
+      "seq": 16,
+      "title": "판정↔실행 왕복 (Phase 2.5 — 읽음 회신·결과 반영·충돌 조정)",
+      "state": "blocked",
+      "done_when": "소담루프엔지니어링이 graph-state.json 을 읽은 기록이 남고, 실행 결과가 graph.json 에 반영되며, 실행 중 항목에 승격 제안이 뜨지 않음",
+      "verify_cmd": null,
+      "evidence": null,
+      "owner": "both",
+      "last_moved_at": "2026-08-02"
+    }
+  ],
+  "edges": [
+    { "from": "sodam-graph-eng.M0", "to": "sodam-graph-eng.M1", "type": "next", "note": null },
+    { "from": "sodam-graph-eng.M1", "to": "sodam-graph-eng.M2", "type": "next", "note": "저장소·정본이 있어야 스캐너가 대조할 대상이 생김" },
+    { "from": "sodam-graph-eng.M2", "to": "sodam-graph-eng.M3", "type": "next", "note": null },
+    { "from": "sodam-graph-eng.M2", "to": "sodam-graph-eng.M4", "type": "next", "note": null },
+    { "from": "sodam-graph-eng.M2", "to": "sodam-graph-eng.M5", "type": "next", "note": null },
+    { "from": "sodam-graph-eng.M2", "to": "sodam-graph-eng.M7", "type": "next", "note": null },
+    { "from": "sodam-graph-eng.M2", "to": "sodam-graph-eng.M10", "type": "next", "note": null },
+    { "from": "sodam-graph-eng.M2", "to": "sodam-graph-eng.M11", "type": "next", "note": null },
+    { "from": "sodam-graph-eng.M4", "to": "sodam-graph-eng.M6", "type": "next", "note": "다음 할 일 판정이 있어야 세션 시작에 넣을 내용이 생김" },
+    { "from": "sodam-graph-eng.M10", "to": "sodam-graph-eng.M9", "type": "next", "note": "그림자로 coarse 가 해소돼야 임계 경로가 정확해짐" },
+    { "from": "sodam-graph-eng.M11", "to": "sodam-graph-eng.M9", "type": "next", "note": "정지 일수 계산이 있어야 점수가 나옴" },
+    { "from": "sodam-graph-eng.M9", "to": "sodam-graph-eng.M8", "type": "next", "note": "다 만든 뒤에 문서를 써야 실제와 안 어긋남" },
+    { "from": "sodam-graph-eng.M16", "to": "sodam-loop-eng.current", "type": "depends_on", "note": "소담루프엔지니어링이 실행 담당으로 동작해야 Phase 2.5 착수 가능" },
+    { "from": "sodam-graph-eng.M2", "to": "sodam-loop-eng.current", "type": "shares", "note": "공유 루트 ~/.sodam/ 를 함께 사용 (그래프는 graph-state.json 만 씀, loop-state.json 은 소담루프엔지니어링 소유)" },
+    { "from": "sodam-harness-eng.current", "to": "sodam-loop-eng.current", "type": "conflicts", "note": "명령 파일 이름 중복 3건 — install.md·status.md·undo.md (2026-08-02 실측)" },
+    { "from": "sodam-context-eng.current", "to": "sodam-loop-eng.current", "type": "conflicts", "note": "명령 파일 이름 중복 1건 — checkup.md (2026-08-02 실측)" },
+    { "from": "sodam-harness-eng.current", "to": "sodam-agentic-eng.current", "type": "conflicts", "note": "명령 파일 이름 중복 1건 — log.md (2026-08-02 실측)" },
+    { "from": "sodam-agentic-eng.current", "to": "sodam-loop-eng.current", "type": "conflicts", "note": "명령 파일 이름 중복 1건 — start.md (2026-08-02 실측)" }
+  ],
+  "blockers": []
+}
