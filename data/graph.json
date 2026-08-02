@@ -1,7 +1,9 @@
 {
   "version": 1,
   "config": {
-    "search_roots": ["D:\\AI_Dev_Work\\2026y"],
+    "search_roots": [
+      "D:\\AI_Dev_Work\\2026y"
+    ],
     "scan_filter": "*SoDam-*-Eng*",
     "stall_days": 7,
     "coarse_confidence": 0.7,
@@ -15,7 +17,10 @@
       "name_en": "SoDam-Harness-Eng",
       "repo_remote": "sodam-ai/SoDam-Harness-Eng",
       "markers": [
-        { "file": ".claude-plugin/plugin.json", "contains": "sodam-harness" }
+        {
+          "file": ".claude-plugin/plugin.json",
+          "contains": "sodam-harness"
+        }
       ],
       "role": "위험 차단·백업·되돌리기",
       "status": "active"
@@ -26,7 +31,10 @@
       "name_en": "SoDam-Context-Eng",
       "repo_remote": "sodam-ai/SoDam-Context-Eng",
       "markers": [
-        { "file": ".claude-plugin/plugin.json", "contains": "sodam-context" }
+        {
+          "file": ".claude-plugin/plugin.json",
+          "contains": "sodam-context"
+        }
       ],
       "role": "AGENTS.md·CLAUDE.md 건강검진",
       "status": "active"
@@ -37,7 +45,10 @@
       "name_en": "SoDam-Agentic-Eng",
       "repo_remote": "sodam-ai/SoDam-Agentic-Eng",
       "markers": [
-        { "file": ".claude-plugin/plugin.json", "contains": "sodam-agentic" }
+        {
+          "file": ".claude-plugin/plugin.json",
+          "contains": "sodam-agentic"
+        }
       ],
       "role": "진입점·계획먼저·검토 (패밀리 정본 소유자)",
       "status": "active"
@@ -48,7 +59,10 @@
       "name_en": "SoDam-Loop-Eng",
       "repo_remote": "sodam-ai/SoDam-Loop-Eng",
       "markers": [
-        { "file": ".claude-plugin/plugin.json", "contains": "sodam-loop" }
+        {
+          "file": ".claude-plugin/plugin.json",
+          "contains": "sodam-loop"
+        }
       ],
       "role": "다음 단계 실행·반복 (make→check→fix)",
       "status": "active"
@@ -59,7 +73,10 @@
       "name_en": "SoDam-Prompt-Eng",
       "repo_remote": "sodam-ai/SoDam-Prompt-Eng",
       "markers": [
-        { "file": ".claude-plugin/plugin.json", "contains": "sodam-prompt" }
+        {
+          "file": ".claude-plugin/plugin.json",
+          "contains": "sodam-prompt"
+        }
       ],
       "role": "프롬프트 입문 (플러그인 전용 — 정본 §1 정정 필요)",
       "status": "active"
@@ -70,7 +87,10 @@
       "name_en": "SoDam-Reverse-Eng",
       "repo_remote": "sodam-ai/SoDam-Reverse-Eng",
       "markers": [
-        { "file": ".claude-plugin/plugin.json", "contains": "sodam-reverse" }
+        {
+          "file": ".claude-plugin/plugin.json",
+          "contains": "sodam-reverse"
+        }
       ],
       "role": "코드·앱 분석 → 한국어 보고서",
       "status": "active"
@@ -81,9 +101,18 @@
       "name_en": "SoDam-Graph-Eng",
       "repo_remote": "sodam-ai/SoDam-Graph-Eng",
       "markers": [
-        { "file": ".claude-plugin/plugin.json", "contains": "sodam-graph" },
-        { "file": "NOTICE", "contains": "SoDam-Graph-Eng" },
-        { "file": ".PRD/01_PRD.md", "contains": "소담그래프엔지니어링" }
+        {
+          "file": ".claude-plugin/plugin.json",
+          "contains": "sodam-graph"
+        },
+        {
+          "file": "NOTICE",
+          "contains": "SoDam-Graph-Eng"
+        },
+        {
+          "file": ".PRD/01_PRD.md",
+          "contains": "소담그래프엔지니어링"
+        }
       ],
       "role": "7형제 위치·진행 판정 (읽기 전용)",
       "status": "active"
@@ -215,10 +244,10 @@
       "project_id": "sodam-graph-eng",
       "seq": 4,
       "title": "/graph-next 명령",
-      "state": "todo",
+      "state": "done",
       "done_when": "7형제 각각에 다음 할 일 1개 문장 출력 · coarse 형제는 1층 요약(미완료 N건·마지막 갱신일)과 /graph-shadow 안내를 함께 출력",
       "verify_cmd": null,
-      "evidence": null,
+      "evidence": "2026-08-02 커밋 5ee2aaa · 7형제 각각 문장 1개 · coarse 6곳 1층요약+graph-shadow 안내 6/6 · 금지표기 0건 · 분기 5종 · 캐시 85ms. 구현 중 UTC/로컬 버그 3건 수정(캐시 미작동·시각 9시간 오차·수정일 하루 밀림)",
       "owner": "ai",
       "last_moved_at": "2026-08-02"
     },
@@ -227,10 +256,10 @@
       "project_id": "sodam-graph-eng",
       "seq": 5,
       "title": "/graph-map 명령 (Mermaid graph LR)",
-      "state": "todo",
+      "state": "verified",
       "done_when": "graph LR 규격(노드 ID=Project.id, 라벨=name_ko+state+정지일수, depends_on/next=실선, conflicts/shares=점선, coarse=(추정), 순환=:::cycle)대로 출력되고 GitHub 프리뷰·VS Code 미리보기 둘 다에서 렌더링됨",
       "verify_cmd": null,
-      "evidence": null,
+      "evidence": "2026-08-02 커밋 a33573b · 규격 10/10 · 순환 경고 5/5(픽스처) · 문법 자체검사 0건. GitHub·VS Code 실제 렌더링은 사람 눈 확인 대기",
       "owner": "ai",
       "last_moved_at": "2026-08-02"
     },
@@ -320,24 +349,114 @@
     }
   ],
   "edges": [
-    { "from": "sodam-graph-eng.M0", "to": "sodam-graph-eng.M1", "type": "next", "note": null },
-    { "from": "sodam-graph-eng.M1", "to": "sodam-graph-eng.M2", "type": "next", "note": "저장소·정본이 있어야 스캐너가 대조할 대상이 생김" },
-    { "from": "sodam-graph-eng.M2", "to": "sodam-graph-eng.M3", "type": "next", "note": null },
-    { "from": "sodam-graph-eng.M2", "to": "sodam-graph-eng.M4", "type": "next", "note": null },
-    { "from": "sodam-graph-eng.M2", "to": "sodam-graph-eng.M5", "type": "next", "note": null },
-    { "from": "sodam-graph-eng.M2", "to": "sodam-graph-eng.M7", "type": "next", "note": null },
-    { "from": "sodam-graph-eng.M2", "to": "sodam-graph-eng.M10", "type": "next", "note": null },
-    { "from": "sodam-graph-eng.M2", "to": "sodam-graph-eng.M11", "type": "next", "note": null },
-    { "from": "sodam-graph-eng.M4", "to": "sodam-graph-eng.M6", "type": "next", "note": "다음 할 일 판정이 있어야 세션 시작에 넣을 내용이 생김" },
-    { "from": "sodam-graph-eng.M10", "to": "sodam-graph-eng.M9", "type": "next", "note": "그림자로 coarse 가 해소돼야 임계 경로가 정확해짐" },
-    { "from": "sodam-graph-eng.M11", "to": "sodam-graph-eng.M9", "type": "next", "note": "정지 일수 계산이 있어야 점수가 나옴" },
-    { "from": "sodam-graph-eng.M9", "to": "sodam-graph-eng.M8", "type": "next", "note": "다 만든 뒤에 문서를 써야 실제와 안 어긋남" },
-    { "from": "sodam-graph-eng.M16", "to": "sodam-loop-eng.current", "type": "depends_on", "note": "소담루프엔지니어링이 실행 담당으로 동작해야 Phase 2.5 착수 가능" },
-    { "from": "sodam-graph-eng.M2", "to": "sodam-loop-eng.current", "type": "shares", "note": "공유 루트 ~/.sodam/ 를 함께 사용 (그래프는 graph-state.json 만 씀, loop-state.json 은 소담루프엔지니어링 소유)" },
-    { "from": "sodam-harness-eng.current", "to": "sodam-loop-eng.current", "type": "conflicts", "note": "명령 파일 이름 중복 3건 — install.md·status.md·undo.md (2026-08-02 실측)" },
-    { "from": "sodam-context-eng.current", "to": "sodam-loop-eng.current", "type": "conflicts", "note": "명령 파일 이름 중복 1건 — checkup.md (2026-08-02 실측)" },
-    { "from": "sodam-harness-eng.current", "to": "sodam-agentic-eng.current", "type": "conflicts", "note": "명령 파일 이름 중복 1건 — log.md (2026-08-02 실측)" },
-    { "from": "sodam-agentic-eng.current", "to": "sodam-loop-eng.current", "type": "conflicts", "note": "명령 파일 이름 중복 1건 — start.md (2026-08-02 실측)" }
+    {
+      "from": "sodam-graph-eng.M0",
+      "to": "sodam-graph-eng.M1",
+      "type": "next",
+      "note": null
+    },
+    {
+      "from": "sodam-graph-eng.M1",
+      "to": "sodam-graph-eng.M2",
+      "type": "next",
+      "note": "저장소·정본이 있어야 스캐너가 대조할 대상이 생김"
+    },
+    {
+      "from": "sodam-graph-eng.M2",
+      "to": "sodam-graph-eng.M3",
+      "type": "next",
+      "note": null
+    },
+    {
+      "from": "sodam-graph-eng.M2",
+      "to": "sodam-graph-eng.M4",
+      "type": "next",
+      "note": null
+    },
+    {
+      "from": "sodam-graph-eng.M2",
+      "to": "sodam-graph-eng.M5",
+      "type": "next",
+      "note": null
+    },
+    {
+      "from": "sodam-graph-eng.M2",
+      "to": "sodam-graph-eng.M7",
+      "type": "next",
+      "note": null
+    },
+    {
+      "from": "sodam-graph-eng.M2",
+      "to": "sodam-graph-eng.M10",
+      "type": "next",
+      "note": null
+    },
+    {
+      "from": "sodam-graph-eng.M2",
+      "to": "sodam-graph-eng.M11",
+      "type": "next",
+      "note": null
+    },
+    {
+      "from": "sodam-graph-eng.M4",
+      "to": "sodam-graph-eng.M6",
+      "type": "next",
+      "note": "다음 할 일 판정이 있어야 세션 시작에 넣을 내용이 생김"
+    },
+    {
+      "from": "sodam-graph-eng.M10",
+      "to": "sodam-graph-eng.M9",
+      "type": "next",
+      "note": "그림자로 coarse 가 해소돼야 임계 경로가 정확해짐"
+    },
+    {
+      "from": "sodam-graph-eng.M11",
+      "to": "sodam-graph-eng.M9",
+      "type": "next",
+      "note": "정지 일수 계산이 있어야 점수가 나옴"
+    },
+    {
+      "from": "sodam-graph-eng.M9",
+      "to": "sodam-graph-eng.M8",
+      "type": "next",
+      "note": "다 만든 뒤에 문서를 써야 실제와 안 어긋남"
+    },
+    {
+      "from": "sodam-graph-eng.M16",
+      "to": "sodam-loop-eng.current",
+      "type": "depends_on",
+      "note": "소담루프엔지니어링이 실행 담당으로 동작해야 Phase 2.5 착수 가능"
+    },
+    {
+      "from": "sodam-graph-eng.M2",
+      "to": "sodam-loop-eng.current",
+      "type": "shares",
+      "note": "공유 루트 ~/.sodam/ 를 함께 사용 (그래프는 graph-state.json 만 씀, loop-state.json 은 소담루프엔지니어링 소유)"
+    },
+    {
+      "from": "sodam-harness-eng.current",
+      "to": "sodam-loop-eng.current",
+      "type": "conflicts",
+      "note": "명령 파일 이름 중복 3건 — install.md·status.md·undo.md (2026-08-02 실측)"
+    },
+    {
+      "from": "sodam-context-eng.current",
+      "to": "sodam-loop-eng.current",
+      "type": "conflicts",
+      "note": "명령 파일 이름 중복 1건 — checkup.md (2026-08-02 실측)"
+    },
+    {
+      "from": "sodam-harness-eng.current",
+      "to": "sodam-agentic-eng.current",
+      "type": "conflicts",
+      "note": "명령 파일 이름 중복 1건 — log.md (2026-08-02 실측)"
+    },
+    {
+      "from": "sodam-agentic-eng.current",
+      "to": "sodam-loop-eng.current",
+      "type": "conflicts",
+      "note": "명령 파일 이름 중복 1건 — start.md (2026-08-02 실측)"
+    }
   ],
   "blockers": []
 }

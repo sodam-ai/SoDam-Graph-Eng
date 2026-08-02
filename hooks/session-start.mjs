@@ -2,41 +2,131 @@
 /**
  * session-start.mjs — 세션 시작 자동 주입 (SessionStart 훅)
  *
- * 🟡 현재 상태: **안전 스텁 (no-op)** — 실제 판정 로직은 **M6** 에서 구현합니다.
- *
- * 왜 지금 만드는가:
- *   M0 `done_when` 6이 `hooks/hooks.json` 을 요구하는데, 훅이 가리키는 대상 파일이
- *   없으면 **설치한 사람의 모든 세션 시작이 깨집니다.** 빈 파일이라도 있어야
- *   안전합니다.
- *
  * 규격: 07_FAMILY_COEXIST.md §4 규약 E
- *   E1 출력 3줄 이내 · E3 SODAM_GRAPH_SILENT=1 이면 0줄 · E4 형제 저장소 밖이면 침묵
- *   E5 1초 이내 · E6 실패해도 세션 시작을 절대 막지 않음
+ *   E1 출력 3줄 이내         E2 패밀리 합계 10줄
+ *   E3 끄는 법 필수           E4 형제 저장소 밖이면 아무것도 출력 안 함
+ *   E5 1초 이내 (초과 시 캐시만 읽고 백그라운드 재스캔)
+ *   E6 실패해도 세션 시작을 절대 막지 않음
  *
- * 🔴 M6 구현자에게 (중요):
- *   Claude Code 훅은 **stdout 에 JSON 을 써야** 인식합니다. 평문은 무시됩니다.
- *   형식 예: {"continue": true, "hookSpecificOutput": { ... }}
- *   평문 `console.log("...")` 로 내보내면 **아무 일도 일어나지 않습니다.**
+ * 🔴 출력 형식 (2026-08-02 실측 확인 — 이 PC 에서 동작 중인 훅과 동일)
+ *   침묵 : {"continue":true,"suppressOutput":true}
+ *   안내 : {"continue":true,"hookSpecificOutput":{"hookEventName":"SessionStart",
+ *                                                 "additionalContext":"..."}}
+ *   **평문을 그냥 찍으면 무시됩니다.** 반드시 stdout 에 JSON 을 씁니다.
  */
 
-// E6: 어떤 예외도 세션 시작을 막지 않는다. 최상위를 통째로 감싼다.
+import { spawn } from 'node:child_process';
+import { resolve as resolvePath, dirname, sep } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const BUDGET_MS = 1000; // E5
+const STALE_MIN = 10; // 06 §3-B D2
+const started = Date.now();
+
+/** 침묵 (E3·E4·E5·E6 공통 출구) */
+function silent() {
+  process.stdout.write(JSON.stringify({ continue: true, suppressOutput: true }));
+  process.exit(0);
+}
+
+/** 안내 — 3줄 이내만 허용 (E1) */
+function notice(lines) {
+  const text = lines.filter(Boolean).slice(0, 3).join('\n'); // E1 하드 상한
+  process.stdout.write(
+    JSON.stringify({
+      continue: true,
+      hookSpecificOutput: { hookEventName: 'SessionStart', additionalContext: text },
+    })
+  );
+  process.exit(0);
+}
+
+/** 경로를 짧게 — 마지막 두 조각만 (07 §4 출력 예시 형식) */
+function shortPath(p) {
+  if (!p) return '';
+  const parts = String(p).split(/[\\/]/).filter(Boolean);
+  return parts.length <= 2 ? p : `...${sep}${parts.slice(-2).join(sep)}`;
+}
+
+/** 예산을 넘겼는가 (E5) */
+const overBudget = () => Date.now() - started > BUDGET_MS;
+
+/** 오래된 스냅샷을 백그라운드에서 갱신 — 세션을 절대 붙잡지 않는다 (E5) */
+function rescanDetached() {
+  try {
+    const child = spawn(process.execPath, [resolvePath(HERE, '..', 'lib', 'scan.mjs')], {
+      detached: true,
+      stdio: 'ignore',
+      windowsHide: true,
+    });
+    child.unref();
+  } catch {
+    /* 실패해도 무시 — 부가 동작 */
+  }
+}
+
+// E6: 어떤 예외도 세션 시작을 막지 않는다
 try {
-  // E3: 사용자가 끈 경우 즉시 종료 (아무것도 출력하지 않음)
-  if (process.env.SODAM_GRAPH_SILENT === '1') {
-    process.exit(0);
+  // E3 — 사용자가 껐으면 즉시 침묵
+  if (process.env.SODAM_GRAPH_SILENT === '1') silent();
+
+  const { loadGraph } = await import('../lib/loadGraph.mjs');
+  const { readSnapshot, isStale, judgeProject } = await import('../lib/judge.mjs');
+
+  const graph = loadGraph();
+
+  // 캐시 우선 — 스캔은 캐시가 아예 없을 때만 (E5)
+  let snapshot = readSnapshot();
+  let stale = false;
+
+  if (!snapshot) {
+    if (overBudget()) silent();
+    const { scanAll } = await import('../lib/scan.mjs');
+    snapshot = scanAll(graph).snapshot;
+  } else if (isStale(snapshot, new Date(), STALE_MIN)) {
+    stale = true; // 낡은 값으로 즉시 답하고, 갱신은 백그라운드로
   }
 
-  // ── M6 에서 여기에 구현 ──────────────────────────────────
-  //   1. data/snapshot.json 캐시 읽기 (없거나 10분 초과면 재스캔 — 06 §3-B D2)
-  //   2. 현재 폴더가 어느 형제인지 resolve (07 규약 E4: 형제 밖이면 침묵)
-  //   3. 현재 단계 · 다음 할 일 · 스캔 시각을 **3줄 이내**로 구성 (E1)
-  //   4. JSON 으로 stdout 출력 (위 주의사항 참조)
-  //   5. 전체 1초 예산 초과 시 캐시만 읽고 백그라운드 재스캔 (E5)
-  // ─────────────────────────────────────────────────────────
+  if (overBudget()) silent();
 
-  // 스텁 단계에서는 아무것도 출력하지 않습니다 (정상 동작).
-  process.exit(0);
+  // E4 — 지금 열린 폴더가 형제 저장소 안인가. 아니면 아무 말도 하지 않는다.
+  const cwd = resolvePath(process.cwd());
+  const here = snapshot.projects.find((p) => {
+    if (!p.repo_root) return false;
+    const root = resolvePath(p.repo_root);
+    return cwd === root || cwd.startsWith(root.endsWith(sep) ? root : root + sep);
+  });
+  if (!here) {
+    if (stale) rescanDetached();
+    silent();
+  }
+
+  const p = graph.projects.find((x) => x.id === here.project_id);
+  const j = judgeProject(graph, snapshot, here.project_id);
+  const stamp = String(snapshot.scanned_at).slice(11, 16);
+
+  // 정체 형제 수 (활동 축이 아니라 정체 축 — 12차)
+  const stalled = snapshot.projects.filter(
+    (x) => x.days_in_state !== null && x.days_in_state >= graph.config.stall_days
+  ).length;
+
+  // 자기 저장소에서 열면 이름이 두 번 나오므로 접두사만 남긴다
+  const head =
+    p.id === 'sodam-graph-eng' ? '[소담그래프엔지니어링]' : `[소담그래프엔지니어링] ${p.name_ko} ·`;
+  const line1 = `${head} ${shortPath(here.repo_root)}`;
+
+  // j.text 가 이미 "시작: …" 처럼 동사로 시작하므로 "다음:" 을 덧붙이지 않는다
+  const stateLabel = j.kind === 'coarse' ? '거친 판정' : (here.state ?? '-');
+  const days = here.days_in_state !== null ? ` (${here.days_in_state}일)` : '';
+  const line2 = `  현재: ${stateLabel}${days} → ${j.text}`;
+  const line3 =
+    `  7형제 중 정체 ${stalled}곳 · /graph-next 로 전체 보기` +
+    `   [${stamp} 기준${stale ? ' · 갱신 중' : ''}]`;
+
+  if (stale) rescanDetached();
+  notice([line1, line2, line3]);
 } catch {
-  // E6: 조용히 침묵. 스택 트레이스도 내보내지 않는다 (08 S-13.4).
-  process.exit(0);
+  // E6: 조용히 침묵. 스택 트레이스도 내보내지 않는다 (08 S-13.4)
+  silent();
 }

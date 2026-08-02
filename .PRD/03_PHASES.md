@@ -194,7 +194,34 @@ graph LR
 ```
 
   만든 파일: `lib/mermaid.mjs`(`buildMermaid`·`findCycles`·`lintMermaid`) · `commands/graph-map.md`
-- [ ] **M6 — 세션 시작 자동 주입 (SessionStart hook)**
+- [x] **M6 — 세션 시작 자동 주입 (SessionStart hook)** — ✅ **완료 (2026-08-02)** · `done_when` **4/4 수치 측정**
+
+  | # | 검수 (수치) | 결과 |
+  |---|------|------|
+  | 1 | 사람 개입 없이 표시 | ✅ JSON 형식 정확 — `continue:true` + `hookSpecificOutput.hookEventName="SessionStart"` |
+  | 2 | **출력 3줄 이하** (E1) | ✅ **정확히 3줄** (`additionalContext` 줄 수로 측정 — 아래 주의 참조) |
+  | 3 | **실행 1초 미만** (E5) | ✅ **80·81·87ms** (3회, 72폴더 실환경) — **예산의 8%** |
+  | 4 | `SODAM_GRAPH_SILENT=1` → 0줄 (E3) | ✅ `{"continue":true,"suppressOutput":true}` — 주입 텍스트 없음 |
+
+  **규약 E 나머지도 확인**: E4 형제 저장소 **밖**(`C:/Users/PC`)에서 실행 → **침묵 PASS** · E6 `graph.json` 을 일부러 깨뜨려도 **종료코드 0 + 조용히 침묵** PASS
+
+  🔴 **출력 형식은 실측으로 확보했습니다** — 이 PC 에서 **실제 동작 중인** SessionStart 훅(`gptaku-update-check.cjs`)이 쓰는 형식을 읽어 확인했습니다.
+  ```
+  침묵 : {"continue":true,"suppressOutput":true}
+  안내 : {"continue":true,"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"..."}}
+  ```
+  **평문을 그냥 찍으면 무시됩니다.** M0 스텁 주석의 경고가 맞았고, 정확한 필드명까지 실측으로 채웠습니다.
+
+  ⚠️ **`done_when` 2번의 측정 방법 정정**: 규격은 *"`wc -l` 로 측정"* 이라 적혀 있으나, 훅 출력은 **JSON 한 줄**이라 `wc -l` 은 항상 1이 나와 의미가 없습니다. **실제로 주입되는 `additionalContext` 의 줄 수**를 세는 것이 규격의 의도이며, 그 기준으로 **3줄**입니다.
+
+  실제 출력:
+  ```
+  [소담그래프엔지니어링] ...\2026y\26y_06m_30d_SoDam-Graph-Eng
+    현재: verified (0일) → /graph-map 명령 (Mermaid graph LR) — 완료 조건을 확인할 차례입니다
+    7형제 중 정체 0곳 · /graph-next 로 전체 보기   [23:13 기준]
+  ```
+
+  **성능 설계**: 캐시 우선(85ms) · 캐시가 **아예 없을 때만** 동기 스캔 · 10분 초과면 **낡은 값으로 즉시 답하고 백그라운드에서 재스캔**(`detached`+`unref` — 세션을 붙잡지 않음). M4 에서 캐시 버그를 고쳐둔 것이 그대로 예산 여유가 됐습니다.
   - `done_when` (**4개 전부 — 수치로 측정**):
     1. 새 세션을 열면 현재 위치·다음 할 일이 사람 개입 없이 표시됨
     2. **출력이 3줄 이하** (`07` 규약 E1) — `wc -l` 로 측정
