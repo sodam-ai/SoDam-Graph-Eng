@@ -240,9 +240,36 @@ grep -nE "^\| (3[0-9]|4[0-9]|5[0-9]) \|" 01_PRD.md | grep -oE "\| 0[0-9](, 0[0-9
 #  "이 문서로 코드를 짤 수 있는가"는 다른 질문이고, 6차는 그걸 검사하지 않아
 #  "구현 실패시키는 것 0건"이라는 오판을 냈습니다. 아래는 사람이 눈으로 확인합니다.
 
-grep -c '"projects"' 02_DATA_MODEL.md      # ≥1 — graph.json 최상위 예시가 있는가
-grep -c 'graph LR'   03_PHASES.md          # ≥1 — Mermaid 타입이 정해졌는가
-grep -c 'make-fixture\|git remote add' 04_PROJECT_SPEC.md   # ≥1 — 픽스처 만드는 법이 있는가
+#  🔴 12차 확장: 초안 D는 grep 3줄을 하드코딩해서 10·11·12차 신설 규격
+#     (~/.sodam mkdir · 정체 축 · markers OR · 매니페스트 · hooks.json ·
+#      설치 명령 형식 · GitHub 설치 실측 · PUBLIC 노출 목록)을 하나도
+#     검사하지 않았습니다. A-1 이 FAIL "목록"으로 바뀐 것과 같은 이유로
+#     D 도 "목록"으로 바꿉니다 — 새 규격이 생기면 SPEC 에 한 줄만 추가.
+#     ★ 패턴을 새로 짜지 마십시오. M-V 가 2번 실패한 원인이 정확히 그것입니다.
+
+# 형식: "설명::파일::반드시 있어야 하는 문자열"  (고정 문자열 비교 — grep -F)
+SPEC=(
+  "graph.json 최상위 구조::02_DATA_MODEL.md::\"projects\""
+  "Mermaid 타입 고정::03_PHASES.md::graph LR"
+  "픽스처 생성 스크립트::04_PROJECT_SPEC.md::make-fixture"
+  "픽스처 remote 등록법::04_PROJECT_SPEC.md::git remote add"
+  "~/.sodam 디렉터리 생성::02_DATA_MODEL.md::mkdirSync"
+  "정체 축 필드::02_DATA_MODEL.md::days_in_state"
+  "markers OR 판정::02_DATA_MODEL.md::OR (하나라도"
+  "설치 캐시 판정::02_DATA_MODEL.md::installed"
+  "마켓플레이스 매니페스트::04_PROJECT_SPEC.md::marketplace.json"
+  "훅 등록 파일::04_PROJECT_SPEC.md::hooks.json"
+  "플러그인 루트 변수::04_PROJECT_SPEC.md::CLAUDE_PLUGIN_ROOT"
+  "설치 명령 결합형식::04_PROJECT_SPEC.md::sodam-graph@sodamgraph-marketplace"
+  "GitHub 설치 실측 항목::03_PHASES.md::GitHub 마켓플레이스 설치 실측"
+  "PUBLIC 전환 노출 목록::09_LEGAL_LICENSE_SPEC.md::E-2"
+  "skills 의도적 제외::04_PROJECT_SPEC.md::의도적으로 만들지 않습니다"
+)
+for s in "${SPEC[@]}"; do
+  desc="${s%%::*}"; rest="${s#*::}"; file="${rest%%::*}"; pat="${rest#*::}"
+  if grep -qF "$pat" "$file" 2>/dev/null; then echo "  PASS $desc"
+  else echo "  FAIL $desc — $file 에 '$pat' 없음"; fi
+done
 ```
 
 **추가 확인 (자동화 불가 — 사람이 판단)**
