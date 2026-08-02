@@ -151,6 +151,49 @@ Phase 1이 끝나면, **새 세션을 열었을 때 아무 설명 없이 "지금
     | 순환 발견 시 | 해당 노드를 `:::cycle` 클래스로 표시 + 그림 위에 경고 한 줄 |
 
   - `done_when`: 위 규격대로 출력되고 **GitHub 마크다운 프리뷰와 VS Code 미리보기 둘 다에서** 깨지지 않고 렌더링됨 (렌더링 확인 보고)
+
+  #### ✅ M5 완료 (2026-08-02) — 규격 10/10 · 순환 경고 5/5
+
+  | 검수 | 결과 |
+  |------|------|
+  | 타입 `graph LR` · 노드 ID = `Project.id`(7개) | ✅ |
+  | 라벨 = `name_ko` + `state` + 정지 일수 | ✅ 정체 축(`days_in_state`) 사용 |
+  | `coarse` 노드 `(추정)` 표기 | ✅ 6곳 |
+  | `depends_on`·`next` 실선 / `conflicts`·`shares` 점선 + 라벨 | ✅ |
+  | 순환 시 `:::cycle` + **그림 위** 경고 한 줄 | ✅ 픽스처로 강제해 확인 (2개 노드 표시 · 무한 루프 없음) |
+  | 문법 자체검사 | ✅ 0건 (`lintMermaid`) |
+
+  🔴 **규격의 모호한 지점 1건 — 이렇게 해석했습니다**
+  노드 ID 가 **`Project.id`(형제 단위)** 인데 `next` 엣지는 **같은 형제 안의 마일스톤 순서**라, 그대로 그리면 **자기 자신을 가리키는 화살표**가 생깁니다.
+  → **`from`·`to` 의 형제가 다를 때만** 그리고, **생략한 개수(현재 12개)를 그림 아래에 밝힙니다.** 숨기는 게 아니라 *"형제 안쪽 순서는 이 그림의 축척이 아니다"* 를 명시하는 방식입니다.
+
+  🔴 **미완 — 사람 눈 확인이 남았습니다**
+  `done_when` 이 요구하는 **GitHub·VS Code 실제 렌더링**은 GUI라 기계가 대신 볼 수 없습니다. 아래 그림이 이 문서에서 제대로 보이면 GitHub 쪽은 확인된 것입니다.
+
+  <!-- 실제 `node lib/mermaid.mjs` 출력 (2026-08-02) -->
+
+```mermaid
+graph LR
+  sodam-harness-eng["소담하네스엔지니어링<br/>coarse · 0일 (추정)"]
+  sodam-context-eng["소담컨텍스트엔지니어링<br/>coarse · 0일 (추정)"]
+  sodam-agentic-eng["소담에이전틱엔지니어링<br/>coarse · 0일 (추정)"]
+  sodam-loop-eng["소담루프엔지니어링<br/>coarse · 0일 (추정)"]
+  sodam-prompt-eng["소담프롬프트엔지니어링<br/>coarse · 6일 (추정)"]
+  sodam-reverse-eng["소담리버스엔지니어링<br/>coarse · 6일 (추정)"]
+  sodam-graph-eng["소담그래프엔지니어링<br/>todo · 0일"]
+
+  sodam-graph-eng --> sodam-loop-eng
+  sodam-graph-eng -.->|공용| sodam-loop-eng
+  sodam-harness-eng -.->|충돌| sodam-loop-eng
+  sodam-context-eng -.->|충돌| sodam-loop-eng
+  sodam-harness-eng -.->|충돌| sodam-agentic-eng
+  sodam-agentic-eng -.->|충돌| sodam-loop-eng
+
+  classDef cycle stroke:#d33,stroke-width:3px;
+  classDef lost stroke:#d33,stroke-dasharray:4 3;
+```
+
+  만든 파일: `lib/mermaid.mjs`(`buildMermaid`·`findCycles`·`lintMermaid`) · `commands/graph-map.md`
 - [ ] **M6 — 세션 시작 자동 주입 (SessionStart hook)**
   - `done_when` (**4개 전부 — 수치로 측정**):
     1. 새 세션을 열면 현재 위치·다음 할 일이 사람 개입 없이 표시됨
