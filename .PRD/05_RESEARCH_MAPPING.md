@@ -80,7 +80,7 @@
 
 | 자료 | 위치 | 크기 | 무엇을 가져왔나 |
 |------|------|------|--------------|
-| **`family-synergy.md`** ★정본 | `SoDam-Agentic-Eng/docs/` | 6,210B | **§4 `isFamilyAlive(name)` 미구현 계약** → `~/.sodam/graph-state.json` 공유 발행의 근거 · §3 규약 A~D 준수 · §1 한 줄 원칙 확장 · §2 설치 순서 |
+| **`family-synergy.md`** ★정본 | `SoDam-Agentic-Eng/docs/` | **6,926B** (2026-08-02 11:35 갱신) | **§4 `isFamilyAlive(name)` 미구현 계약** → `~/.sodam/graph-state.json` 공유 발행의 근거 · §3 규약 A~D 준수 · §1 한 줄 원칙 확장 · §2 설치 순서 · **§5 2026-08-02 정정(형제마다 고유 마켓플레이스·플러그인 이름 = 표준, 공용 `sodam` 이름 재사용은 폐기)** |
 | `SODAM_FAMILY_COEXIST.md` | `SoDam-Harness-Eng/.PRD/` | 7,467B | §3-3 공유 루트 `~/.sodam/` 관례 · §6-5 명령어 중복 금지 · §7 "100% 안전" 표현 금지 |
 | 형제 `CHECKPOINT.md` 4개 | 각 형제 루트 | 3,572줄 | **형식이 4가지임을 실증** → 2층 추출 설계의 근거 |
 | 형제 `git remote` 6개 | — | — | `repo_remote` 실측값 → 초안 예시 오류 발견 |

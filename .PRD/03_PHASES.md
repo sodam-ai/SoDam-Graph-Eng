@@ -15,7 +15,7 @@ Phase 1이 끝나면, **새 세션을 열었을 때 아무 설명 없이 "지금
 
 ### 기능
 
-- [ ] **M0 — 저장소 준비** ★신규
+- [x] **M0 — 저장소 준비** ★신규 — ✅ **완료 (2026-08-02, 커밋 `a02f7cf`)** · `done_when` 5/5 통과 · `licenseInfo.key=apache-2.0` 확인(형제 3곳의 `other` 불일치를 7번째는 반복하지 않음) · 시크릿 0건
   - `git init` → GitHub `sodam-ai/SoDam-Graph-Eng` 생성 → remote 연결 → `.gitignore` 작성
   - **왜 필요한가**: 2026-08-02 실측 결과 `26y_06m_30d_SoDam-Graph-Eng` 는 **git 저장소가 아닙니다.** 그런데 `graph.json` 은 자기 자신을 7번째 형제로 포함해야 하고, 식별 열쇠가 `repo_remote` 입니다. 저장소가 없으면 **자기 참조가 성립하지 않습니다**
   - 저장소 이름은 **`SoDam-Graph-Eng`** — 6형제 전부 `sodam-ai/SoDam-{X}-Eng` 형식임이 실측으로 확인됨 (소문자 `sodam-graph-eng` 는 관례 위반)
@@ -30,7 +30,7 @@ Phase 1이 끝나면, **새 세션을 열었을 때 아무 설명 없이 "지금
        — 형제 3곳이 로컬은 Apache-2.0인데 GitHub은 `other` 로 인식하는 불일치가 실측됨(`09` F-6). **같은 실수를 반복하지 않습니다**
     5. ⚖️ `git ls-files` 에 `.env`·`*.key`·`*.pem` **0건** (`08` §5)
 
-- [ ] **M1 — `graph.json` 스키마 확정 + 7형제 초기 데이터 작성**
+- [x] **M1 — `graph.json` 스키마 확정 + 7형제 초기 데이터 작성** — ✅ **완료 (2026-08-02, 커밋 `680dc87`)** · `done_when` 5/5 + 무결성 7개 통과 · projects 7 · milestones 19 · edges 18 · **드라이브 경로 1건(`config.search_roots`)만** · 초기 데이터는 PRD 표가 아닌 **13:30 실측**으로 채움
   - 범위: **엔지니어링 7형제만** (2026-08-02 확정). 다른 소담 프로젝트는 넣지 않음
   - 🔴 **정본에 경로를 쓰지 않습니다.** 식별 열쇠는 **`repo_remote` + `markers` + `search_roots`** 뿐
   - 채우는 방법: **2층 추출** (`02_DATA_MODEL.md` 참조) — 1층은 공통분모 자동, 2층 상세는 그림자
@@ -40,7 +40,8 @@ Phase 1이 끝나면, **새 세션을 열었을 때 아무 설명 없이 "지금
     1. 7형제 전부에 `id`/`name_ko`/`name_en`/`repo_remote`/`markers` 가 채워짐 (**`search_roots` 는 형제가 아니라 `config` 에**)
     2. **`graph.json` 전체에 `D:\` 로 시작하는 문자열이 0개** (`search_roots` 제외) — grep으로 입증
     3. remote 값이 **2026-08-02 실측값과 일치** — `sodam-ai/SoDam-Loop-Eng` 등 (`sodam-loop` 같은 축약형 금지)
-    4. 추적 파일이 없는 소담하네스엔지니어링·소담루프엔지니어링은 `state="coarse"` 로 표시되고 근거가 `evidence` 에 남음
+    4. 🔴 **초기 데이터는 PRD 표를 베끼지 말고 착수 시점에 다시 실측**할 것. 실측상 추적 파일이 **정말 없는 형제는 소담하네스엔지니어링 하나뿐**이며(소담루프엔지니어링은 `sodamloop/CHECKPOINT.md` 1,349줄 실재), 판정 불가한 형제는 `state="coarse"` 로 표시되고 **근거가 `evidence` 에 실측값(줄수·완료표시·미완료·수정일)과 함께** 남음
+       - **이유**: `01 §1` 정지 데이터가 **반나절 만에 무효**가 된 전례가 있습니다(01:40 → 13:30). 문서의 실측 표는 **개정 근거**이지 구현 입력이 아닙니다
 - [ ] **M2 — 상태 스캐너 + resolve + 🆕 공유 발행 (읽기 전용)**
   - resolve 3단계: `repo_remote`(정규화 후 비교) → `markers` → `lost`
   - 1차 필터로 폴더명 패턴 `*SoDam-*-Eng*` 을 먼저 좁힘 (실측 60+ 폴더 전수 스캔 방지)
@@ -50,6 +51,8 @@ Phase 1이 끝나면, **새 세션을 열었을 때 아무 설명 없이 "지금
     1. 7형제를 훑어 `snapshot.json` 생성 + `resolve_status` 가 7개 모두 `found_by_*`
     2. 스캔 후 `git status` 로 **형제 저장소 변경 0건** 입증
     3. `~/.sodam/graph-state.json` 이 생성되고 **원자적 교체가 입증됨** — 발행 반복 중 별도 프로세스에서 **100회 연속 읽기·JSON 파싱 실패 0건**(`node -e` 루프). "안 깨질 것 같다"는 통과가 아닙니다
+       - 🔴 **3-a. 디렉터리 부재 상태에서 첫 발행이 성공해야 함** — **2026-08-02 실측상 `~/.sodam/` 폴더 자체가 없습니다.** `publish.mjs` 가 `mkdirSync(dir, {recursive:true})` 로 먼저 만들지 않으면 여기서 곧바로 실패합니다. 이미 있으면 건드리지 않습니다(하네스 §6-4)
+       - 🔴 **3-b. `snapshot.json` 에 활동 축·정체 축이 **둘 다** 기록됨** — `days_since_activity`(커밋·파일 시각)와 `days_in_state`(`last_moved_at` 기준). 하나만 있으면 `01 §5` 2주 성적표 1번을 **낼 수 없습니다** (`02` §Snapshot 참조)
     4. 🔒 **S-1**: 코드에 `shell: true`·`exec(`·`execSync(` **0건**(grep) + 폴더명 `test$(echo INJECTED)` 픽스처에서 **`INJECTED` 미출현**
     5. 🔒 **S-2**: `markers[].file` 에 `../../secret.txt` 를 넣은 픽스처 → **거부되고 파일을 읽지 않음** + 심볼릭 링크 순환에서 **무한 루프 없이 종료**
     6. 🔒 **S-3**: `scan.mjs`·`resolve.mjs` 에 쓰기 API **0건**(grep) + `safeWrite` 에 형제 경로 전달 시 **throw** + 화이트리스트 밖 git 서브커맨드 **throw**
