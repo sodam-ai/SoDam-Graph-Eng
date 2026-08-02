@@ -1,0 +1,15 @@
+# 스캔마다 바뀜 — 커밋하면 노이즈 폭증 (04_PROJECT_SPEC.md, 08 S-4.7)
+data/snapshot.json
+
+# 실행 중에만 존재하는 동시 세션 잠금 (08 S-13.10)
+data/.lock
+
+node_modules/
+
+# 도구 부산물 — 세션 ID·로그라 설계 근거가 아님 (형제 관례 실측: 하네스·프롬프트 동일)
+.omc/
+.remember/
+
+# 개명 테스트용 더미 저장소 — tools/make-fixture.sh 로 매번 생성
+# (중첩 .git 을 상위 저장소가 삼키는 문제를 회피. 04_PROJECT_SPEC.md 권장안)
+_test_fixture/

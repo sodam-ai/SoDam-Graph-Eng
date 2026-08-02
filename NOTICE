@@ -1,0 +1,27 @@
+SoDam-Graph-Eng (소담그래프엔지니어링)
+Copyright 2026 SoDam AI Studio
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License in the LICENSE file or at
+http://www.apache.org/licenses/LICENSE-2.0
+
+---
+
+상표 고지 (Trademark notice):
+"Claude Code", "Claude", "Anthropic", "Codex", "OpenAI", "Cursor",
+"Gemini", "GitHub", "Mermaid" 는 각 소유자의 상표입니다.
+SoDam-Graph-Eng 는 이들과 제휴·보증·후원 관계가 없습니다
+(not affiliated with, endorsed by, or sponsored by Anthropic, OpenAI,
+GitHub, or any other tool vendor).
+호환·연동 사실의 명목적 표시(nominative use)로만 언급합니다.
+
+제3자 코드 (Third-party code):
+이 릴리스에는 번들된 제3자 소스 코드가 없습니다.
+npm 패키지 의존성 0개, 이미지·폰트·외부 SDK 0개입니다.
+향후 외부 코드를 차용할 경우, 그 출처와 라이선스를 여기에 명시합니다.
+(AGPL/GPL 등 비호환 카피레프트 코드는 차용하지 않습니다.)
+
+외부 실행 도구 (External tools invoked, not bundled):
+git CLI 를 읽기 전용 서브커맨드로 호출합니다. 코드를 포함하지 않으므로
+배포 대상이 아니며, git 자체의 라이선스는 각 설치본을 따릅니다.
