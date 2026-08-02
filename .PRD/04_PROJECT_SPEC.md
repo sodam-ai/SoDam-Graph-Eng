@@ -49,7 +49,8 @@ sodam-graph-eng/
 │   ├── resolve.mjs          # 형제 찾기 (repo_remote 정규화 → markers → lost)
 │   ├── scan.mjs             # 형제 폴더 실측 (읽기 전용) + 1층 추출
 │   ├── publish.mjs          # ~/.sodam/graph-state.json 원자적 발행
-│   ├── judge.mjs            # 단계 판정 + done 승격 (E1|E2 필수)
+│   ├── judge.mjs            # 단계 판정 + 불일치 대조(M7) + done 승격 (E1|E2 필수)
+│   ├── shadow.mjs           # 그림자 추적 읽기·쓰기 (M10, 06 §2 규칙 B)
 │   ├── critical.mjs         # 순환 탐지 → 사이클 제외 → 임계 경로
 │   ├── lock.mjs             # data/.lock 파일 잠금 (동시 세션)
 │   └── mermaid.mjs          # 관계도 생성
