@@ -49,10 +49,12 @@ sodam-graph-eng/
 │   ├── resolve.mjs          # 형제 찾기 (repo_remote 정규화 → markers → lost)
 │   ├── scan.mjs             # 형제 폴더 실측 (읽기 전용) + 1층 추출
 │   ├── publish.mjs          # ~/.sodam/graph-state.json 원자적 발행
+│   ├── refresh.mjs          # 🆕 scan+publish 배선 (판정 명령 끝·세션훅 재스캔 끝에서 호출 — scan↔publish 순환 import 방지용 분리, W-1)
 │   ├── judge.mjs            # 단계 판정 + 불일치 대조(M7) + done 승격 (E1|E2 필수)
 │   ├── shadow.mjs           # 그림자 추적 읽기·쓰기 (M10, 06 §2 규칙 B)
+│   ├── rejected.mjs         # 🆕 data/rejected.json 승격 거부 이력 (M11)
 │   ├── critical.mjs         # 순환 탐지 → 사이클 제외 → 임계 경로
-│   ├── lock.mjs             # data/.lock 파일 잠금 (동시 세션)
+│   ├── lock.mjs             # data/.lock 파일 잠금 (동시 세션, M11 에서 실사용 시작)
 │   └── mermaid.mjs          # 관계도 생성
 ├── data/
 │   ├── graph.json           # 정본 — 경로 없음                [git 추적]
@@ -62,8 +64,13 @@ sodam-graph-eng/
 │   └── shadow/              # 그림자 추적                      [git 추적]
 │       ├── sodam-harness-eng.md
 │       └── sodam-loop-eng.md
+├── docs/                    # 🆕 M8-A 형제 계약 갱신 제출물 (읽기전용 결정 불변 — 형제 저장소엔 안 씀)
+│   ├── FAMILY_CONTRACT_PROPOSAL.md    # 갱신안 8건 (사람이 복사해 형제 저장소에 붙여넣음)
+│   └── FAMILY_INCONSISTENCY_REPORT.md # 불일치 7건 보고서
 ├── tools/
-│   └── make-fixture.sh      # _test_fixture/ 생성 (아래 §테스트 방법 참조)
+│   ├── make-fixture.sh      # _test_fixture/ 생성 (아래 §테스트 방법 참조)
+│   └── family-read-test.mjs # 🆕 M8-A 읽는 쪽 실증 — 규약 F 조각(readFamilyState·isFamilyAlive) 실행 검증
+│                            #    (_test_fixture/ 는 .gitignore 대상이라 여기 둠 — 위 §.gitignore 참조)
 ├── _test_fixture/           # 개명 테스트용 더미 저장소 (스크립트로 생성, 실제 형제 대신)
 ├── .PRD/                    # 이 설계 문서들
 ├── .gitignore
