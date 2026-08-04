@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SoDam-Graph-Eng — README</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1f2328; --muted: #59636e; --border: #d1d9e0;
+    --code-bg: #f6f8fa; --link: #0969da; --table-alt: #f6f8fa;
+    --blockquote-border: #d1d9e0; --red: #cf222e; --green: #1a7f37; --yellow: #9a6700;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117; --fg: #e6edf3; --muted: #9198a1; --border: #30363d;
+      --code-bg: #161b22; --link: #4493f8; --table-alt: #161b22;
+      --blockquote-border: #30363d; --red: #ff7b72; --green: #3fb950; --yellow: #d29922;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.7; max-width: 900px; margin: 0 auto; padding: 32px 20px 80px;
+    font-size: 16px;
+  }
+  h1, h2, h3 { border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-top: 40px; }
+  h1 { font-size: 1.9em; }
+  h2 { font-size: 1.5em; margin-top: 48px; }
+  h3 { font-size: 1.2em; border-bottom: none; }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code { background: var(--code-bg); border-radius: 4px; padding: 0.15em 0.4em; font-size: 0.9em;
+    font-family: "Cascadia Code", Consolas, monospace; }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px;
+    overflow-x: auto; }
+  pre code { background: none; padding: 0; font-size: 0.88em; line-height: 1.5; }
+  blockquote { border-left: 4px solid var(--blockquote-border); margin: 16px 0; padding: 4px 16px; color: var(--muted); }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; display: block; overflow-x: auto; }
+  th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; vertical-align: top; }
+  tr:nth-child(even) { background: var(--table-alt); }
+  th { background: var(--table-alt); }
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  details { border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; margin: 12px 0; }
+  summary { cursor: pointer; font-weight: 600; }
+  summary code { font-weight: normal; }
+  ol, ul { padding-left: 1.6em; }
+  .badge-red { color: var(--red); font-weight: 600; }
+  .badge-green { color: var(--green); font-weight: 600; }
+  .badge-yellow { color: var(--yellow); font-weight: 600; }
+  .lang-switch { text-align: right; font-size: 0.9em; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<p class="lang-switch">🌐 <a href="README.html">한국어 버전</a> · <a href="README.en.md">Markdown source</a></p>
+
+<h1 id="top">SoDam-Graph-Eng (소담그래프엔지니어링)</h1>
+
+<blockquote>
+A Claude Code plugin that shows the location, progress stage, and dependencies of the "SoDam Seven Siblings" projects on a single map.<br>
+<strong>Written so that someone who has never coded before</strong> can install and use it just by following this document.
+</blockquote>
+
+<hr>
+
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#what-is-this">What is this?</a></li>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#required-programs">Required Programs</a></li>
+<li><a href="#how-to-download">How to Download</a></li>
+<li><a href="#how-to-install">How to Install</a></li>
+<li><a href="#quick-start-5-minutes">Quick Start (5 minutes)</a></li>
+<li><a href="#how-to-run">How to Run</a></li>
+<li><a href="#how-to-use">How to Use</a></li>
+<li><a href="#how-it-works-principle">How It Works (Principle)</a></li>
+<li><a href="#command-list">Command List</a></li>
+<li><a href="#update-summary">Update Summary</a></li>
+<li><a href="#file--document-locations">File / Document Locations</a></li>
+<li><a href="#workflow">Workflow</a></li>
+<li><a href="#architecture">Architecture</a></li>
+<li><a href="#security--data-flow">Security &amp; Data Flow</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#legal--copyright--license--commercial-use">Legal / Copyright / License / Commercial Use</a></li>
+</ol>
+
+<hr>
+
+<h2 id="what-is-this">What is this?</h2>
+<p>A tool that saves you from re-explaining "which project am I in, how far did I get" every time you open a new session. It manages the location and progress stage of 7 projects ("siblings") in a single file (<code>graph.json</code>), and automatically informs the AI when a session opens.<br>
+<strong>It never modifies sibling project files</strong> — it only reads them.</p>
+
+<hr>
+
+<h2 id="prerequisites">Prerequisites</h2>
+<p>You need to know how to open a terminal (the black command-input screen). On Windows, if you run <code>Claude Code</code>, you are already inside a terminal screen — you don't need to open anything else separately.</p>
+<table>
+<tr><th>What you need</th><th>Why it's needed</th><th>How to check</th><th>If missing</th></tr>
+<tr><td><strong>Claude Code</strong></td><td>This tool is a plugin that runs inside Claude Code</td><td><code>claude --version</code></td><td>Install from https://claude.com/claude-code</td></tr>
+<tr><td><strong>git</strong></td><td>Used to read the progress of sibling projects. <span class="badge-red">🔴 Not installed by default on Windows</span> — the point where absolute beginners get stuck most often</td><td><code>git --version</code></td><td>Install from https://git-scm.com, then <strong>restart the terminal completely</strong></td></tr>
+<tr><td><strong>Node.js</strong></td><td>This tool is built with Node.js</td><td><code>node --version</code></td><td>Install from https://nodejs.org (LTS version recommended)</td></tr>
+<tr><td><strong>The SoDam sibling folders</strong></td><td>This is what the tool reads</td><td>Check with your own eyes that the folders actually exist</td><td>See <a href="#17-6">Troubleshooting 17-6</a></td></tr>
+</table>
+
+<hr>
+
+<h2 id="required-programs">Required Programs</h2>
+<p>Same as the table above. There is no strict minimum version, but if git/Node.js are <strong>very old versions</strong>, commands may not be recognized — a version released within the last 1–2 years should be enough.</p>
+
+<hr>
+
+<h2 id="how-to-download">How to Download</h2>
+<p>No separate download is needed. The commands in <a href="#how-to-install">How to Install</a> below fetch everything automatically from GitHub.</p>
+
+<hr>
+
+<h2 id="how-to-install">How to Install</h2>
+<p>Follow these steps exactly, inside Claude Code.</p>
+<pre><code>1. Start Claude Code
+2. Type /plugin
+3. Choose "Add marketplace"
+4. Enter the install source — one of the two below
+
+   (A) Install from GitHub  ← standard method
+       sodam-ai/SoDam-Graph-Eng
+
+   (B) Install from a folder on your computer  ← fallback if (A) doesn't work
+       D:\my-work-folder\SoDam-Graph-Eng
+
+5. Find sodam-graph in the list and press Install
+6. Fully quit Claude Code and start it again
+   (/exit → close the terminal window too → open a new terminal → claude)
+7. Type /sodam-graph: in the input box. If the command list appears, the install succeeded</code></pre>
+
+<p><strong>Command-line method (copy-paste ready):</strong></p>
+<pre><code># Install
+/plugin marketplace add sodam-ai/SoDam-Graph-Eng
+/plugin install sodam-graph@sodamgraph-marketplace
+
+# Uninstall (for reinstall testing)
+/plugin uninstall sodam-graph@sodamgraph-marketplace
+/plugin marketplace remove sodamgraph-marketplace</code></pre>
+
+<p><span class="badge-red">🔴</span> <strong>The combined form <code>plugin-name@marketplace-name</code> is required.</strong> Typing only <code>/plugin install sodam-graph</code> will not install it.</p>
+<p><span class="badge-red">🔴</span> <strong>Step 6 (full restart) is the most commonly skipped step.</strong> If you don't restart, the commands won't show up in the list at all → see <a href="#17-1">17-1</a>.</p>
+
+<h3 id="verified">🟢 Verified — GitHub install works even for a PRIVATE repository</h3>
+<p>This repository is actually PRIVATE. Method (A) above still works (directly measured and confirmed):</p>
+<pre><code>claude plugin marketplace add sodam-ai/SoDam-Graph-Eng
+  → ✔ Successfully added marketplace: sodamgraph-marketplace
+claude plugin install sodam-graph@sodamgraph-marketplace
+  → ✔ Successfully installed (scope: user) · Status: ✔ enabled</code></pre>
+<p>This works based on a logged-in (<code>gh auth</code>) account. If it doesn't work, see <a href="#17-23">17-23</a>.</p>
+
+<hr>
+
+<h2 id="quick-start-5-minutes">Quick Start (5 minutes)</h2>
+<pre><code>1. Install (see above)
+2. Fully quit and restart Claude Code   ← skip this and commands won't appear
+3. Try typing /graph-where
+4. If a sibling name and folder location appear, you're done</code></pre>
+<p><strong>Expected screen (actual output):</strong></p>
+<pre><code>SoDam-Loop-Eng (소담루프엔지니어링)   [as of 09:10]
+  Repo root : D:\my-work-folder\SoDam-Loop-Eng\sodamloop
+  Found by  : found_by_remote
+  Role      : execute/repeat next steps (make→check→fix)
+  Progress file : CHECKPOINT.md</code></pre>
+<p>If it doesn't work → see <a href="#17-1">17-1</a>.</p>
+
+<hr>
+
+<h2 id="how-to-run">How to Run</h2>
+<p>There is no separate "run" step. Inside Claude Code, it activates when you type one of the slash commands in the <a href="#command-list">Command List</a> below. It is not a program that runs constantly in the background.</p>
+
+<hr>
+
+<h2 id="how-to-use">How to Use</h2>
+<p><strong>Scenario 1 — When you open a new session</strong>: You don't need to do anything. If you open a session inside a sibling project folder, a 3-line notice appears automatically.</p>
+<p><strong>Scenario 2 — When you're curious which project you're in, or where it is</strong>: <code>/graph-where &lt;name&gt;</code></p>
+<p><strong>Scenario 3 — When you don't know what to do first today</strong>: <code>/graph-next</code> (all 7 siblings) or <code>/graph-why</code> (just the one thing to do right now)</p>
+<p><strong>Scenario 4 — When there isn't enough info and you only get a "rough judgment"</strong>: <code>/graph-shadow</code> to fill it in once</p>
+<p><strong>Scenario 5 — When a "done" suggestion was wrong</strong>: <code>/graph-reject</code> (before it's confirmed) or <code>/graph-undo</code> (after it's already confirmed)</p>
+
+<hr>
+
+<h2 id="how-it-works-principle">How It Works (Principle)</h2>
+<ol>
+<li>It reads <code>graph.json</code> (the plan — set by a human)</li>
+<li>It looks for where each sibling actually is right now (it doesn't store paths, so renaming a folder doesn't break it)</li>
+<li>It scans the actual repository read-only (git commits, progress-tracking files)</li>
+<li>If the plan and reality differ, it doesn't quietly pass — it tells you</li>
+<li>It judges one single "next thing to do"</li>
+<li>It saves a summary to <code>~/.sodam/graph-state.json</code> so the other SoDam siblings can read it</li>
+<li>It stops here — <strong>actual execution is handled by SoDam-Loop-Eng</strong></li>
+</ol>
+
+<hr>
+
+<h2 id="command-list">Command List</h2>
+<table>
+<tr><th>Command</th><th>What it does</th><th>When to use it</th></tr>
+<tr><td><code>/graph-where</code></td><td>Shows which project you're in and where the folder is</td><td>When you're confused</td></tr>
+<tr><td><code>/graph-next</code></td><td>Shows the next thing to do for each of the 7 siblings</td><td>When you want to see what to do next</td></tr>
+<tr><td><code>/graph-map</code></td><td>Draws a diagram of how the 7 siblings relate</td><td>When you want the big picture</td></tr>
+<tr><td><code>/graph-why</code></td><td><strong>If you can only pick one thing, this is it</strong></td><td>When you can't decide</td></tr>
+<tr><td><code>/graph-shadow</code></td><td>Fills in a project that lacks enough information</td><td>When something shows as <code>coarse</code></td></tr>
+<tr><td><code>/graph-reject</code></td><td>Tells the tool "this isn't actually finished"</td><td>When a "done" suggestion is wrong (before confirmation)</td></tr>
+<tr><td><code>/graph-undo</code></td><td>Reverts something that was already marked done</td><td>When something got marked done by mistake (after confirmation)</td></tr>
+</table>
+
+<h3>Actual Output Examples</h3>
+
+<details><summary><code>/graph-next</code> (actual output, sibling name and judgment only — no paths)</summary>
+<pre><code>🟡 SoDam-Loop-Eng
+   (estimate — pending human confirmation) Next-task candidate: "SP2: batch approval live test → move to Phase 1b" and 6 more
+   └ Basis: direct quote of unchecked items from the sibling's CHECKPOINT.md · run /graph-shadow once to make it exact</code></pre>
+</details>
+
+<details><summary><code>/graph-why</code> (actual output)</summary>
+<pre><code>[If you can only solve one thing right now]  SoDam-Prompt-Eng · stage: rough judgment   [as of 08:47]
+
+  Reason:
+   · Stalled 7 days (based on the stagnation axis)
+   · Score 7 × (1+0) × 0.7 = 4.9   (details unknown — estimate)
+     #2 SoDam-Reverse-Eng  7 × (1+0) × 0.7 = 4.9  (1.0x)
+
+  Next task: stage detail is still a rough judgment — progress file 343 lines · 120 checked items · 0 unchecked items
+  └ Run /graph-shadow once to clean it up, and it will be judged automatically from then on.</code></pre>
+</details>
+
+<details><summary><code>/graph-map</code> (beginning of actual output)</summary>
+<pre><code>graph LR
+  sodam-harness-eng["SoDam-Harness-Eng&lt;br/&gt;coarse · 1 day (estimate)"]
+  sodam-context-eng["SoDam-Context-Eng&lt;br/&gt;coarse · 1 day (estimate)"]
+  sodam-loop-eng["SoDam-Loop-Eng&lt;br/&gt;coarse · 1 day (estimate)"]
+  sodam-graph-eng["SoDam-Graph-Eng&lt;br/&gt;verified · 1 day"]</code></pre>
+<p>Save it as an <code>.md</code> file and open it with a GitHub preview or VS Code preview (<code>Ctrl+Shift+V</code>) to see it as a diagram. Seeing plain text in the terminal is normal.</p>
+</details>
+
+<details><summary><code>/graph-reject</code> · <code>/graph-undo</code> (actual execution)</summary>
+<pre><code>&gt; /graph-reject sodam-graph-eng.M-example --reason "not confirmed yet"
+Rejected — sodam-graph-eng.M-example has returned to verified. It will not be suggested again.
+
+&gt; /graph-undo sodam-graph-eng.M-example
+Undone — sodam-graph-eng.M-example has returned to verified.</code></pre>
+</details>
+
+<details><summary><code>/graph-shadow</code> (list-mode actual output)</summary>
+<pre><code>6 siblings with a rough judgment   [as of 09:10]
+
+  🟡 SoDam-Harness-Eng
+     No progress-tracking file at all — judged from git activity only
+  🟡 SoDam-Loop-Eng
+     Has a progress file, but the format differs per sibling so the stage can't be read (7 unchecked items)
+
+🔴 Please don't do them all at once. These 2 are recommended first.</code></pre>
+</details>
+
+<hr>
+
+<h2 id="update-summary">Update Summary</h2>
+
+<details>
+<summary><b>v0.1.0 (2026-08-03) — First version</b></summary>
+<ul>
+<li>Map of the 7 siblings and their next tasks</li>
+<li>Still finds a sibling even if its folder was renamed</li>
+<li>Automatic 3-line notice when a session opens</li>
+<li>The problem of "marked done but still stuck in place" — once enough evidence accumulates, "done" is auto-suggested; a human only needs to say "no"</li>
+<li>Points out the single thing to solve right now if you can only do one</li>
+<li>A project lacking information only needs to be asked once, then it's judged automatically from then on</li>
+<li>Fixed the problem of siblings being unable to read each other — a summary is saved to a shared location so other siblings can read it too</li>
+</ul>
+</details>
+
+<hr>
+
+<h2 id="file--document-locations">File / Document Locations</h2>
+
+<p><strong>Files you may look at directly</strong></p>
+<pre><code>README.md                     This document (Korean)
+README.en.md                  This document (English)
+README.html / README.en.html  Web-page (browser-viewable) versions of the two documents above
+CHECKPOINT.md                  List of work to continue next (milestones, verification method, status)
+data/graph.json                Source of truth — the list/plan of the 7 siblings (tracked by git, no absolute paths)
+data/baseline-2026-08-02.json  Snapshot taken at kickoff time, used as the comparison baseline for the "2-week report card"
+docs/FAMILY_CONTRACT_PROPOSAL.md    Proposed updates submitted to sibling repositories (drafted only — pushing is a human task)
+docs/FAMILY_INCONSISTENCY_REPORT.md Report of inconsistencies found among siblings
+~/.sodam/graph-state.json      Summary that other SoDam siblings read (inside your own computer's user folder)</code></pre>
+
+<p><strong>Files that are created/removed automatically while running</strong> (no need to create them yourself)</p>
+<pre><code>data/snapshot.json    Measurement cache — refreshed on every scan, not tracked by git
+data/shadow/           Information a human filled in via /graph-shadow
+data/rejected.json     History of /graph-reject actions (exists only when present)
+data/.lock              Temporary lock file to prevent concurrent-run conflicts (exists only when present)</code></pre>
+
+<p><strong>Internal working code</strong> (no need to open these in normal use)</p>
+<pre><code>lib/            The actual judging/scanning/publishing code (13 .mjs files)
+hooks/          Code responsible for the automatic notice when a session starts
+commands/       Descriptions for the 7 commands such as /graph-where
+.claude-plugin/ Claude Code plugin registration files (marketplace.json · plugin.json)
+tools/          Scripts for internal code checks
+.PRD/           12 design documents used to plan this project</code></pre>
+
+<hr>
+
+<h2 id="workflow">Workflow</h2>
+<pre><code>Start Claude Code in the morning
+  → if you're inside a sibling folder, an automatic 3-line notice appears
+  → if you don't know what to do, use /graph-why
+  → if you want to see everything, use /graph-next
+  → if a "done" suggestion appears, leave it if correct, or /graph-reject if wrong</code></pre>
+
+<hr>
+
+<h2 id="architecture">Architecture</h2>
+<pre><code>[7 sibling folders] --read only--&gt; [SoDam-Graph-Eng] --summary--&gt; [~/.sodam/graph-state.json]
+                              |                                    |
+                          graph.json                        read by the 6 siblings
+                        (plan / source of truth)</code></pre>
+<p>Look closely at the read-only arrows — there is no arrow going into the sibling folders. Nothing is ever modified.</p>
+
+<hr>
+
+<h2 id="security--data-flow">Security &amp; Data Flow</h2>
+<table>
+<tr><th>Question</th><th>Answer</th></tr>
+<tr><td>Will it break my other projects?</td><td><strong>No.</strong> It only reads. You can verify with a before/after <code>git status</code> comparison</td></tr>
+<tr><td>Does it send anything over the internet?</td><td><strong>No.</strong> There is no server or external transmission</td></tr>
+<tr><td>Does it read passwords or keys?</td><td><strong>No.</strong> Reading <code>.env</code> and key files is blocked at the code level</td></tr>
+<tr><td>Where does it create files?</td><td>Only inside this program's own folder, plus one file: <code>~/.sodam/graph-state.json</code></td></tr>
+<tr><td>Want to delete it?</td><td>See <a href="#17-17">17-17</a></td></tr>
+</table>
+
+<hr>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+<p>Search for the exact message shown on your screen.</p>
+
+<h3>Installation stage</h3>
+<p id="17-1"><strong>17-1. Nothing happens when you type a command / the <code>/graph-</code> commands are not in the list</strong><br>
+Cause: Claude Code was not restarted (most common). Fix: fully quit and relaunch — closing just the window is not enough, the program itself must end.</p>
+
+<p><strong>17-2. <code>git: command not found</code> / <code>'git' is not recognized as an internal or external command</code></strong><br>
+Cause: git is not installed (not installed by default on Windows). Fix: install git, then restart the terminal.</p>
+
+<p><strong>17-3. <code>node: command not found</code></strong><br>
+Cause: Node.js is not installed. Fix: install it, then restart the terminal.</p>
+
+<p><strong>17-4. Adding the marketplace fails / <code>repository not found</code></strong><br>
+Cause: no access to the PRIVATE repository, or a typo in the address. Fix: check login status with <code>gh auth status</code>.</p>
+
+<p><strong>17-5. It installed, but only half the commands show up</strong><br>
+Cause: an old cached version. Fix: uninstall → reinstall → fully restart.</p>
+
+<p><strong>17-20. The marketplace was added, but <code>sodam-graph</code> is not in the list</strong><br>
+Cause: manifest name mismatch (an issue on the maker's side). Fix: try reinstalling; if it still fails, report it as an issue.</p>
+
+<p><strong>17-21. A message like "marketplace already exists"</strong><br>
+Cause: the marketplace name collides with another SoDam sibling's. Fix: this tool uses <code>sodamgraph-marketplace</code>. If it collides, change that name and add it again.</p>
+
+<p><strong>17-22. After installing, opening a session doesn't show the automatic notice</strong><br>
+Cause: the hook registration file is missing, or the <code>SODAM_GRAPH_SILENT</code> environment variable is turned on. Fix: check the environment variable → see <a href="#17-8">17-8</a>.</p>
+
+<p id="17-23"><strong>17-23. <code>repository not found</code> / can't find the repository</strong><br>
+Cause: the repository is private and your logged-in account has no access, or a typo in the address. Fix: check login with <code>gh auth status</code> → if that doesn't help, install via method (B), the local folder method.</p>
+<blockquote>⚠ <strong>Note</strong>: This item is not a message we actually encountered — it is an <strong>anticipated symptom</strong>. In the actual M0 install test, method (A) <strong>succeeded on the first try</strong> — since there is no failure case yet, we could not fill in the exact on-screen wording. If you actually see this message, please let us know the exact wording so we can update this.</blockquote>
+
+<p><strong>17-24. Asked for permission/authentication, or denied</strong> <em>(anticipated symptom — same reason as above)</em><br>
+Cause: GitHub authentication expired or not set up. Fix: run <code>gh auth login</code>, then retry → if it still fails, fall back to method (B).</p>
+
+<p><strong>17-25. <code>Cannot find marketplace.json</code></strong> <em>(anticipated symptom)</em><br>
+Cause: <code>.claude-plugin/</code> is missing from the repository root (the repository is nested one folder deeper). Fix: check the repository root. SoDam-Loop-Eng actually has this exact structure (the repository is inside <code>sodamloop/</code>), so there is already a precedent within the family.</p>
+
+<h3>First run</h3>
+<p id="17-6"><strong>17-6. <code>Path lost — needs re-search</code> / <code>lost</code></strong><br>
+Cause: the sibling folder is outside the search range. Fix: edit <code>config.search_roots</code> in <code>data/graph.json</code> to point to your own folder location.</p>
+
+<p><strong>17-7. It shows <code>coarse (details unknown)</code></strong><br>
+<strong>This is normal.</strong> Just fill it in once with <code>/graph-shadow</code>.</p>
+
+<p id="17-8"><strong>17-8. Nothing shows up when you open a session</strong><br>
+Cause: ① you opened it outside a sibling folder (normal) ② <code>SODAM_GRAPH_SILENT=1</code> is turned on. Fix: check the environment variable.</p>
+
+<p><strong>17-9. Session startup got slower</strong><br>
+Cause: too many folders to scan. Fix: narrow the scope with <code>config.scan_filter</code>.</p>
+
+<p><strong>17-10. Korean text is garbled as <code>???</code></strong><br>
+Cause: terminal encoding is not UTF-8. Fix: run <code>chcp 65001</code> in PowerShell, then retry.</p>
+
+<h3>While using it</h3>
+<p><strong>17-11. A "done" suggestion appeared but it isn't actually finished</strong><br>
+Fix: <code>/graph-reject &lt;item&gt;</code> — it will not be suggested again.</p>
+
+<p><strong>17-12. It was already marked done and you want to undo it</strong><br>
+Fix: <code>/graph-undo &lt;item&gt;</code></p>
+
+<p><strong>17-13. The <code>/graph-why</code> pick seems off</strong><br>
+Cause: ① the scan is stale ② it's <code>coarse</code>, so it's an estimate. Fix: check the scan timestamp, then re-run.</p>
+
+<p><strong>17-14. Info looks different after working in another window</strong><br>
+<strong>This is normal.</strong> It can happen if you have multiple sessions open and working at the same time — check the <code>[as of HH:MM]</code> timestamp in the output.</p>
+
+<p><strong>17-15. A command name collides with another SoDam plugin</strong><br>
+All commands in this tool start with <code>graph-</code> — there is no way for them to collide.</p>
+
+<p><strong>17-16. <code>Circular dependency found</code> warning</strong><br>
+Cause: the plan has items waiting on each other in a loop. Fix: it shows exactly what is looped with what — you need to detach one of them.</p>
+
+<h3>Undo / Removal</h3>
+<p id="17-17"><strong>17-17. To remove it completely</strong><br>
+Uninstall the plugin → delete <code>~/.sodam/graph-state.json</code> → (optionally) delete the program folder.</p>
+
+<p><strong>17-18. You edited <code>graph.json</code> incorrectly</strong><br>
+You can revert it with <code>git checkout data/graph.json</code>.</p>
+
+<p><strong>17-19. It looks like a sibling project changed</strong><br>
+<strong>This tool did not do that.</strong> Check with <code>git log</code> — it's likely that another session worked on it.</p>
+
+<hr>
+
+<h2 id="faq">FAQ</h2>
+<ol>
+<li><strong>Will using this change my project?</strong> → No, it only reads (verifiable with a before/after <code>git status</code> comparison).</li>
+<li><strong>Do I need an internet connection?</strong> → Only when installing (to fetch from GitHub). Not needed afterward.</li>
+<li><strong>Does it cost money?</strong> → 0 won. No server, account, or subscription.</li>
+<li><strong>Does it work on other computers too?</strong> → Right now it's based on this PC. Support for other PCs is a future task.</li>
+<li><strong>Can it see projects that aren't SoDam siblings?</strong> → Right now, only the 7 siblings.</li>
+<li><strong>What is <code>coarse</code>?</strong> → It means "roughly known, but not known in detail."</li>
+<li><strong>What happens if I ignore a "done" suggestion?</strong> → It gets marked done on the next scan (actually tested and confirmed — not immediately, but after at least one more judgment run).</li>
+<li><strong>Can I have multiple windows open?</strong> → Yes. Just check the timestamp shown in the output.</li>
+<li><strong>Can I rename a folder?</strong> → <strong>Yes.</strong> It's found by repository address, not by name.</li>
+<li><strong>Does the stored information include passwords?</strong> → No.</li>
+<li><strong>Can I use this commercially?</strong> → <strong>Yes</strong> (Apache-2.0, see <a href="#legal--copyright--license--commercial-use">Legal</a> below).</li>
+<li><strong>Where do I ask if something goes wrong?</strong> → Please leave it as a repository issue (since the repository is private, only people with access can do this).</li>
+</ol>
+
+<hr>
+
+<h2 id="legal--copyright--license--commercial-use">Legal / Copyright / License / Commercial Use</h2>
+
+<blockquote>⚠️ <strong>This section is not legal advice.</strong> It is for reference only and does not guarantee legal effect. Before actual publication, distribution, delivery, or commercial use, <strong>consulting a lawyer is recommended.</strong> Final responsibility rests with the user.</blockquote>
+
+<h3>Basic Information</h3>
+<table>
+<tr><th>Item</th><th>Content</th></tr>
+<tr><td>License</td><td>This project follows the <strong>Apache License 2.0</strong> (see the <code>LICENSE</code> file for the full text, unedited and unexcerpted)</td></tr>
+<tr><td>Copyright holder</td><td>Copyright 2026 SoDam AI Studio</td></tr>
+<tr><td>Trademark notice</td><td>See the <code>NOTICE</code> file — third-party names mentioned in the documentation (Claude Code, Anthropic, etc.) are the property of their respective owners, and this project has <strong>no affiliation, sponsorship, or endorsement relationship</strong> with them</td></tr>
+<tr><td>AI-generated content notice</td><td>Most of this project's code and documentation was <strong>written using an AI tool (Claude Code)</strong>. This is disclosed transparently</td></tr>
+</table>
+
+<h3>What You Can Do (under Apache-2.0)</h3>
+<p>Use · modify · copy/redistribute · <strong>commercial use</strong> · fork · <strong>sell / operate as a service</strong> · use for educational materials · <strong>deliver to companies/clients</strong> · use the patent grant (explicitly granted)</p>
+<p>→ Condition: <strong>you must include <code>LICENSE</code> and <code>NOTICE</code>, and disclose any changes you made.</strong></p>
+
+<h3>What You Must Not Do</h3>
+<table>
+<tr><th>Prohibition</th><th>Explanation</th></tr>
+<tr><td><strong>Using the name/logo as if it were your own</strong></td><td>Apache-2.0 <strong>does not grant trademark rights</strong> — permission to use the code and permission to use the name are separate matters</td></tr>
+<tr><td><strong>Claiming the original author endorses you</strong></td><td>Statements like "certified by SoDam AI Studio" are prohibited</td></tr>
+<tr><td><strong>Overstated claims like "completely safe" or "no legal issues whatsoever"</strong></td><td>Prohibited because they contradict the limitation of liability below</td></tr>
+</table>
+
+<h3>Limitation of Liability (No Warranty)</h3>
+<p>This project is provided <strong>"AS IS"</strong>, with no warranty of any kind. Any damages arising from using this project (including data loss, business interruption, etc.) are <strong>entirely the user's responsibility</strong>. This follows §7 and §8 of the Apache License 2.0 text.</p>
+
+<h3>What You Must Check Separately for Commercial Use</h3>
+<table>
+<tr><th>Item</th><th>Content</th></tr>
+<tr><td><strong>Trademarks</strong></td><td>See "What You Must Not Do" above — using the name/logo as your own brand is not allowed</td></tr>
+<tr><td><strong>External API/service terms</strong></td><td>The terms of service for Claude Code, GitHub, etc. referenced by this project <strong>are each provider's own policy</strong>, and this project does not guarantee them on your behalf</td></tr>
+<tr><td><strong>Individual contracts/NDAs</strong></td><td>When delivering to a client, an <strong>individual contract may take precedence over the open-source license</strong></td></tr>
+<tr><td><strong>Fonts/images/icons</strong></td><td>This project itself does not use any (terminal and markdown text only). If you add any, their license is <strong>your own responsibility</strong></td></tr>
+</table>
+
+<h3>Note on Sibling Projects (the other 6 SoDam siblings)</h3>
+<p>This project only <strong>reads</strong> the progress of the other 6 SoDam projects, and does not include or redistribute their code or documents. <strong>Each sibling project's license belongs to that project itself, and this README does not guarantee it on their behalf.</strong></p>
+
+<h3>External Materials / Dependencies</h3>
+<p>This project itself <strong>uses no external packages (npm)</strong> — only Node.js built-in features and the <code>git</code> command. It includes no images, fonts, audio, video, or open-source code snippets. This is the project's strongest legal defense — <strong>if nothing is included, there is nothing to infringe.</strong></p>
+
+<h3>Personal Information / Non-public Materials</h3>
+<p>Neither this README nor this project's examples/fixtures contain <strong>actual personal information (names, emails, phone numbers, account IDs).</strong> Real PC paths in on-screen examples have been masked in the form <code>D:\my-work-folder\...</code>.</p>
+
+<h3>For More Detail</h3>
+<p>Expert-level supporting detail (tables separating confirmed facts from items requiring review, the procedure for handling a switch to public, etc.) is in <code>.PRD/09_LEGAL_LICENSE_SPEC.md</code> (Korean only).</p>
+
+<hr>
+<p style="text-align:center; color:var(--muted); font-size:0.85em;">This page is the HTML version with content identical to <code>README.en.md</code>.</p>
+
+</body>
+</html>

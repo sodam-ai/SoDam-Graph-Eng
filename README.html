@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>소담그래프엔지니어링 (SoDam-Graph-Eng) — README</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1f2328; --muted: #59636e; --border: #d1d9e0;
+    --code-bg: #f6f8fa; --link: #0969da; --table-alt: #f6f8fa;
+    --blockquote-border: #d1d9e0; --red: #cf222e; --green: #1a7f37; --yellow: #9a6700;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117; --fg: #e6edf3; --muted: #9198a1; --border: #30363d;
+      --code-bg: #161b22; --link: #4493f8; --table-alt: #161b22;
+      --blockquote-border: #30363d; --red: #ff7b72; --green: #3fb950; --yellow: #d29922;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", "맑은 고딕", Helvetica, Arial, sans-serif;
+    line-height: 1.7; max-width: 900px; margin: 0 auto; padding: 32px 20px 80px;
+    font-size: 16px; word-break: keep-all;
+  }
+  h1, h2, h3 { border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-top: 40px; }
+  h1 { font-size: 1.9em; }
+  h2 { font-size: 1.5em; margin-top: 48px; }
+  h3 { font-size: 1.2em; border-bottom: none; }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code { background: var(--code-bg); border-radius: 4px; padding: 0.15em 0.4em; font-size: 0.9em;
+    font-family: "Cascadia Code", Consolas, "D2Coding", monospace; }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px;
+    overflow-x: auto; }
+  pre code { background: none; padding: 0; font-size: 0.88em; line-height: 1.5; }
+  blockquote { border-left: 4px solid var(--blockquote-border); margin: 16px 0; padding: 4px 16px; color: var(--muted); }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; display: block; overflow-x: auto; }
+  th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; vertical-align: top; }
+  tr:nth-child(even) { background: var(--table-alt); }
+  th { background: var(--table-alt); }
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  details { border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; margin: 12px 0; }
+  summary { cursor: pointer; font-weight: 600; }
+  summary code { font-weight: normal; }
+  ol, ul { padding-left: 1.6em; }
+  .badge-red { color: var(--red); font-weight: 600; }
+  .badge-green { color: var(--green); font-weight: 600; }
+  .badge-yellow { color: var(--yellow); font-weight: 600; }
+  .lang-switch { text-align: right; font-size: 0.9em; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<p class="lang-switch">🌐 <a href="README.en.html">English version</a> · <a href="README.md">Markdown 원본</a></p>
+
+<h1 id="top">소담그래프엔지니어링 (SoDam-Graph-Eng)</h1>
+
+<blockquote>
+소담 7형제의 위치·진행단계·의존관계를 지도 하나로 보여주는 Claude Code 플러그인입니다.<br>
+<strong>코딩을 한 번도 해본 적 없어도</strong> 이 문서만 보고 설치·사용할 수 있게 썼습니다.
+</blockquote>
+
+<hr>
+
+<h2 id="목차">목차</h2>
+<ol>
+<li><a href="#이게-뭔가요">이게 뭔가요?</a></li>
+<li><a href="#사전-준비물">사전 준비물</a></li>
+<li><a href="#필요-프로그램">필요 프로그램</a></li>
+<li><a href="#다운로드-방법">다운로드 방법</a></li>
+<li><a href="#설치-방법">설치 방법</a></li>
+<li><a href="#빠른-시작-5분">빠른 시작 (5분)</a></li>
+<li><a href="#실행-방법">실행 방법</a></li>
+<li><a href="#사용-방법">사용 방법</a></li>
+<li><a href="#작동-방법원리">작동 방법(원리)</a></li>
+<li><a href="#명령어-목록">명령어 목록</a></li>
+<li><a href="#업데이트-내용-요약">업데이트 내용 요약</a></li>
+<li><a href="#파일문서-위치">파일·문서 위치</a></li>
+<li><a href="#워크플로우">워크플로우</a></li>
+<li><a href="#아키텍처">아키텍처</a></li>
+<li><a href="#보안데이터-흐름">보안·데이터 흐름</a></li>
+<li><a href="#문제오류-대처">문제·오류 대처</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#법률저작권라이선스상업적-용도">법률·저작권·라이선스·상업적 용도</a></li>
+</ol>
+
+<hr>
+
+<h2 id="이게-뭔가요">이게 뭔가요?</h2>
+<p>새 세션을 열 때마다 "지금 어느 프로젝트, 어디까지 했더라"를 다시 설명하지 않아도 되게 해주는 도구입니다. 7개 프로젝트(형제)의 위치와 진행 단계를 파일 하나(<code>graph.json</code>)로 관리하고, 세션이 열리면 AI에게 자동으로 알려줍니다.<br>
+<strong>형제 프로젝트 파일은 절대 고치지 않습니다</strong> — 읽기만 합니다.</p>
+
+<hr>
+
+<h2 id="사전-준비물">사전 준비물</h2>
+<p>터미널(명령어를 입력하는 검은 화면)을 열 줄 알아야 합니다. Windows 기준으로 <code>Claude Code</code> 를 실행하면 이미 터미널 화면 안에 있는 것입니다 — 별도로 뭔가를 더 열 필요는 없습니다.</p>
+<table>
+<tr><th>필요한 것</th><th>왜 필요한가</th><th>확인 방법</th><th>없으면</th></tr>
+<tr><td><strong>Claude Code</strong></td><td>이 도구는 Claude Code 안에서 도는 플러그인입니다</td><td><code>claude --version</code></td><td>https://claude.com/claude-code 에서 설치</td></tr>
+<tr><td><strong>git</strong></td><td>형제 프로젝트의 진행 상황을 읽는 데 씁니다. <span class="badge-red">🔴 Windows에는 기본 설치가 안 되어 있습니다</span> — 왕초보가 가장 많이 막히는 지점입니다</td><td><code>git --version</code></td><td>https://git-scm.com 에서 설치 후 <strong>터미널을 완전히 재시작</strong></td></tr>
+<tr><td><strong>Node.js</strong></td><td>이 도구가 Node.js로 만들어졌습니다</td><td><code>node --version</code></td><td>https://nodejs.org 에서 설치(LTS 버전 권장)</td></tr>
+<tr><td><strong>소담 형제 폴더들</strong></td><td>이 도구가 읽을 대상입니다</td><td>폴더가 실제로 있는지 눈으로 확인</td><td><a href="#17-6">문제 대처 17-6</a> 참조</td></tr>
+</table>
+
+<hr>
+
+<h2 id="필요-프로그램">필요 프로그램</h2>
+<p>위 표와 같습니다. 최소 버전 제한은 없지만, git·Node.js가 <strong>너무 오래된 버전</strong>이면 명령이 인식되지 않을 수 있습니다 — 최근 1~2년 내 배포된 버전이면 충분합니다.</p>
+
+<hr>
+
+<h2 id="다운로드-방법">다운로드 방법</h2>
+<p>별도 다운로드가 필요 없습니다. 아래 <a href="#설치-방법">설치 방법</a>의 명령이 GitHub에서 자동으로 받아옵니다.</p>
+
+<hr>
+
+<h2 id="설치-방법">설치 방법</h2>
+<p>Claude Code 안에서 아래 순서 그대로 따라 하세요.</p>
+<pre><code>1. Claude Code 를 켠다
+2. /plugin 을 입력한다
+3. "마켓플레이스 추가(Add marketplace)" 를 고른다
+4. 설치 소스를 입력한다 — 아래 둘 중 하나
+
+   (A) GitHub 에서 설치  ← 표준 방법
+       sodam-ai/SoDam-Graph-Eng
+
+   (B) 내 컴퓨터 폴더로 설치  ← (A) 가 안 될 때 폴백
+       D:\내작업폴더\SoDam-Graph-Eng
+
+5. 목록에서 sodam-graph 를 찾아 설치(Install) 를 누른다
+6. Claude Code 를 완전히 끄고 다시 켠다
+   (/exit → 터미널 창도 닫기 → 새 터미널 → claude)
+7. 입력칸에 /sodam-graph: 를 친다. 명령 목록이 뜨면 설치 성공</code></pre>
+
+<p><strong>명령으로 하는 방법 (복붙 가능):</strong></p>
+<pre><code># 설치
+/plugin marketplace add sodam-ai/SoDam-Graph-Eng
+/plugin install sodam-graph@sodamgraph-marketplace
+
+# 제거 (재설치 테스트용)
+/plugin uninstall sodam-graph@sodamgraph-marketplace
+/plugin marketplace remove sodamgraph-marketplace</code></pre>
+
+<p><span class="badge-red">🔴</span> <strong><code>플러그인이름@마켓플레이스이름</code> 결합 형식이 필수입니다.</strong> <code>/plugin install sodam-graph</code> 만 쓰면 설치되지 않습니다.</p>
+<p><span class="badge-red">🔴</span> <strong>6번(완전 재시작)을 가장 많이 빠뜨립니다.</strong> 재시작하지 않으면 명령이 목록에 아예 안 보입니다 → <a href="#17-1">17-1</a> 참조.</p>
+
+<h3 id="검증-완료">🟢 검증 완료 — PRIVATE 저장소도 GitHub 설치가 됩니다</h3>
+<p>이 저장소는 실제로 PRIVATE 상태입니다. 그래도 위 (A) 방법이 됩니다(직접 실측 확인):</p>
+<pre><code>claude plugin marketplace add sodam-ai/SoDam-Graph-Eng
+  → ✔ Successfully added marketplace: sodamgraph-marketplace
+claude plugin install sodam-graph@sodamgraph-marketplace
+  → ✔ Successfully installed (scope: user) · Status: ✔ enabled</code></pre>
+<p>로그인된(<code>gh auth</code>) 계정 기준으로 됩니다. 안 되면 <a href="#17-23">17-23</a>을 보세요.</p>
+
+<hr>
+
+<h2 id="빠른-시작-5분">빠른 시작 (5분)</h2>
+<pre><code>1. 설치한다 (위 참조)
+2. Claude Code를 완전히 껐다 켠다   ← 이거 안 하면 명령이 안 보임
+3. /graph-where 라고 쳐본다
+4. 형제 이름과 폴더 위치가 나오면 성공</code></pre>
+<p><strong>예상 화면 (실제 출력):</strong></p>
+<pre><code>소담루프엔지니어링 (SoDam-Loop-Eng)   [09:10 기준]
+  저장소 루트 : D:\내작업폴더\SoDam-Loop-Eng\sodamloop
+  찾은 방법   : found_by_remote
+  역할        : 다음 단계 실행·반복 (make→check→fix)
+  진행 기록   : CHECKPOINT.md</code></pre>
+<p>안 되면 → <a href="#17-1">17-1</a> 참조.</p>
+
+<hr>
+
+<h2 id="실행-방법">실행 방법</h2>
+<p>별도 실행이 없습니다. Claude Code 안에서 아래 <a href="#명령어-목록">명령어 목록</a>의 슬래시 명령을 치면 그때 동작합니다. 백그라운드에서 항상 도는 프로그램이 아닙니다.</p>
+
+<hr>
+
+<h2 id="사용-방법">사용 방법</h2>
+<p><strong>시나리오 1 — 세션을 새로 열었을 때</strong>: 아무것도 안 해도 됩니다. 형제 프로젝트 폴더 안에서 세션을 열면 자동으로 3줄 안내가 뜹니다.</p>
+<p><strong>시나리오 2 — 어느 프로젝트인지, 어디 있는지 궁금할 때</strong>: <code>/graph-where 이름</code></p>
+<p><strong>시나리오 3 — 오늘 뭐부터 할지 모를 때</strong>: <code>/graph-next</code> (7형제 전체) 또는 <code>/graph-why</code> (지금 딱 하나만)</p>
+<p><strong>시나리오 4 — 정보가 부족해서 "거친 판정"으로만 나올 때</strong>: <code>/graph-shadow</code> 로 한 번만 채워 넣기</p>
+<p><strong>시나리오 5 — 완료 제안이 틀렸을 때</strong>: <code>/graph-reject</code> (아직 확정 전) 또는 <code>/graph-undo</code> (이미 확정된 뒤)</p>
+
+<hr>
+
+<h2 id="작동-방법원리">작동 방법(원리)</h2>
+<ol>
+<li><code>graph.json</code> 을 읽습니다(계획 — 사람이 정한 것)</li>
+<li>형제가 지금 어디 있는지 다시 찾습니다(경로를 저장해두지 않아서, 폴더 이름을 바꿔도 안 깨집니다)</li>
+<li>실제 저장소를 읽기 전용으로 훑습니다(git 커밋, 진행 기록 파일)</li>
+<li>계획과 실제가 다르면 조용히 넘기지 않고 알립니다</li>
+<li>다음 할 일 1개를 판정합니다</li>
+<li>요약을 <code>~/.sodam/graph-state.json</code> 에 저장해, 다른 소담 형제들이 읽어갈 수 있게 합니다</li>
+<li>여기서 멈춥니다 — <strong>실제 실행은 소담루프엔지니어링 담당</strong>입니다</li>
+</ol>
+
+<hr>
+
+<h2 id="명령어-목록">명령어 목록</h2>
+<table>
+<tr><th>명령</th><th>뭘 하나</th><th>언제 쓰나</th></tr>
+<tr><td><code>/graph-where</code></td><td>지금 어느 프로젝트이고 폴더가 어디인지</td><td>헷갈릴 때</td></tr>
+<tr><td><code>/graph-next</code></td><td>7형제 각각의 다음 할 일</td><td>뭐부터 할지 볼 때</td></tr>
+<tr><td><code>/graph-map</code></td><td>7형제 관계 그림</td><td>전체를 보고 싶을 때</td></tr>
+<tr><td><code>/graph-why</code></td><td><strong>딱 하나만 고르라면 이것</strong></td><td>결정을 못 하겠을 때</td></tr>
+<tr><td><code>/graph-shadow</code></td><td>정보가 부족한 프로젝트를 채워 넣음</td><td><code>coarse</code> 라고 뜰 때</td></tr>
+<tr><td><code>/graph-reject</code></td><td>"아직 안 끝났어" 라고 알려줌</td><td>완료 제안이 틀렸을 때(확정 전)</td></tr>
+<tr><td><code>/graph-undo</code></td><td>이미 완료된 걸 되돌림</td><td>실수로 완료됐을 때(확정 후)</td></tr>
+</table>
+
+<h3>실제 출력 예시</h3>
+
+<details><summary><code>/graph-next</code> (실제 출력, 형제 이름·판정만 — 경로 없음)</summary>
+<pre><code>🟡 소담루프엔지니어링
+   (추정 — 사람 확인 전) 다음 할 일 후보: "SP2: 배치 승인 live 테스트 → Phase 1b로 이동" 외 6건
+   └ 근거: 형제 CHECKPOINT.md 의 미완료 표시 원문 인용 · 정확히 하려면 /graph-shadow 로 한 번만 정리하세요.</code></pre>
+</details>
+
+<details><summary><code>/graph-why</code> (실제 출력)</summary>
+<pre><code>[지금 딱 하나만 푼다면]  소담프롬프트엔지니어링 · 진행 단계 거친 판정   [08:47 기준]
+
+  이유:
+   · 7일 정지 (정체 축 기준)
+   · 점수 7 × (1+0) × 0.7 = 4.9   (상세 미상 — 추정치)
+     2위 소담리버스엔지니어링  7 × (1+0) × 0.7 = 4.9  보다 1.0배
+
+  다음 할 일: 상세 단계는 아직 거친 판정입니다 — 진행 기록 343줄 · 완료 표시 120개 · 미완료 0건
+  └ /graph-shadow 로 한 번만 정리하면 그다음부터 자동 판정됩니다.</code></pre>
+</details>
+
+<details><summary><code>/graph-map</code> (실제 출력 앞부분)</summary>
+<pre><code>graph LR
+  sodam-harness-eng["소담하네스엔지니어링&lt;br/&gt;coarse · 1일 (추정)"]
+  sodam-context-eng["소담컨텍스트엔지니어링&lt;br/&gt;coarse · 1일 (추정)"]
+  sodam-loop-eng["소담루프엔지니어링&lt;br/&gt;coarse · 1일 (추정)"]
+  sodam-graph-eng["소담그래프엔지니어링&lt;br/&gt;verified · 1일"]</code></pre>
+<p><code>.md</code> 파일로 저장해서 GitHub나 VS Code 미리보기(<code>Ctrl+Shift+V</code>)로 열면 그림으로 보입니다. 터미널에는 글자만 나오는 게 정상입니다.</p>
+</details>
+
+<details><summary><code>/graph-reject</code> · <code>/graph-undo</code> (실제 실행 확인)</summary>
+<pre><code>&gt; /graph-reject sodam-graph-eng.M-예시 --reason "아직 확인 전"
+거부 완료 — sodam-graph-eng.M-예시 는 verified 로 복귀했습니다. 다시 제안되지 않습니다.
+
+&gt; /graph-undo sodam-graph-eng.M-예시
+되돌리기 완료 — sodam-graph-eng.M-예시 는 verified 로 복귀했습니다.</code></pre>
+</details>
+
+<details><summary><code>/graph-shadow</code> (목록 모드 실제 출력)</summary>
+<pre><code>거친 판정인 형제 6곳   [09:10 기준]
+
+  🟡 소담하네스엔지니어링
+     진행 기록 파일이 아예 없어 git 활동만으로 판단 중
+  🟡 소담루프엔지니어링
+     진행 기록은 있으나 형제마다 형식이 달라 단계를 못 읽음 (미완료 7건)
+
+🔴 한 번에 다 하지 마세요. 먼저 이 2곳만 권합니다.</code></pre>
+</details>
+
+<hr>
+
+<h2 id="업데이트-내용-요약">업데이트 내용 요약</h2>
+
+<details>
+<summary><b>v0.1.0 (2026-08-03) — 첫 버전</b></summary>
+<ul>
+<li>7형제 지도와 다음 할 일 알려주기</li>
+<li>폴더 이름이 바뀌어도 찾아내기</li>
+<li>세션 열 때 자동으로 3줄 안내</li>
+<li>완료됐는데 계속 그 자리인 문제 — 증거가 모이면 자동으로 완료 제안, 사람은 "아니오"만 하면 됨</li>
+<li>지금 딱 하나만 풀어야 한다면 무엇인지 지목</li>
+<li>정보가 부족한 형제는 한 번만 물어보면 그다음부터 자동 판정</li>
+<li>형제끼리 서로 못 읽던 문제 — 요약본을 공유 위치에 저장해 다른 형제도 읽을 수 있음</li>
+</ul>
+</details>
+
+<hr>
+
+<h2 id="파일문서-위치">파일·문서 위치</h2>
+
+<p><strong>사용자가 직접 볼 일이 있는 파일</strong></p>
+<pre><code>README.md                     이 문서 (한국어)
+README.en.md                  이 문서 (영어)
+README.html / README.en.html  위 두 문서의 웹페이지(브라우저로 열람) 버전
+CHECKPOINT.md                  다음에 이어서 할 작업 목록(마일스톤·검증 방법·상태)
+data/graph.json                정본 — 7형제 목록·계획 (git 으로 관리됨, 절대경로 없음)
+data/baseline-2026-08-02.json  2주 성적표를 낼 때 비교 기준이 되는 착수 시점 스냅샷
+docs/FAMILY_CONTRACT_PROPOSAL.md    형제 저장소에 제출하는 갱신안(작성만, push는 사람 몫)
+docs/FAMILY_INCONSISTENCY_REPORT.md 형제 간 발견된 불일치 보고서
+~/.sodam/graph-state.json      다른 소담 형제가 읽어가는 요약본 (내 컴퓨터의 사용자 폴더 안)</code></pre>
+
+<p><strong>동작 중 자동으로 생기고 없어지는 파일</strong> (직접 만들 필요 없음)</p>
+<pre><code>data/snapshot.json    실측 캐시 — 스캔할 때마다 갱신됨, git 으로 관리 안 함
+data/shadow/           /graph-shadow 로 사람이 채워준 정보
+data/rejected.json     /graph-reject 이력 (있을 때만 존재)
+data/.lock              동시 실행 충돌 방지용 임시 잠금 파일 (있을 때만 존재)</code></pre>
+
+<p><strong>내부 동작 코드</strong> (평소에 직접 열어볼 필요 없음)</p>
+<pre><code>lib/            판정·스캔·발행 등 실제 동작 코드 (.mjs 파일 13개)
+hooks/          세션 시작 시 자동 안내를 담당하는 코드
+commands/       /graph-where 등 명령어 7개의 설명서
+.claude-plugin/ Claude Code 플러그인 등록 파일(marketplace.json·plugin.json)
+tools/          내부 코드 점검용 스크립트
+.PRD/           이 프로젝트를 설계할 때 쓴 기획 문서 12개</code></pre>
+
+<hr>
+
+<h2 id="워크플로우">워크플로우</h2>
+<pre><code>아침에 Claude Code 를 켠다
+  → 형제 폴더 안이면 자동으로 3줄 안내가 뜬다
+  → 뭐부터 할지 모르면 /graph-why
+  → 전체를 보고 싶으면 /graph-next
+  → 완료 제안이 뜨면 맞으면 두고, 틀리면 /graph-reject</code></pre>
+
+<hr>
+
+<h2 id="아키텍처">아키텍처</h2>
+<pre><code>[7형제 폴더] --읽기만--&gt; [소담그래프엔지니어링] --요약--&gt; [~/.sodam/graph-state.json]
+                              |                                    |
+                          graph.json                        6형제가 읽어감
+                        (계획·정본)</code></pre>
+<p>읽기만 하는 화살표를 잘 보세요 — 형제 폴더 쪽으로 들어가는 화살표가 없습니다. 아무것도 고치지 않습니다.</p>
+
+<hr>
+
+<h2 id="보안데이터-흐름">보안·데이터 흐름</h2>
+<table>
+<tr><th>궁금한 것</th><th>답</th></tr>
+<tr><td>내 다른 프로젝트를 망가뜨리나요?</td><td><strong>아니요.</strong> 읽기만 합니다. <code>git status</code> 로 전후 비교해 확인할 수 있습니다</td></tr>
+<tr><td>인터넷으로 뭘 보내나요?</td><td><strong>아니요.</strong> 서버·외부 전송이 없습니다</td></tr>
+<tr><td>비밀번호나 키를 읽나요?</td><td><strong>아니요.</strong> <code>.env</code>·키 파일은 읽지 않도록 코드 수준에서 막아뒀습니다</td></tr>
+<tr><td>어디에 파일을 만드나요?</td><td>이 프로그램 폴더 안, 그리고 <code>~/.sodam/graph-state.json</code> 하나뿐입니다</td></tr>
+<tr><td>지우고 싶으면?</td><td><a href="#17-17">17-17</a> 참조</td></tr>
+</table>
+
+<hr>
+
+<h2 id="문제오류-대처">문제·오류 대처</h2>
+<p>화면에 뜬 문구를 그대로 찾아보세요.</p>
+
+<h3>설치 단계</h3>
+<p id="17-1"><strong>17-1. 명령을 쳤는데 반응이 없다 / <code>/graph-</code> 명령이 목록에 없다</strong><br>
+원인: Claude Code 재시작 안 함(가장 흔함). 해결: 완전히 종료 후 재실행 — 창만 닫는 게 아니라 프로그램 자체를 끝내야 합니다.</p>
+
+<p><strong>17-2. <code>git: command not found</code> / <code>'git'은(는) 내부 또는 외부 명령이 아닙니다</code></strong><br>
+원인: git 미설치(Windows 기본 미설치). 해결: git 설치 후 터미널 재시작.</p>
+
+<p><strong>17-3. <code>node: command not found</code></strong><br>
+원인: Node.js 미설치. 해결: 설치 후 터미널 재시작.</p>
+
+<p><strong>17-4. 마켓플레이스 추가 실패 / <code>repository not found</code></strong><br>
+원인: PRIVATE 저장소 권한 또는 주소 오타. 해결: <code>gh auth status</code> 로 로그인 확인.</p>
+
+<p><strong>17-5. 설치는 됐는데 명령이 반만 보인다</strong><br>
+원인: 옛 버전 캐시. 해결: 제거 → 재설치 → 완전 재시작.</p>
+
+<p><strong>17-20. 마켓플레이스는 추가됐는데 <code>sodam-graph</code> 가 목록에 없다</strong><br>
+원인: 매니페스트 이름 불일치(제작자 측 문제). 해결: 재설치 시도 후 안 되면 이슈로 보고.</p>
+
+<p><strong>17-21. <code>이미 존재하는 마켓플레이스</code> 류 메시지</strong><br>
+원인: 다른 소담 형제와 마켓플레이스 이름이 겹침. 해결: 이 도구는 <code>sodamgraph-marketplace</code> 를 씁니다. 겹치면 그 이름을 바꿔 다시 추가.</p>
+
+<p><strong>17-22. 설치 후 세션을 열어도 자동 안내가 안 뜬다</strong><br>
+원인: 훅 등록 파일 누락 또는 <code>SODAM_GRAPH_SILENT</code> 환경변수가 켜져 있음. 해결: 환경변수 확인 → <a href="#17-8">17-8</a>.</p>
+
+<p id="17-23"><strong>17-23. <code>repository not found</code> / 저장소를 못 찾음</strong><br>
+원인: 저장소가 비공개인데 로그인 계정에 권한이 없음, 또는 주소 오타. 해결: <code>gh auth status</code> 로 로그인 확인 → 안 되면 (B) 내 컴퓨터 폴더 방식으로 설치.</p>
+<blockquote>⚠ <strong>참고</strong>: 이 항목은 실제로 겪은 메시지가 아니라 <strong>예상 증상</strong>입니다. M0 설치 실측에서는 (A) 방법이 <strong>한 번에 성공</strong>했습니다 — 실패 사례가 아직 없어 정확한 화면 문구를 못 채웠습니다. 실제로 이 메시지를 보셨다면 정확한 문구를 알려주시면 갱신하겠습니다.</blockquote>
+
+<p><strong>17-24. 권한/인증을 묻거나 거부당함</strong> <em>(예상 증상 — 위와 동일 사유)</em><br>
+원인: GitHub 인증이 만료·미설정. 해결: <code>gh auth login</code> 후 재시도 → 그래도 안 되면 (B) 폴백.</p>
+
+<p><strong>17-25. <code>marketplace.json 을 찾을 수 없음</code></strong> <em>(예상 증상)</em><br>
+원인: 저장소 루트에 <code>.claude-plugin/</code> 이 없음(저장소가 폴더 한 겹 안쪽인 경우). 해결: 저장소 루트를 확인하세요. 소담루프엔지니어링이 실제로 이 구조(<code>sodamloop/</code> 안이 저장소)라 패밀리 안에 선례가 있습니다.</p>
+
+<h3>첫 실행 단계</h3>
+<p id="17-6"><strong>17-6. <code>경로 유실 — 재탐색 필요</code> / <code>lost</code></strong><br>
+원인: 형제 폴더가 검색 범위 밖. 해결: <code>data/graph.json</code> 의 <code>config.search_roots</code> 를 자기 폴더 위치로 수정.</p>
+
+<p><strong>17-7. <code>coarse (상세 미상)</code> 이라고 나온다</strong><br>
+<strong>정상입니다.</strong> <code>/graph-shadow</code> 로 한 번만 채우면 됩니다.</p>
+
+<p id="17-8"><strong>17-8. 세션을 열어도 아무것도 안 뜬다</strong><br>
+원인: ① 형제 폴더 밖에서 열었음(정상) ② <code>SODAM_GRAPH_SILENT=1</code> 켜짐. 해결: 환경변수 확인.</p>
+
+<p><strong>17-9. 세션 시작이 느려졌다</strong><br>
+원인: 폴더가 많아 스캔이 오래 걸림. 해결: <code>config.scan_filter</code> 로 범위를 좁힘.</p>
+
+<p><strong>17-10. 한글이 깨져 <code>???</code> 로 나온다</strong><br>
+원인: 터미널 인코딩(UTF-8 아님). 해결: PowerShell 에서 <code>chcp 65001</code> 실행 후 재시도.</p>
+
+<h3>사용 중</h3>
+<p><strong>17-11. 완료 제안이 떴는데 아직 안 끝났다</strong><br>
+해결: <code>/graph-reject &lt;항목&gt;</code> — 다시 제안하지 않습니다.</p>
+
+<p><strong>17-12. 이미 완료 처리됐는데 되돌리고 싶다</strong><br>
+해결: <code>/graph-undo &lt;항목&gt;</code></p>
+
+<p><strong>17-13. <code>/graph-why</code> 지목이 이상하다</strong><br>
+원인: ① 스캔이 오래됨 ② <code>coarse</code> 라 추정치. 해결: 스캔 시각 확인 후 재실행.</p>
+
+<p><strong>17-14. 다른 창에서 작업했더니 정보가 다르다</strong><br>
+<strong>정상입니다.</strong> 여러 세션을 동시에 켜고 작업하면 그럴 수 있습니다 — 출력의 <code>[HH:MM 기준]</code> 시각을 확인하세요.</p>
+
+<p><strong>17-15. 명령 이름이 다른 소담 플러그인과 겹친다</strong><br>
+이 도구는 전부 <code>graph-</code> 로 시작합니다 — 겹칠 일이 없습니다.</p>
+
+<p><strong>17-16. <code>순환 의존 발견</code> 경고</strong><br>
+원인: 계획이 서로를 기다리는 상태. 해결: 무엇과 무엇이 물렸는지 표시됨 — 하나를 떼어내야 합니다.</p>
+
+<h3>되돌리기·제거</h3>
+<p id="17-17"><strong>17-17. 완전히 지우려면</strong><br>
+플러그인 제거 → <code>~/.sodam/graph-state.json</code> 삭제 → (원하면) 프로그램 폴더 삭제.</p>
+
+<p><strong>17-18. <code>graph.json</code> 을 잘못 고쳤다</strong><br>
+<code>git checkout data/graph.json</code> 으로 되돌릴 수 있습니다.</p>
+
+<p><strong>17-19. 형제 프로젝트가 바뀐 것 같다</strong><br>
+<strong>이 도구는 쓰지 않습니다.</strong> <code>git log</code> 로 확인해보세요 — 다른 세션이 작업했을 가능성이 큽니다.</p>
+
+<hr>
+
+<h2 id="faq">FAQ</h2>
+<ol>
+<li><strong>이걸 쓰면 제 프로젝트가 바뀌나요?</strong> → 아니요, 읽기만 합니다(<code>git status</code> 전후 비교로 확인 가능).</li>
+<li><strong>인터넷 연결이 필요한가요?</strong> → 설치할 때만(GitHub에서 받아올 때). 이후엔 필요 없습니다.</li>
+<li><strong>돈이 드나요?</strong> → 0원. 서버·계정·구독 없음.</li>
+<li><strong>다른 컴퓨터에서도 되나요?</strong> → 지금은 이 PC 기준입니다. 다른 PC는 다음 단계 과제입니다.</li>
+<li><strong>소담 형제가 아닌 프로젝트도 볼 수 있나요?</strong> → 지금은 7형제만입니다.</li>
+<li><strong><code>coarse</code> 가 뭔가요?</strong> → "대충은 아는데 자세히는 모르는 상태"입니다.</li>
+<li><strong>완료 제안을 무시하면?</strong> → 다음 스캔에서 완료 처리됩니다(실제로 테스트해서 확인했습니다 — 즉시가 아니라 최소 한 번의 판정 실행 뒤입니다).</li>
+<li><strong>여러 창을 켜도 되나요?</strong> → 됩니다. 출력의 시각 표시를 확인하세요.</li>
+<li><strong>폴더 이름을 바꿔도 되나요?</strong> → <strong>됩니다.</strong> 이름이 아니라 저장소 주소로 찾습니다.</li>
+<li><strong>저장하는 정보에 비밀번호가 들어가나요?</strong> → 아니요.</li>
+<li><strong>상업적으로 써도 되나요?</strong> → <strong>됩니다</strong>(Apache-2.0, 아래 <a href="#법률저작권라이선스상업적-용도">법률</a> 참조).</li>
+<li><strong>문제가 생기면 어디에 물어보나요?</strong> → 저장소 이슈(비공개 저장소라 접근 권한이 있는 분만 가능)로 남겨주세요.</li>
+</ol>
+
+<hr>
+
+<h2 id="법률저작권라이선스상업적-용도">법률·저작권·라이선스·상업적 용도</h2>
+
+<blockquote>⚠️ <strong>이 절은 법률 자문이 아닙니다.</strong> 참고용이며 법적 효력을 보장하지 않습니다. 실제 공개·배포·납품·상업적 사용 전에는 <strong>변호사 확인을 권장</strong>합니다. 최종 책임은 사용자에게 있습니다.</blockquote>
+
+<h3>기본 정보</h3>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>라이선스</td><td>이 프로젝트는 <strong>Apache License 2.0</strong> 을 따릅니다 (전문은 <code>LICENSE</code> 파일 참조, 발췌·수정 없이 원문 그대로)</td></tr>
+<tr><td>저작권자</td><td>Copyright 2026 SoDam AI Studio</td></tr>
+<tr><td>상표 고지</td><td><code>NOTICE</code> 파일 참조 — 문서에 언급된 타사 이름(Claude Code·Anthropic 등)은 각 소유자의 자산이며, 이 프로젝트와 <strong>제휴·후원·인증 관계가 없습니다</strong></td></tr>
+<tr><td>AI 생성물 고지</td><td>이 프로젝트의 코드·문서 대부분은 <strong>AI 도구(Claude Code)를 사용해 작성</strong>됐습니다. 투명하게 밝힙니다</td></tr>
+</table>
+
+<h3>할 수 있는 것 (Apache-2.0 기준)</h3>
+<p>사용 · 수정 · 복제·재배포 · <strong>상업적 사용</strong> · 포크 · <strong>판매·서비스 운영</strong> · 교육 자료 활용 · <strong>회사·고객사 납품</strong> · 특허 사용(명시적 허여)</p>
+<p>→ 조건: <strong><code>LICENSE</code>·<code>NOTICE</code> 를 같이 넣고, 고친 부분은 고쳤다고 밝혀야 합니다.</strong></p>
+
+<h3>하면 안 되는 것</h3>
+<table>
+<tr><th>금지 사항</th><th>설명</th></tr>
+<tr><td><strong>이름·로고를 자기 것처럼 쓰기</strong></td><td>Apache-2.0은 <strong>상표권을 허여하지 않습니다</strong> — 코드 사용 허가와 이름 사용 허가는 별개입니다</td></tr>
+<tr><td><strong>원저작자가 보증한다고 말하기</strong></td><td>"SoDam AI Studio가 인증했다" 같은 표현 금지</td></tr>
+<tr><td><strong>"완전히 안전"·"법적으로 문제없음" 같은 과장 표현</strong></td><td>아래 책임 제한과 모순되는 표현이라 금지합니다</td></tr>
+</table>
+
+<h3>책임 제한 (보증 없음)</h3>
+<p>이 프로젝트는 <strong>"있는 그대로(AS IS)"</strong> 제공되며, 어떤 형태의 보증도 하지 않습니다. 이 프로젝트를 사용해서 생긴 손해(데이터 손실·업무 중단 등 포함)는 <strong>전적으로 사용자 책임</strong>입니다. Apache License 2.0 원문 §7·§8을 따릅니다.</p>
+
+<h3>상업적으로 쓸 때 사용자가 별도로 확인해야 하는 것</h3>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td><strong>상표</strong></td><td>위 "하면 안 되는 것" 참조 — 이름·로고를 자기 브랜드처럼 사용 불가</td></tr>
+<tr><td><strong>외부 API·서비스 약관</strong></td><td>이 프로젝트가 참조하는 Claude Code·GitHub 등의 <strong>이용 약관은 각 제공사 정책</strong>이며, 이 프로젝트가 대신 보장하지 않습니다</td></tr>
+<tr><td><strong>개별 계약·NDA</strong></td><td>고객사 납품 시 <strong>개별 계약이 오픈소스 라이선스보다 우선</strong>할 수 있습니다</td></tr>
+<tr><td><strong>폰트·이미지·아이콘</strong></td><td>이 프로젝트 자체는 미사용(터미널·마크다운 텍스트만). 사용자가 추가하면 그 라이선스는 <strong>사용자 책임</strong>입니다</td></tr>
+</table>
+
+<h3>형제 프로젝트(소담 6형제)에 대한 안내</h3>
+<p>이 프로젝트는 다른 6개 소담 프로젝트의 진행 상황을 <strong>읽기만</strong> 하며, 그 저장소들의 코드·문서를 포함하거나 재배포하지 않습니다. <strong>각 형제 프로젝트의 라이선스는 그 프로젝트 자신의 것이며, 이 README가 대신 보증하지 않습니다.</strong></p>
+
+<h3>외부 자료·의존성</h3>
+<p>이 프로젝트 자체는 <strong>외부 패키지(npm)를 쓰지 않습니다</strong> — Node.js 기본 기능과 <code>git</code> 명령만 사용합니다. 이미지·폰트·음원·영상·오픈소스 코드 조각을 포함하지 않습니다. 이것이 이 프로젝트의 가장 강한 법적 방어입니다 — <strong>포함한 게 없으면 침해할 것도 없습니다.</strong></p>
+
+<h3>개인정보·비공개 자료</h3>
+<p>이 README와 이 프로젝트의 예시·픽스처에는 <strong>실제 개인정보(이름·이메일·전화번호·계정 ID)를 포함하지 않습니다.</strong> 화면 예시의 실제 PC 경로는 <code>D:\내작업폴더\...</code> 형태로 가려서 표기했습니다.</p>
+
+<h3>더 자세한 내용</h3>
+<p>전문가용 상세 근거(확인된 사실과 검토 필요 사항을 분리한 표, 공개 전환 시 처리 절차 등)는 <code>.PRD/09_LEGAL_LICENSE_SPEC.md</code> 에 있습니다.</p>
+
+<hr>
+<p style="text-align:center; color:var(--muted); font-size:0.85em;">이 페이지는 <code>README.md</code> 와 내용이 동일한 HTML 버전입니다.</p>
+
+</body>
+</html>
