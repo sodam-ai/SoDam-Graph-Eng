@@ -52,10 +52,10 @@ function shortPath(p) {
 /** 예산을 넘겼는가 (E5) */
 const overBudget = () => Date.now() - started > BUDGET_MS;
 
-/** 오래된 스냅샷을 백그라운드에서 갱신 — 세션을 절대 붙잡지 않는다 (E5) */
+/** 오래된 스냅샷을 백그라운드에서 갱신 + 발행 — 세션을 절대 붙잡지 않는다 (E5 · W-1 배선 호출 지점 ②) */
 function rescanDetached() {
   try {
-    const child = spawn(process.execPath, [resolvePath(HERE, '..', 'lib', 'scan.mjs')], {
+    const child = spawn(process.execPath, [resolvePath(HERE, '..', 'lib', 'refresh.mjs')], {
       detached: true,
       stdio: 'ignore',
       windowsHide: true,
