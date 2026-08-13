@@ -230,14 +230,13 @@ claude plugin install sodam-graph@sodamgraph-marketplace
   └ Run /graph-shadow once to clean it up, and it will be judged automatically from then on.</code></pre>
 </details>
 
-<details><summary><code>/graph-map</code> (beginning of actual output)</summary>
+<p><strong><code>/graph-map</code> (beginning of actual output)</strong></p>
 <pre><code>graph LR
   sodam-harness-eng["SoDam-Harness-Eng&lt;br/&gt;coarse · 1 day (estimate)"]
   sodam-context-eng["SoDam-Context-Eng&lt;br/&gt;coarse · 1 day (estimate)"]
   sodam-loop-eng["SoDam-Loop-Eng&lt;br/&gt;coarse · 1 day (estimate)"]
   sodam-graph-eng["SoDam-Graph-Eng&lt;br/&gt;verified · 1 day"]</code></pre>
 <p>Save it as an <code>.md</code> file and open it with a GitHub preview or VS Code preview (<code>Ctrl+Shift+V</code>) to see it as a diagram. Seeing plain text in the terminal is normal.</p>
-</details>
 
 <details><summary><code>/graph-reject</code> · <code>/graph-undo</code> (actual execution)</summary>
 <pre><code>&gt; /graph-reject sodam-graph-eng.M-example --reason "not confirmed yet"
