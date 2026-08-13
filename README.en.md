@@ -206,7 +206,7 @@ There is no separate "run" step. Inside Claude Code, it activates when you type 
 ```
 </details>
 
-<details><summary><code>/graph-map</code> (beginning of actual output)</summary>
+**`/graph-map` (beginning of actual output)**
 
 ```mermaid
 graph LR
@@ -217,7 +217,6 @@ graph LR
 ```
 
 Save it as an `.md` file and open it with a GitHub preview or VS Code preview (`Ctrl+Shift+V`) to see it as a diagram. Seeing plain text in the terminal is normal.
-</details>
 
 <details><summary><code>/graph-reject</code> · <code>/graph-undo</code> (actual execution)</summary>
 

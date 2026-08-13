@@ -206,7 +206,7 @@ claude plugin install sodam-graph@sodamgraph-marketplace
 ```
 </details>
 
-<details><summary><code>/graph-map</code> (실제 출력 앞부분)</summary>
+**`/graph-map` (실제 출력 앞부분)**
 
 ```mermaid
 graph LR
@@ -217,7 +217,6 @@ graph LR
 ```
 
 `.md` 파일로 저장해서 GitHub나 VS Code 미리보기(`Ctrl+Shift+V`)로 열면 그림으로 보입니다. 터미널에는 글자만 나오는 게 정상입니다.
-</details>
 
 <details><summary><code>/graph-reject</code> · <code>/graph-undo</code> (실제 실행 확인)</summary>
 
