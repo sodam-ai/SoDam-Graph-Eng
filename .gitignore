@@ -13,3 +13,9 @@ node_modules/
 # 개명 테스트용 더미 저장소 — tools/make-fixture.sh 로 매번 생성
 # (중첩 .git 을 상위 저장소가 삼키는 문제를 회피. 04_PROJECT_SPEC.md 권장안)
 _test_fixture/
+
+# 세션별 작업 메모 — 형제 관례상 로컬 전용, 커밋 안 함
+CHECKPOINT.md
+
+# 로컬 하네스 훅이 남기는 도구 실패 로그 — 프로젝트 산출물 아님
+.failure-tracker.jsonl
