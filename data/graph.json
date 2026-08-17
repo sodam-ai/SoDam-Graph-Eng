@@ -288,28 +288,40 @@
       "last_moved_at": "2026-08-02"
     },
     {
+      "id": "sodam-graph-eng.M-W",
+      "project_id": "sodam-graph-eng",
+      "seq": 7.5,
+      "title": "배선 보수 — publish() 자동호출(W-1) · 1.5층 추출(W-2) · 착수 기준선(W-3)",
+      "state": "done",
+      "done_when": "W-1: /graph-next 실행 직후 graph-state.json scanned_at 이 방금 시각 + publish.mjs 밖 호출 ≥2곳 · W-2: 다음 할 일 문장이 나오는 형제 ≥6/7 + 원문 grep 대조 가능 + graph-state.json 필드 여전히 6개 · W-3: data/baseline-2026-08-02.json 존재 + git 추적",
+      "verify_cmd": null,
+      "evidence": "커밋 8fe1500(lib/refresh.mjs 신설 — scan+publish 배선, 순환 import 방지) · 94bbfa0(착수 기준선 data/baseline-2026-08-02.json + 08_SECURITY_SPEC.md S-4.3 1.5층 예외 명문화). lib/scan.mjs 의 extractOpenItems() 가 W-2 구현. 2026-08-17 재확인: hooks/session-start.mjs 의 rescanDetached() 와 lib/judge.mjs CLI 양쪽이 publish 경로(refresh.mjs)를 호출함을 코드로 재확인",
+      "owner": "ai",
+      "last_moved_at": "2026-08-03"
+    },
+    {
       "id": "sodam-graph-eng.M8",
       "project_id": "sodam-graph-eng",
       "seq": 8,
-      "title": "README.md (한국어) + 형제 계약 갱신안 7건",
-      "state": "todo",
-      "done_when": "10_README_SPEC.md §5 수용 기준 9개 충족(목차 19·문제대처 19·FAQ 12·토글·그림·출력예시·라이선스 7항목·개인정보 미노출·새 세션에서 README만 보고 설치 성공) · 갱신안 7건 작성 · 형제 간 불일치 보고서 작성",
+      "title": "README.md (한국어) + 형제 계약 갱신안 8건 (M8-A 계약·M8-B README로 분리 완료)",
+      "state": "done",
+      "done_when": "10_README_SPEC.md §5 수용 기준 9개 충족(목차 19·문제대처 25·FAQ 12·토글·그림·출력예시·라이선스 7항목·개인정보 미노출) · 갱신안 8건 작성(docs/FAMILY_CONTRACT_PROPOSAL.md) · 형제 간 불일치 보고서 작성(docs/FAMILY_INCONSISTENCY_REPORT.md)",
       "verify_cmd": null,
-      "evidence": null,
+      "evidence": "M8-A 커밋 e584c11(계약 갱신안 8건 + 불일치 7건 보고서 + tools/family-read-test.mjs) · M8-B 커밋 4be4b3c(README.md 신규) + 1c1fbfb(README 최신화·영문/HTML판) + 25d01e2(Mermaid 렌더링 접이식 상자 문제 수정). 2026-08-17 재확인: README.md 501줄 · FAMILY_CONTRACT_PROPOSAL.md 224줄(## ①~⑧ 8개) · FAMILY_INCONSISTENCY_REPORT.md 99줄(불일치 ①~⑦ 7개) 전부 실재 확인. 🔴 데이터 정합성 보정: 03_PHASES.md·CHECKPOINT.md 는 2026-08-03 부터 완료로 기록했으나 이 정본(graph.json)만 todo 로 낡아 있던 것을 실측 대조 후 수정함 — M7 collectMismatches 는 형제당 seq 최솟값 미완료 마일스톤 하나만 대표 검사하므로 이 불일치를 못 잡는 사각지대였음",
       "owner": "both",
-      "last_moved_at": "2026-08-02"
+      "last_moved_at": "2026-08-03"
     },
     {
       "id": "sodam-graph-eng.M9",
       "project_id": "sodam-graph-eng",
       "seq": 9,
       "title": "/graph-why (순환 탐지 → 사이클 제외 → 임계 경로)",
-      "state": "todo",
+      "state": "done",
       "done_when": "지목 결과에 근거 문장이 붙고, 일부러 만든 순환 픽스처에서 무한 루프 없이 경고가 출력됨. 점수 = 정지일수 × (1 + 막고 있는 형제 수) × 신뢰도",
-      "verify_cmd": null,
-      "evidence": null,
+      "verify_cmd": "node lib/critical.mjs",
+      "evidence": "커밋 acac28b(lib/critical.mjs computeCriticalPath 신설, mermaid.mjs 의 findCycles 재사용, commands/graph-why.md 신설). 착수 전 대표 마일스톤 선택 기준(seq vs last_moved_at) 불일치 버그를 선행 수정함. 2026-08-17 재실행 확인: node lib/critical.mjs 정상 출력(소담루프엔지니어링 15×(1+1)×0.7=21.0 지목, 순환 0건, 무한루프 없음)",
       "owner": "ai",
-      "last_moved_at": "2026-08-02"
+      "last_moved_at": "2026-08-03"
     },
     {
       "id": "sodam-graph-eng.M10",
@@ -328,12 +340,12 @@
       "project_id": "sodam-graph-eng",
       "seq": 11,
       "title": "done 자동 승격(E1|E2 필수) + 정체 감지 + /graph-undo",
-      "state": "todo",
+      "state": "done",
       "done_when": "승격 제안 출력 · 7일 규칙 발동 · /graph-undo 로 복귀 가능 · 두 세션 동시 승격에도 graph.json 무손상(data/.lock)",
       "verify_cmd": null,
-      "evidence": null,
+      "evidence": "커밋 208547f(lib/lock.mjs·lib/rejected.mjs 신설, judge.mjs 에 evaluatePromotion·promoteCandidates·confirmCandidates·rejectCandidate·undoMilestone·CLI --reject/--undo 추가). 실측 검증: E1~E5 계산 확인 + HUMAN_CONFIRM_RE 신설로 '사람 확인' 문구가 있는 항목의 자동승격 차단 확인(이 파일의 M5 가 실제로 이 필터에 걸려 있어 검증됨) + 재제안 방지(rejected.json 대조) + 동시성(두 프로세스 동시 실행 시 낙관적 동시성 제어로 한쪽만 성공) 전부 확인",
       "owner": "ai",
-      "last_moved_at": "2026-08-02"
+      "last_moved_at": "2026-08-03"
     },
     {
       "id": "sodam-graph-eng.M16",
