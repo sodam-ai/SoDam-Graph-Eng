@@ -180,6 +180,7 @@ There is no separate "run" step. Inside Claude Code, it activates when you type 
 | `/graph-reject` | Tells the tool "this isn't actually finished" | When a "done" suggestion is wrong (before confirmation) |
 | `/graph-undo` | Reverts something that was already marked done | When something got marked done by mistake (after confirmation) |
 | `/graph-verify` | Runs the verification command for real and confirms it if it passes | When a milestone can be checked automatically |
+| `/graph-block` | Records or clears a human-only blocker | When something is stuck on work only a person can do |
 
 ### Actual Output Examples
 
@@ -293,7 +294,7 @@ data/.lock              Temporary lock file to prevent concurrent-run conflicts 
 ```
 lib/            The actual judging/scanning/publishing code (13 .mjs files)
 hooks/          Code responsible for the automatic notice when a session starts
-commands/       Descriptions for the 8 commands such as /graph-where
+commands/       Descriptions for the 9 commands such as /graph-where
 .claude-plugin/ Claude Code plugin registration files (marketplace.json · plugin.json)
 tools/          Scripts for internal code checks
 .PRD/           12 design documents used to plan this project

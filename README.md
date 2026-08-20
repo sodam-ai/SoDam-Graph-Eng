@@ -180,6 +180,7 @@ claude plugin install sodam-graph@sodamgraph-marketplace
 | `/graph-reject` | "아직 안 끝났어" 라고 알려줌 | 완료 제안이 틀렸을 때(확정 전) |
 | `/graph-undo` | 이미 완료된 걸 되돌림 | 실수로 완료됐을 때(확정 후) |
 | `/graph-verify` | 검증 명령을 실제로 돌려 통과하면 확정 | 자동으로 확인 가능한 마일스톤일 때 |
+| `/graph-block` | 사람 몫 블로커를 기록·해제 | AI가 대신 못 하는 일 때문에 막혔을 때 |
 
 ### 실제 출력 예시
 
@@ -293,7 +294,7 @@ data/.lock              동시 실행 충돌 방지용 임시 잠금 파일 (있
 ```
 lib/            판정·스캔·발행 등 실제 동작 코드 (.mjs 파일 13개)
 hooks/          세션 시작 시 자동 안내를 담당하는 코드
-commands/       /graph-where 등 명령어 8개의 설명서
+commands/       /graph-where 등 명령어 9개의 설명서
 .claude-plugin/ Claude Code 플러그인 등록 파일(marketplace.json·plugin.json)
 tools/          내부 코드 점검용 스크립트
 .PRD/           이 프로젝트를 설계할 때 쓴 기획 문서 12개

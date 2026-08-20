@@ -209,6 +209,7 @@ claude plugin install sodam-graph@sodamgraph-marketplace
 <tr><td><code>/graph-reject</code></td><td>Tells the tool "this isn't actually finished"</td><td>When a "done" suggestion is wrong (before confirmation)</td></tr>
 <tr><td><code>/graph-undo</code></td><td>Reverts something that was already marked done</td><td>When something got marked done by mistake (after confirmation)</td></tr>
 <tr><td><code>/graph-verify</code></td><td>Runs the verification command for real and confirms it if it passes</td><td>When a milestone can be checked automatically</td></tr>
+<tr><td><code>/graph-block</code></td><td>Records or clears a human-only blocker</td><td>When something is stuck on work only a person can do</td></tr>
 </table>
 
 <h3>Actual Output Examples</h3>
@@ -299,7 +300,7 @@ data/.lock              Temporary lock file to prevent concurrent-run conflicts 
 <p><strong>Internal working code</strong> (no need to open these in normal use)</p>
 <pre><code>lib/            The actual judging/scanning/publishing code (13 .mjs files)
 hooks/          Code responsible for the automatic notice when a session starts
-commands/       Descriptions for the 8 commands such as /graph-where
+commands/       Descriptions for the 9 commands such as /graph-where
 .claude-plugin/ Claude Code plugin registration files (marketplace.json · plugin.json)
 tools/          Scripts for internal code checks
 .PRD/           12 design documents used to plan this project</code></pre>
