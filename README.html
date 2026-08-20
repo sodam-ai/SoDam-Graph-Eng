@@ -259,9 +259,48 @@ claude plugin install sodam-graph@sodamgraph-marketplace
 🔴 한 번에 다 하지 마세요. 먼저 이 2곳만 권합니다.</code></pre>
 </details>
 
+<details><summary><code>/graph-verify</code> (실제 출력 — 성공·실패 3가지)</summary>
+<pre><code>&gt; /graph-verify sodam-graph-eng.M2   (성공했을 때)
+검증 완료 — sodam-graph-eng.M2 는 verified 로 확정됐습니다 (3135ms).
+
+&gt; /graph-verify sodam-graph-eng.M0   (이미 검증 단계를 지났을 때)
+실패 — 이미 "done" 상태입니다 — 자동 검증은 todo/doing 에서만 verified 로 올립니다
+
+&gt; /graph-verify sodam-loop-eng.current   (검증 대상이 아닐 때 — 형제 마일스톤이거나 확인 방법이 자동화돼 있지 않음)
+실패 — 자동 검증 대상이 아닙니다(자기 소유·배열형 verify_cmd 필수)</code></pre>
+</details>
+
+<details><summary><code>/graph-block</code> (사람 몫 블로커 기록·해제, 실제 출력)</summary>
+<pre><code>&gt; /graph-block sodam-loop-eng.current --kind human_test --description "새 세션 라이브 확인"   (기록)
+기록 완료 — blk-001 (2026-08-21부터, sodam-loop-eng.current)
+
+&gt; /graph-block --resolve-block blk-001   (풀렸을 때 해제)
+해제 완료 — blk-001 (sodam-loop-eng.current)
+
+&gt; /graph-block sodam-loop-eng.current --kind bogus --description "x"   (종류를 잘못 적었을 때 — 허용되는 5가지 중 하나만 가능)
+실패 — 허용되지 않는 kind "bogus" — human_test·legal·external_account·decision·purchase 중 하나
+
+&gt; /graph-block no-such-milestone --kind legal --description "x"   (없는 마일스톤 ID를 적었을 때)
+실패 — 없는 마일스톤 "no-such-milestone"</code></pre>
+<p>기록한 블로커는 <code>/graph-why</code> 결과 맨 끝에 <strong>오래 기다린 순</strong>으로 자동으로 뜹니다:</p>
+<pre><code>사람 몫 블로커 1건 (오래 기다린 순):
+  · 소담루프엔지니어링 · 진행 단계 거친 판정 (마일스톤 상세 미추출) — 0일째 (human_test)
+     └ 새 세션 라이브 확인   [blk-001]</code></pre>
+</details>
+
 <hr>
 
 <h2 id="업데이트-내용-요약">업데이트 내용 요약</h2>
+
+<details>
+<summary><b>v0.2.0 (2026-08-21) — 더 정확하게, 사람 몫도 챙기게</b></summary>
+<ul>
+<li>완료 조건을 사람이 눈으로 안 봐도 <strong>기계가 실제로 명령을 돌려서 확인</strong>해주는 기능 추가 (<code>/graph-verify</code>)</li>
+<li>다른 컴퓨터로 옮기거나 폴더 위치가 바뀌어도 <strong>설정값 하나로 다시 찾게</strong> 만드는 기능 추가(개발자용 옵션)</li>
+<li>진행 기록 파일(<code>data/graph.json</code>)이 <strong>깨지거나 손상됐을 때</strong> 이상한 결과를 내는 대신 <strong>바로 알려주고 멈추도록</strong> 안전장치 추가</li>
+<li><strong>사람만 할 수 있는 일 때문에 막혔을 때</strong>, 그걸 기록해두고 "며칠째 대기 중"인지 자동으로 보여주는 기능 추가 (<code>/graph-block</code>, <code>/graph-why</code> 결과 맨 끝에 표시됨)</li>
+</ul>
+</details>
 
 <details>
 <summary><b>v0.1.0 (2026-08-03) — 첫 버전</b></summary>
@@ -310,9 +349,11 @@ tools/          내부 코드 점검용 스크립트
 <h2 id="워크플로우">워크플로우</h2>
 <pre><code>아침에 Claude Code 를 켠다
   → 형제 폴더 안이면 자동으로 3줄 안내가 뜬다
-  → 뭐부터 할지 모르면 /graph-why
+  → 뭐부터 할지 모르면 /graph-why (사람 몫 블로커도 여기 같이 뜬다)
   → 전체를 보고 싶으면 /graph-next
-  → 완료 제안이 뜨면 맞으면 두고, 틀리면 /graph-reject</code></pre>
+  → 완료 조건을 기계가 바로 확인할 수 있는 항목이면 /graph-verify
+  → 완료 제안이 뜨면 맞으면 두고, 틀리면 /graph-reject
+  → 사람만 할 수 있는 일 때문에 막히면 /graph-block 으로 기록, 풀리면 다시 /graph-block 으로 해제</code></pre>
 
 <hr>
 
@@ -332,6 +373,7 @@ tools/          내부 코드 점검용 스크립트
 <tr><td>인터넷으로 뭘 보내나요?</td><td><strong>아니요.</strong> 서버·외부 전송이 없습니다</td></tr>
 <tr><td>비밀번호나 키를 읽나요?</td><td><strong>아니요.</strong> <code>.env</code>·키 파일은 읽지 않도록 코드 수준에서 막아뒀습니다</td></tr>
 <tr><td>어디에 파일을 만드나요?</td><td>이 프로그램 폴더 안, 그리고 <code>~/.sodam/graph-state.json</code> 하나뿐입니다</td></tr>
+<tr><td><code>/graph-block</code>·<code>/graph-verify</code> 로 직접 쓰는 것도 안전한가요?</td><td><strong>예.</strong> 이 프로그램 자신의 <code>data/graph.json</code> 안에만 씁니다. 형제 폴더는 여전히 읽기만 하고, 동시에 여러 창에서 써도 순서대로 안전하게 처리됩니다(잠금 장치)</td></tr>
 <tr><td>지우고 싶으면?</td><td><a href="#17-17">17-17</a> 참조</td></tr>
 </table>
 
@@ -410,6 +452,24 @@ tools/          내부 코드 점검용 스크립트
 <p><strong>17-16. <code>순환 의존 발견</code> 경고</strong><br>
 원인: 계획이 서로를 기다리는 상태. 해결: 무엇과 무엇이 물렸는지 표시됨 — 하나를 떼어내야 합니다.</p>
 
+<p><strong>17-26. <code>/graph-verify</code> 실행 시 <code>실패 — 자동 검증 대상이 아닙니다</code></strong><br>
+원인: 형제 프로젝트의 마일스톤이거나, 그 항목의 확인 방법이 아직 자동화돼 있지 않음(사람이 직접 봐야 함). 해결: <strong>정상 동작입니다</strong> — 사람이 직접 확인해주세요.</p>
+
+<p><strong>17-27. <code>/graph-verify</code> 실행 시 <code>실패 — 이미 "○○" 상태입니다</code></strong><br>
+원인: 이미 검증 단계를 지나 다음 단계로 넘어간 항목. 해결: 다시 실행할 필요가 없습니다.</p>
+
+<p><strong>17-28. <code>/graph-verify</code> 실행 시 <code>실패 — 검증 실패 — ...</code></strong><br>
+원인: 실제로 확인 명령을 돌려봤는데 조건을 못 채움. 해결: 메시지에 적힌 원인 그대로 사람에게 전달해주세요 — 실제로 아직 안 끝난 것입니다.</p>
+
+<p><strong>17-29. <code>/graph-block</code> 실행 시 <code>실패 — 허용되지 않는 kind</code></strong><br>
+원인: 블로커 종류는 <code>human_test</code>(사람이 직접 하는 테스트) · <code>legal</code>(법무) · <code>external_account</code>(외부 계정) · <code>decision</code>(결정) · <code>purchase</code>(구매) 5가지뿐입니다. 해결: 이 중 하나로 다시 입력하세요.</p>
+
+<p><strong>17-30. <code>/graph-block</code> 실행 시 <code>실패 — 없는 마일스톤</code></strong><br>
+원인: 마일스톤 ID 오타. 해결: <code>/graph-where</code>나 <code>/graph-next</code>로 정확한 ID를 먼저 확인하세요.</p>
+
+<p><strong>17-31. <code>/graph-block --resolve-block</code> 실행 시 <code>실패 — 없는 블로커 id</code></strong><br>
+원인: 이미 해제됐거나 ID를 잘못 입력함. 해결: <code>/graph-why</code> 출력에서 현재 남아 있는 블로커 목록을 다시 확인하세요.</p>
+
 <h3>되돌리기·제거</h3>
 <p id="17-17"><strong>17-17. 완전히 지우려면</strong><br>
 플러그인 제거 → <code>~/.sodam/graph-state.json</code> 삭제 → (원하면) 프로그램 폴더 삭제.</p>
@@ -433,7 +493,9 @@ tools/          내부 코드 점검용 스크립트
 <li><strong>완료 제안을 무시하면?</strong> → 다음 스캔에서 완료 처리됩니다(실제로 테스트해서 확인했습니다 — 즉시가 아니라 최소 한 번의 판정 실행 뒤입니다).</li>
 <li><strong>여러 창을 켜도 되나요?</strong> → 됩니다. 출력의 시각 표시를 확인하세요.</li>
 <li><strong>폴더 이름을 바꿔도 되나요?</strong> → <strong>됩니다.</strong> 이름이 아니라 저장소 주소로 찾습니다.</li>
-<li><strong>저장하는 정보에 비밀번호가 들어가나요?</strong> → 아니요.</li>
+<li><strong>저장하는 정보에 비밀번호가 들어가나요?</strong> → 아니요. 다만 <code>/graph-block</code>으로 직접 적는 "무엇을 해야 풀리나" 같은 설명 칸은 사람이 쓰는 자유 텍스트라, 여기에 비밀번호나 개인정보를 직접 적으면 그대로 저장됩니다 — 일반 텍스트만 적어주세요.</li>
+<li><strong><code>/graph-verify</code>는 뭘 확인하나요?</strong> → 마일스톤마다 정해둔 "확인 명령"을 실제로 실행해서 통과하면 자동으로 다음 단계로 올려줍니다. 이 프로그램 자기 자신의 항목에만 쓸 수 있고, 실행 가능한 명령도 미리 허용된 몇 개뿐입니다.</li>
+<li><strong><code>/graph-block</code>은 뭘 하는 건가요?</strong> → "사람만 할 수 있는 일이라 AI가 대신 못 하는 것"을 기록해두는 기능입니다. 기록하면 <code>/graph-why</code>에 "며칠째 대기 중"으로 자동 표시되고, 풀리면 다시 명령으로 지워야 합니다(안 지우면 계속 대기 중으로 남습니다).</li>
 <li><strong>상업적으로 써도 되나요?</strong> → <strong>됩니다</strong>(Apache-2.0, 아래 <a href="#법률저작권라이선스상업적-용도">법률</a> 참조).</li>
 <li><strong>문제가 생기면 어디에 물어보나요?</strong> → 저장소 이슈로 남겨주세요.</li>
 </ol>

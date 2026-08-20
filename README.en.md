@@ -245,9 +245,58 @@ Undone — sodam-graph-eng.M-example has returned to verified.
 ```
 </details>
 
+<details><summary><code>/graph-verify</code> (actual output — 3 outcomes: success/failure)</summary>
+
+```
+> /graph-verify sodam-graph-eng.M2   (success)
+Verified — sodam-graph-eng.M2 has been confirmed as verified (3135ms).
+
+> /graph-verify sodam-graph-eng.M0   (already past the verification stage)
+Failed — already in "done" state — automatic verification only promotes todo/doing to verified
+
+> /graph-verify sodam-loop-eng.current   (not eligible — a sibling's milestone, or its check method isn't automated)
+Failed — not eligible for automatic verification (must be self-owned with an array-form verify_cmd)
+```
+</details>
+
+<details><summary><code>/graph-block</code> (record/clear a human-only blocker, actual output)</summary>
+
+```
+> /graph-block sodam-loop-eng.current --kind human_test --description "live test in a new session"   (record)
+Recorded — blk-001 (since 2026-08-21, sodam-loop-eng.current)
+
+> /graph-block --resolve-block blk-001   (clear it once resolved)
+Cleared — blk-001 (sodam-loop-eng.current)
+
+> /graph-block sodam-loop-eng.current --kind bogus --description "x"   (wrong kind — only 5 values are allowed)
+Failed — kind "bogus" is not allowed — must be one of human_test·legal·external_account·decision·purchase
+
+> /graph-block no-such-milestone --kind legal --description "x"   (a milestone ID that doesn't exist)
+Failed — no such milestone "no-such-milestone"
+```
+
+A recorded blocker automatically shows up at the end of `/graph-why`'s output, **sorted by longest wait first**:
+
+```
+1 human-only blocker (longest wait first):
+  · SoDam-Loop-Eng · stage: rough judgment (milestone detail not extracted) — day 0 (human_test)
+     └ live test in a new session   [blk-001]
+```
+</details>
+
 ---
 
 ## Update Summary
+
+<details>
+<summary><b>v0.2.0 (2026-08-21) — More accurate, and now tracks the human's share too</b></summary>
+
+- Added the ability to **actually run a check command** to confirm a "done" condition, instead of requiring a human to look at it (`/graph-verify`)
+- Added an option to keep finding sibling projects after moving to a different computer or folder location, via a single setting (developer-facing option)
+- Added a safety gate so that a **damaged or corrupted** progress file (`data/graph.json`) is reported and stopped right away, instead of producing strange results
+- Added the ability to record **work that only a human can do**, showing "waiting N days" automatically (`/graph-block`, shown at the end of `/graph-why`'s output)
+
+</details>
 
 <details>
 <summary><b>v0.1.0 (2026-08-03) — First version</b></summary>
@@ -307,9 +356,11 @@ tools/          Scripts for internal code checks
 ```
 Start Claude Code in the morning
   → if you're inside a sibling folder, an automatic 3-line notice appears
-  → if you don't know what to do, use /graph-why
+  → if you don't know what to do, use /graph-why (human-only blockers show up here too)
   → if you want to see everything, use /graph-next
+  → if a "done" condition can be checked automatically, use /graph-verify
   → if a "done" suggestion appears, leave it if correct, or /graph-reject if wrong
+  → if you're stuck on something only a human can do, record it with /graph-block; once it's resolved, clear it with /graph-block again
 ```
 
 ---
@@ -335,6 +386,7 @@ Look closely at the read-only arrows — there is no arrow going into the siblin
 | Does it send anything over the internet? | **No.** There is no server or external transmission |
 | Does it read passwords or keys? | **No.** Reading `.env` and key files is blocked at the code level |
 | Where does it create files? | Only inside this program's own folder, plus one file: `~/.sodam/graph-state.json` |
+| Is writing directly via `/graph-block`/`/graph-verify` also safe? | **Yes.** It only writes inside this program's own `data/graph.json`. Sibling folders are still read-only, and even if multiple windows write at the same time, they're handled safely in order (a lock mechanism) |
 | Want to delete it? | See [17-17](#17-17) |
 
 ---
@@ -416,6 +468,24 @@ All commands in this tool start with `graph-` — there is no way for them to co
 **17-16. `Circular dependency found` warning**
 Cause: the plan has items waiting on each other in a loop. Fix: it shows exactly what is looped with what — you need to detach one of them.
 
+**17-26. Running `/graph-verify` gives `Failed — not eligible for automatic verification`**
+Cause: it's a sibling project's milestone, or that item's check method isn't automated yet (a human needs to check it directly). Fix: **this is normal** — please check it yourself.
+
+**17-27. Running `/graph-verify` gives `Failed — already in "○○" state`**
+Cause: the item already passed the verification stage and moved on. Fix: no need to run it again.
+
+**17-28. Running `/graph-verify` gives `Failed — verification failed — ...`**
+Cause: the check command was actually run and the condition wasn't met. Fix: pass along the exact reason in the message — it genuinely isn't finished yet.
+
+**17-29. Running `/graph-block` gives `Failed — kind is not allowed`**
+Cause: blocker kinds are only these 5: `human_test` (a test only a human can run) · `legal` (legal/licensing) · `external_account` (an external account) · `decision` (a human decision) · `purchase` (a purchase). Fix: re-enter it using one of these.
+
+**17-30. Running `/graph-block` gives `Failed — no such milestone`**
+Cause: a typo in the milestone ID. Fix: check the exact ID first with `/graph-where` or `/graph-next`.
+
+**17-31. Running `/graph-block --resolve-block` gives `Failed — no such blocker id`**
+Cause: it was already cleared, or the ID was typed wrong. Fix: check the current list of blockers again in `/graph-why`'s output.
+
 #### Undo / Removal
 
 <a id="17-17"></a>**17-17. To remove it completely**
@@ -440,9 +510,11 @@ You can revert it with `git checkout data/graph.json`.
 7. **What happens if I ignore a "done" suggestion?** → It gets marked done on the next scan (actually tested and confirmed — not immediately, but after at least one more judgment run).
 8. **Can I have multiple windows open?** → Yes. Just check the timestamp shown in the output.
 9. **Can I rename a folder?** → **Yes.** It's found by repository address, not by name.
-10. **Does the stored information include passwords?** → No.
-11. **Can I use this commercially?** → **Yes** (Apache-2.0, see [Legal](#legal--copyright--license--commercial-use) below).
-12. **Where do I ask if something goes wrong?** → Please leave it as a repository issue.
+10. **Does the stored information include passwords?** → No. That said, the free-text description you type into `/graph-block` (what needs to happen for it to be resolved) is written by a human — if you type a password or personal information into it, it will be stored as-is. Please keep that field to plain text.
+11. **What does `/graph-verify` check?** → Each milestone has a pre-defined "check command"; running it and having it pass automatically moves the milestone to the next stage. It only works on this tool's own items, and only a short pre-approved list of programs can ever be run.
+12. **What does `/graph-block` do?** → It records "something only a human can do, that AI can't do instead." Once recorded, it automatically shows up in `/graph-why` as "waiting N days," and once it's resolved you have to clear it with a command yourself (if you don't, it keeps showing as waiting).
+13. **Can I use this commercially?** → **Yes** (Apache-2.0, see [Legal](#legal--copyright--license--commercial-use) below).
+14. **Where do I ask if something goes wrong?** → Please leave it as a repository issue.
 
 ---
 

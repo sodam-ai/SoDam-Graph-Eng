@@ -259,9 +259,48 @@ Undone — sodam-graph-eng.M-example has returned to verified.</code></pre>
 🔴 Please don't do them all at once. These 2 are recommended first.</code></pre>
 </details>
 
+<details><summary><code>/graph-verify</code> (actual output — 3 outcomes: success/failure)</summary>
+<pre><code>&gt; /graph-verify sodam-graph-eng.M2   (success)
+Verified — sodam-graph-eng.M2 has been confirmed as verified (3135ms).
+
+&gt; /graph-verify sodam-graph-eng.M0   (already past the verification stage)
+Failed — already in "done" state — automatic verification only promotes todo/doing to verified
+
+&gt; /graph-verify sodam-loop-eng.current   (not eligible — a sibling's milestone, or its check method isn't automated)
+Failed — not eligible for automatic verification (must be self-owned with an array-form verify_cmd)</code></pre>
+</details>
+
+<details><summary><code>/graph-block</code> (record/clear a human-only blocker, actual output)</summary>
+<pre><code>&gt; /graph-block sodam-loop-eng.current --kind human_test --description "live test in a new session"   (record)
+Recorded — blk-001 (since 2026-08-21, sodam-loop-eng.current)
+
+&gt; /graph-block --resolve-block blk-001   (clear it once resolved)
+Cleared — blk-001 (sodam-loop-eng.current)
+
+&gt; /graph-block sodam-loop-eng.current --kind bogus --description "x"   (wrong kind — only 5 values are allowed)
+Failed — kind "bogus" is not allowed — must be one of human_test·legal·external_account·decision·purchase
+
+&gt; /graph-block no-such-milestone --kind legal --description "x"   (a milestone ID that doesn't exist)
+Failed — no such milestone "no-such-milestone"</code></pre>
+<p>A recorded blocker automatically shows up at the end of <code>/graph-why</code>'s output, <strong>sorted by longest wait first</strong>:</p>
+<pre><code>1 human-only blocker (longest wait first):
+  · SoDam-Loop-Eng · stage: rough judgment (milestone detail not extracted) — day 0 (human_test)
+     └ live test in a new session   [blk-001]</code></pre>
+</details>
+
 <hr>
 
 <h2 id="update-summary">Update Summary</h2>
+
+<details>
+<summary><b>v0.2.0 (2026-08-21) — More accurate, and now tracks the human's share too</b></summary>
+<ul>
+<li>Added the ability to <strong>actually run a check command</strong> to confirm a "done" condition, instead of requiring a human to look at it (<code>/graph-verify</code>)</li>
+<li>Added an option to keep finding sibling projects after moving to a different computer or folder location, via a single setting (developer-facing option)</li>
+<li>Added a safety gate so that a <strong>damaged or corrupted</strong> progress file (<code>data/graph.json</code>) is reported and stopped right away, instead of producing strange results</li>
+<li>Added the ability to record <strong>work that only a human can do</strong>, showing "waiting N days" automatically (<code>/graph-block</code>, shown at the end of <code>/graph-why</code>'s output)</li>
+</ul>
+</details>
 
 <details>
 <summary><b>v0.1.0 (2026-08-03) — First version</b></summary>
@@ -310,9 +349,11 @@ tools/          Scripts for internal code checks
 <h2 id="workflow">Workflow</h2>
 <pre><code>Start Claude Code in the morning
   → if you're inside a sibling folder, an automatic 3-line notice appears
-  → if you don't know what to do, use /graph-why
+  → if you don't know what to do, use /graph-why (human-only blockers show up here too)
   → if you want to see everything, use /graph-next
-  → if a "done" suggestion appears, leave it if correct, or /graph-reject if wrong</code></pre>
+  → if a "done" condition can be checked automatically, use /graph-verify
+  → if a "done" suggestion appears, leave it if correct, or /graph-reject if wrong
+  → if you're stuck on something only a human can do, record it with /graph-block; once it's resolved, clear it with /graph-block again</code></pre>
 
 <hr>
 
@@ -332,6 +373,7 @@ tools/          Scripts for internal code checks
 <tr><td>Does it send anything over the internet?</td><td><strong>No.</strong> There is no server or external transmission</td></tr>
 <tr><td>Does it read passwords or keys?</td><td><strong>No.</strong> Reading <code>.env</code> and key files is blocked at the code level</td></tr>
 <tr><td>Where does it create files?</td><td>Only inside this program's own folder, plus one file: <code>~/.sodam/graph-state.json</code></td></tr>
+<tr><td>Is writing directly via <code>/graph-block</code>/<code>/graph-verify</code> also safe?</td><td><strong>Yes.</strong> It only writes inside this program's own <code>data/graph.json</code>. Sibling folders are still read-only, and even if multiple windows write at the same time, they're handled safely in order (a lock mechanism)</td></tr>
 <tr><td>Want to delete it?</td><td>See <a href="#17-17">17-17</a></td></tr>
 </table>
 
@@ -410,6 +452,24 @@ All commands in this tool start with <code>graph-</code> — there is no way for
 <p><strong>17-16. <code>Circular dependency found</code> warning</strong><br>
 Cause: the plan has items waiting on each other in a loop. Fix: it shows exactly what is looped with what — you need to detach one of them.</p>
 
+<p><strong>17-26. Running <code>/graph-verify</code> gives <code>Failed — not eligible for automatic verification</code></strong><br>
+Cause: it's a sibling project's milestone, or that item's check method isn't automated yet (a human needs to check it directly). Fix: <strong>this is normal</strong> — please check it yourself.</p>
+
+<p><strong>17-27. Running <code>/graph-verify</code> gives <code>Failed — already in "○○" state</code></strong><br>
+Cause: the item already passed the verification stage and moved on. Fix: no need to run it again.</p>
+
+<p><strong>17-28. Running <code>/graph-verify</code> gives <code>Failed — verification failed — ...</code></strong><br>
+Cause: the check command was actually run and the condition wasn't met. Fix: pass along the exact reason in the message — it genuinely isn't finished yet.</p>
+
+<p><strong>17-29. Running <code>/graph-block</code> gives <code>Failed — kind is not allowed</code></strong><br>
+Cause: blocker kinds are only these 5: <code>human_test</code> (a test only a human can run) · <code>legal</code> (legal/licensing) · <code>external_account</code> (an external account) · <code>decision</code> (a human decision) · <code>purchase</code> (a purchase). Fix: re-enter it using one of these.</p>
+
+<p><strong>17-30. Running <code>/graph-block</code> gives <code>Failed — no such milestone</code></strong><br>
+Cause: a typo in the milestone ID. Fix: check the exact ID first with <code>/graph-where</code> or <code>/graph-next</code>.</p>
+
+<p><strong>17-31. Running <code>/graph-block --resolve-block</code> gives <code>Failed — no such blocker id</code></strong><br>
+Cause: it was already cleared, or the ID was typed wrong. Fix: check the current list of blockers again in <code>/graph-why</code>'s output.</p>
+
 <h3>Undo / Removal</h3>
 <p id="17-17"><strong>17-17. To remove it completely</strong><br>
 Uninstall the plugin → delete <code>~/.sodam/graph-state.json</code> → (optionally) delete the program folder.</p>
@@ -433,7 +493,9 @@ You can revert it with <code>git checkout data/graph.json</code>.</p>
 <li><strong>What happens if I ignore a "done" suggestion?</strong> → It gets marked done on the next scan (actually tested and confirmed — not immediately, but after at least one more judgment run).</li>
 <li><strong>Can I have multiple windows open?</strong> → Yes. Just check the timestamp shown in the output.</li>
 <li><strong>Can I rename a folder?</strong> → <strong>Yes.</strong> It's found by repository address, not by name.</li>
-<li><strong>Does the stored information include passwords?</strong> → No.</li>
+<li><strong>Does the stored information include passwords?</strong> → No. That said, the free-text description you type into <code>/graph-block</code> (what needs to happen for it to be resolved) is written by a human — if you type a password or personal information into it, it will be stored as-is. Please keep that field to plain text.</li>
+<li><strong>What does <code>/graph-verify</code> check?</strong> → Each milestone has a pre-defined "check command"; running it and having it pass automatically moves the milestone to the next stage. It only works on this tool's own items, and only a short pre-approved list of programs can ever be run.</li>
+<li><strong>What does <code>/graph-block</code> do?</strong> → It records "something only a human can do, that AI can't do instead." Once recorded, it automatically shows up in <code>/graph-why</code> as "waiting N days," and once it's resolved you have to clear it with a command yourself (if you don't, it keeps showing as waiting).</li>
 <li><strong>Can I use this commercially?</strong> → <strong>Yes</strong> (Apache-2.0, see <a href="#legal--copyright--license--commercial-use">Legal</a> below).</li>
 <li><strong>Where do I ask if something goes wrong?</strong> → Please leave it as a repository issue.</li>
 </ol>
