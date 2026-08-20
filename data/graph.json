@@ -360,6 +360,18 @@
       "last_moved_at": "2026-08-20"
     },
     {
+      "id": "sodam-graph-eng.M13",
+      "project_id": "sodam-graph-eng",
+      "seq": 13,
+      "title": "블로커 대시보드",
+      "state": "done",
+      "done_when": "사람 몫 블로커를 며칠째 대기 순으로 정렬해 출력",
+      "verify_cmd": null,
+      "evidence": "2026-08-21 · loadGraph.mjs에 Blocker 개별 레코드 검증(validateBlockers) 신설 — 그동안 blockers 배열은 '배열이어야 함'만 검사되고 원소는 전혀 검증 안 됐음(운영 데이터가 처음부터 끝까지 0건이라 드러나지 않던 빈틈). judge.mjs에 blockMilestone()/resolveBlocker()+CLI --block/--resolve-block 추가(락+최신재로드+원자적쓰기, M11과 동일 3원칙), /graph-block 명령 신설. critical.mjs(/graph-why)에 며칠째 대기 순 표시 추가(ranked가 비어도 블로커는 숨기지 않음). 스크래치 격리 사본에서: 정상기록·잘못된kind거부·없는마일스톤거부·인자누락안내·정상해제·없는블로커해제거부·id공백재사용안됨(삭제된 중간id 안 씀)·손상된kind주입시 loadGraph 로드거부 전부 확인. 🔴 핵심 검증: isHumanGated()가 blockers=[]라 사실상 죽은 코드였는데, 실제 legal 블로커를 부여하자 evaluatePromotion()이 정확히 그 이유로 승격을 막는 것을 실측 확인(이전엔 테스트 불가능했던 경로). 실운영 graph.json(0 블로커)에서 judge.mjs·critical.mjs 재실행 결과 출력 100% 동일(회귀 없음), md5 실행 전후 무변경. README 4개 파일 명령 개수 9로 갱신, claude plugin validate . 통과",
+      "owner": "ai",
+      "last_moved_at": "2026-08-21"
+    },
+    {
       "id": "sodam-graph-eng.M14",
       "project_id": "sodam-graph-eng",
       "seq": 14,
