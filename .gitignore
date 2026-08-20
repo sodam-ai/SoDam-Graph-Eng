@@ -19,3 +19,8 @@ CHECKPOINT.md
 
 # 로컬 하네스 훅이 남기는 도구 실패 로그 — 프로젝트 산출물 아님
 .failure-tracker.jsonl
+
+# 로컬 하네스가 남기는 활성 에이전트 상태(타임스탬프) — 프로젝트 산출물 아님
+.active-agents
+.active-agents.lock
+.active-agents.tmp
