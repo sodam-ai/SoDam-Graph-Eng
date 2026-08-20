@@ -348,6 +348,18 @@
       "last_moved_at": "2026-08-03"
     },
     {
+      "id": "sodam-graph-eng.M12",
+      "project_id": "sodam-graph-eng",
+      "seq": 12,
+      "title": "done_when 자동 검증",
+      "state": "done",
+      "done_when": "verify_cmd 를 실제로 돌려 verified 를 기계가 판정",
+      "verify_cmd": null,
+      "evidence": "2026-08-20 커밋 60682f3 · lib/verify.mjs 신설(canVerify project_id 경계+ALLOWED_BINS 화이트리스트+execFileSync 배열인자), judge.mjs에 verifyMilestone()+CLI --verify 추가. verify_cmd 6개를 문자열→배열 전환(M6은 time 접두사 제거, 실행시간은 코드로 직접 측정). 스크래치 격리 사본에서 실제 6개 명령 실행 성공·todo→verified 승격 흐름·실패시 상태불변·형제마일스톤 거부·허용안된실행파일(rm) 즉시거부·중복검증방지·없는ID/인자누락 처리까지 전부 확인. 실측 발견: 중첩 프로세스 실행이 직접 실행보다 최대 5배 느려 타임아웃 20초로 상향",
+      "owner": "ai",
+      "last_moved_at": "2026-08-20"
+    },
+    {
       "id": "sodam-graph-eng.M14",
       "project_id": "sodam-graph-eng",
       "seq": 14,
