@@ -348,6 +348,18 @@
       "last_moved_at": "2026-08-03"
     },
     {
+      "id": "sodam-graph-eng.M15",
+      "project_id": "sodam-graph-eng",
+      "seq": 15,
+      "title": "스키마 검증 게이트",
+      "state": "done",
+      "done_when": "graph.json 이 손상되면 실행 전에 막고 어디가 깨졌는지 표시",
+      "verify_cmd": null,
+      "evidence": "2026-08-20 커밋 3b09aad · loadGraph.mjs에 loadGraphOrExit() 추가, CLI 진입점 7곳(judge·critical·mermaid·publish·resolve·scan·shadow) 배선 · 스크래치 격리 사본에서 손상 시나리오 3종(JSON 문법 깨짐·필수 필드 누락·파일 없음) 전부 한 줄 메시지+exit 1 확인 · 정상 상태 7개 진입점 회귀 없음 확인 · 정본 data/graph.json md5 실행 전후 동일",
+      "owner": "ai",
+      "last_moved_at": "2026-08-20"
+    },
+    {
       "id": "sodam-graph-eng.M16",
       "project_id": "sodam-graph-eng",
       "seq": 16,
