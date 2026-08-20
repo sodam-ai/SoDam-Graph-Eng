@@ -100,7 +100,7 @@ Follow these steps exactly, inside Claude Code.
 
 ### 🟢 Verified — GitHub install works even for a PRIVATE repository
 
-This repository is actually PRIVATE. Method (A) above still works (directly measured and confirmed):
+At the time of verification (M0, 2026-08-02), this repository was PRIVATE. Method (A) above still worked then (directly measured and confirmed) — it has since been switched to PUBLIC (2026-08-13):
 
 ```
 claude plugin marketplace add sodam-ai/SoDam-Graph-Eng
@@ -440,7 +440,7 @@ You can revert it with `git checkout data/graph.json`.
 9. **Can I rename a folder?** → **Yes.** It's found by repository address, not by name.
 10. **Does the stored information include passwords?** → No.
 11. **Can I use this commercially?** → **Yes** (Apache-2.0, see [Legal](#legal--copyright--license--commercial-use) below).
-12. **Where do I ask if something goes wrong?** → Please leave it as a repository issue (since the repository is private, only people with access can do this).
+12. **Where do I ask if something goes wrong?** → Please leave it as a repository issue.
 
 ---
 
