@@ -348,6 +348,18 @@
       "last_moved_at": "2026-08-03"
     },
     {
+      "id": "sodam-graph-eng.M14",
+      "project_id": "sodam-graph-eng",
+      "seq": 14,
+      "title": "다른 PC 이식성",
+      "state": "done",
+      "done_when": "search_roots 를 환경변수·설정 파일로 분리",
+      "verify_cmd": null,
+      "evidence": "2026-08-20 커밋 88d0a69 · SODAM_GRAPH_SEARCH_ROOTS(콤마 구분 다중 경로, 운영용) 신설 — 테스트 전용 SODAM_GRAPH_ROOT(S-13.7)와 분리(S-13.9). 스크래치 격리 사본에서 단일경로·다중경로·동시설정 우선순위 3개 시나리오 확인 · 실제 scan.mjs 종단간 검증(올바른 경로→7형제 정상 발견, 잘못된 경로→전부 lost 전환)으로 오버라이드가 실제 스캔에 반영됨을 실증",
+      "owner": "ai",
+      "last_moved_at": "2026-08-20"
+    },
+    {
       "id": "sodam-graph-eng.M15",
       "project_id": "sodam-graph-eng",
       "seq": 15,
