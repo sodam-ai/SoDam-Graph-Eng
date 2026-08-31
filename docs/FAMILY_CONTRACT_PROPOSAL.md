@@ -221,4 +221,4 @@ export function isFamilyAlive(id) {
 
 - 위 8건은 전부 **이미 실측·확정된 사실**만 담았습니다 — README 완성을 기다릴 필요 없이 지금 제출해도 안 어긋납니다 (`03_PHASES.md` 15차 순서변경 근거).
 - 소담그래프엔지니어링은 **작성만** 했습니다. 형제 저장소에 push하는 것은 **사용자 몫**입니다 (읽기 전용 결정 불변).
-- 함께 제출하는 문서: [`FAMILY_INCONSISTENCY_REPORT.md`](./FAMILY_INCONSISTENCY_REPORT.md) (불일치 7건).
+- 함께 제출하는 문서: [`FAMILY_INCONSISTENCY_REPORT.md`](./FAMILY_INCONSISTENCY_REPORT.md) (불일치 8건 — 2026-08-19 ⑧ 추가 반영, 원문 7건은 2026-08-03/04 M8-A 완료 시점 기준으로 위 갱신안 8건 요약 표와는 별개 수치).
