@@ -163,9 +163,9 @@
       "state": "coarse",
       "done_when": "/graph-shadow 로 현재 마일스톤 이름·state·done_when 을 1회 기록",
       "verify_cmd": null,
-      "evidence": "2026-08-02 실측 1층 추출 — 저장소 루트가 한 겹 안쪽(sodamloop/)이며 그 안에 CHECKPOINT.md 1,349줄 · 완료 표시 122 · 미완료 7 · 최종 수정 2026-08-02. PRD 02·06의 '추적 파일 0개' 기재는 낡은 값이라 실측으로 교체함",
+      "evidence": "2026-08-02 실측 1층 추출 — 저장소 루트가 한 겹 안쪽(sodamloop/)이며 그 안에 CHECKPOINT.md 1,349줄 · 완료 표시 122 · 미완료 7 · 최종 수정 2026-08-02. PRD 02·06의 '추적 파일 0개' 기재는 낡은 값이라 실측으로 교체함 | 2026-09-01 정정(그래프엔지니어링 세션 직접 실측) — CHECKPOINT.md mtime(2026-08-02, gitignore 대상이라 낡을 수 있음) 대신 실제 git log 확인 결과 최종 커밋 2026-08-21(02d8f89, Phase 1a 시작절차 안전장치 완료). 같은 날 작업트리에 미커밋 파일 7개(권한모드 경고·자기보호 오탐정밀화 등 진행 중) 확인 — 실제로 정체 아님, 이전 값(2026-08-02)은 last_moved_at 갱신 근거가 CHECKPOINT.md 파일수정일이라는 잘못된 신호를 썼던 것.",
       "owner": "human",
-      "last_moved_at": "2026-08-02"
+      "last_moved_at": "2026-08-21"
     },
     {
       "id": "sodam-prompt-eng.current",
