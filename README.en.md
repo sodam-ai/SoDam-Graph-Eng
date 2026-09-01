@@ -341,7 +341,7 @@ data/.lock              Temporary lock file to prevent concurrent-run conflicts 
 **Internal working code** (no need to open these in normal use)
 
 ```
-lib/            The actual judging/scanning/publishing code (13 .mjs files)
+lib/            The actual judging/scanning/publishing code (14 .mjs files)
 hooks/          Code responsible for the automatic notice when a session starts
 commands/       Descriptions for the 9 commands such as /graph-where
 .claude-plugin/ Claude Code plugin registration files (marketplace.json · plugin.json)

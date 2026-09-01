@@ -341,7 +341,7 @@ data/.lock              동시 실행 충돌 방지용 임시 잠금 파일 (있
 **내부 동작 코드** (평소에 직접 열어볼 필요 없음)
 
 ```
-lib/            판정·스캔·발행 등 실제 동작 코드 (.mjs 파일 13개)
+lib/            판정·스캔·발행 등 실제 동작 코드 (.mjs 파일 14개)
 hooks/          세션 시작 시 자동 안내를 담당하는 코드
 commands/       /graph-where 등 명령어 9개의 설명서
 .claude-plugin/ Claude Code 플러그인 등록 파일(marketplace.json·plugin.json)
