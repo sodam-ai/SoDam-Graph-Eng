@@ -16,15 +16,16 @@
 7. [How to Run](#how-to-run)
 8. [How to Use](#how-to-use)
 9. [How It Works (Principle)](#how-it-works-principle)
-10. [Command List](#command-list)
-11. [Update Summary](#update-summary)
-12. [File / Document Locations](#file--document-locations)
-13. [Workflow](#workflow)
-14. [Architecture](#architecture)
-15. [Security & Data Flow](#security--data-flow)
-16. [Troubleshooting](#troubleshooting)
-17. [FAQ](#faq)
-18. [Legal / Copyright / License / Commercial Use](#legal--copyright--license--commercial-use)
+10. [Environment Variables](#environment-variables)
+11. [Command List](#command-list)
+12. [Update Summary](#update-summary)
+13. [File / Document Locations](#file--document-locations)
+14. [Workflow](#workflow)
+15. [Architecture](#architecture)
+16. [Security & Data Flow](#security--data-flow)
+17. [Troubleshooting](#troubleshooting)
+18. [FAQ](#faq)
+19. [Legal / Copyright / License / Commercial Use](#legal--copyright--license--commercial-use)
 
 ---
 
@@ -168,6 +169,25 @@ There is no separate "run" step. Inside Claude Code, it activates when you type 
 
 ---
 
+## Environment Variables
+
+**You don't need to know these — they're all optional.** They only matter in special situations (moving to a different computer, or turning off the automatic notice).
+
+| Variable | What it does | Default | When to use it |
+|---|---|---|---|
+| `SODAM_GRAPH_SILENT` | Set to `1` to turn off the automatic 3-line notice when a session starts | Unset (notice on) | When the notice gets in your way |
+| `SODAM_GRAPH_SEARCH_ROOTS` | Overrides where sibling projects are searched for, instead of `data/graph.json`'s value (comma-separated for multiple paths) | `config.search_roots` in `data/graph.json` | Moving to a different computer, or when you don't want a real PC path committed in the repository file |
+| `SODAM_GRAPH_DEBUG` | Set to `1` to print detailed logs of the judging/publishing process | Unset (runs quietly) | When something behaves oddly and you need to see why |
+| `SODAM_GRAPH_ROOT` | 🔧 Internal test use only — regular users never need this | Unset | Only for developers running isolated tests |
+
+**How to set it (Windows PowerShell example)**:
+```
+$env:SODAM_GRAPH_SILENT = "1"
+```
+This only applies to **that one terminal window**. To make it permanent, register it as a Windows system environment variable.
+
+---
+
 ## Command List
 
 | Command | What it does | When to use it |
@@ -287,6 +307,15 @@ A recorded blocker automatically shows up at the end of `/graph-why`'s output, *
 ---
 
 ## Update Summary
+
+<details>
+<summary><b>v0.2.1 (2026-09-01) — Fixed a staleness-tracking bug + confirmed Mermaid rendering in real use</b></summary>
+
+- 🔧 **Bug fix**: For 5 of the 6 siblings (Harness, Context, Agentic, Loop, Reverse), the "how many days has it been stuck" judgment was pinned to the date it was first measured instead of the actual last git activity date — off by up to 36 days in some cases. Found and corrected by comparing directly against each repository's real commit history. SoDam-Prompt-Eng's value was already accurate and was left unchanged.
+- ✅ **Confirmed `/graph-map` (Mermaid diagram) renders correctly in real use**: a human directly viewed and confirmed the diagram renders on both GitHub and VS Code (previously only the code path had been verified).
+- With these two items, **the entire first roadmap (Phase 1+2) is now complete**. No user-facing commands changed in this version.
+
+</details>
 
 <details>
 <summary><b>v0.2.0 (2026-08-21) — More accurate, and now tracks the human's share too</b></summary>
@@ -515,6 +544,7 @@ You can revert it with `git checkout data/graph.json`.
 12. **What does `/graph-block` do?** → It records "something only a human can do, that AI can't do instead." Once recorded, it automatically shows up in `/graph-why` as "waiting N days," and once it's resolved you have to clear it with a command yourself (if you don't, it keeps showing as waiting).
 13. **Can I use this commercially?** → **Yes** (Apache-2.0, see [Legal](#legal--copyright--license--commercial-use) below).
 14. **Where do I ask if something goes wrong?** → Please leave it as a repository issue.
+15. **A new version came out — how do I get it?** → Run `/plugin uninstall sodam-graph@sodamgraph-marketplace`, then reinstall with `/plugin install sodam-graph@sodamgraph-marketplace`, and fully restart Claude Code. We've confirmed in practice that re-running `/plugin install` alone can just say "already installed" without pulling the latest content — removing and reinstalling is the reliable way.
 
 ---
 
@@ -530,6 +560,8 @@ You can revert it with `git checkout data/graph.json`.
 | Copyright holder | Copyright 2026 SoDam AI Studio |
 | Trademark notice | See the `NOTICE` file — third-party names mentioned in the documentation (Claude Code, Anthropic, etc.) are the property of their respective owners, and this project has **no affiliation, sponsorship, or endorsement relationship** with them |
 | AI-generated content notice | Most of this project's code and documentation was **written using an AI tool (Claude Code)**. This is disclosed transparently |
+
+> ⚠️ **Recommended check before using AI-generated content**: The copyright attribution and potential for substantial-similarity infringement of AI-generated code/documentation is **still an evolving area of law** across jurisdictions and over time. **Before commercial use or delivery to a third party**, we recommend you personally verify copyright status, provenance, whether commercial use is permitted, and the possibility of infringing a similar existing work. This project does not guarantee any outcome on these points.
 
 ### What You Can Do (under Apache-2.0)
 

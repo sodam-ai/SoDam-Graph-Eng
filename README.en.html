@@ -75,6 +75,7 @@ A Claude Code plugin that shows the location, progress stage, and dependencies o
 <li><a href="#how-to-run">How to Run</a></li>
 <li><a href="#how-to-use">How to Use</a></li>
 <li><a href="#how-it-works-principle">How It Works (Principle)</a></li>
+<li><a href="#environment-variables">Environment Variables</a></li>
 <li><a href="#command-list">Command List</a></li>
 <li><a href="#update-summary">Update Summary</a></li>
 <li><a href="#file--document-locations">File / Document Locations</a></li>
@@ -198,6 +199,21 @@ claude plugin install sodam-graph@sodamgraph-marketplace
 
 <hr>
 
+<h2 id="environment-variables">Environment Variables</h2>
+<p><strong>You don't need to know these — they're all optional.</strong> They only matter in special situations (moving to a different computer, or turning off the automatic notice).</p>
+<table>
+<tr><th>Variable</th><th>What it does</th><th>Default</th><th>When to use it</th></tr>
+<tr><td><code>SODAM_GRAPH_SILENT</code></td><td>Set to <code>1</code> to turn off the automatic 3-line notice when a session starts</td><td>Unset (notice on)</td><td>When the notice gets in your way</td></tr>
+<tr><td><code>SODAM_GRAPH_SEARCH_ROOTS</code></td><td>Overrides where sibling projects are searched for, instead of <code>data/graph.json</code>'s value (comma-separated for multiple paths)</td><td><code>config.search_roots</code> in <code>data/graph.json</code></td><td>Moving to a different computer, or when you don't want a real PC path committed in the repository file</td></tr>
+<tr><td><code>SODAM_GRAPH_DEBUG</code></td><td>Set to <code>1</code> to print detailed logs of the judging/publishing process</td><td>Unset (runs quietly)</td><td>When something behaves oddly and you need to see why</td></tr>
+<tr><td><code>SODAM_GRAPH_ROOT</code></td><td>🔧 Internal test use only — regular users never need this</td><td>Unset</td><td>Only for developers running isolated tests</td></tr>
+</table>
+<p><strong>How to set it (Windows PowerShell example)</strong>:</p>
+<pre><code>$env:SODAM_GRAPH_SILENT = "1"</code></pre>
+<p>This only applies to <strong>that one terminal window</strong>. To make it permanent, register it as a Windows system environment variable.</p>
+
+<hr>
+
 <h2 id="command-list">Command List</h2>
 <table>
 <tr><th>Command</th><th>What it does</th><th>When to use it</th></tr>
@@ -291,6 +307,15 @@ Failed — no such milestone "no-such-milestone"</code></pre>
 <hr>
 
 <h2 id="update-summary">Update Summary</h2>
+
+<details>
+<summary><b>v0.2.1 (2026-09-01) — Fixed a staleness-tracking bug + confirmed Mermaid rendering in real use</b></summary>
+<ul>
+<li>🔧 <strong>Bug fix</strong>: For 5 of the 6 siblings (Harness, Context, Agentic, Loop, Reverse), the "how many days has it been stuck" judgment was pinned to the date it was first measured instead of the actual last git activity date — off by up to 36 days in some cases. Found and corrected by comparing directly against each repository's real commit history. SoDam-Prompt-Eng's value was already accurate and was left unchanged.</li>
+<li>✅ <strong>Confirmed <code>/graph-map</code> (Mermaid diagram) renders correctly in real use</strong>: a human directly viewed and confirmed the diagram renders on both GitHub and VS Code (previously only the code path had been verified).</li>
+<li>With these two items, <strong>the entire first roadmap (Phase 1+2) is now complete</strong>. No user-facing commands changed in this version.</li>
+</ul>
+</details>
 
 <details>
 <summary><b>v0.2.0 (2026-08-21) — More accurate, and now tracks the human's share too</b></summary>
@@ -498,6 +523,7 @@ You can revert it with <code>git checkout data/graph.json</code>.</p>
 <li><strong>What does <code>/graph-block</code> do?</strong> → It records "something only a human can do, that AI can't do instead." Once recorded, it automatically shows up in <code>/graph-why</code> as "waiting N days," and once it's resolved you have to clear it with a command yourself (if you don't, it keeps showing as waiting).</li>
 <li><strong>Can I use this commercially?</strong> → <strong>Yes</strong> (Apache-2.0, see <a href="#legal--copyright--license--commercial-use">Legal</a> below).</li>
 <li><strong>Where do I ask if something goes wrong?</strong> → Please leave it as a repository issue.</li>
+<li><strong>A new version came out — how do I get it?</strong> → Run <code>/plugin uninstall sodam-graph@sodamgraph-marketplace</code>, then reinstall with <code>/plugin install sodam-graph@sodamgraph-marketplace</code>, and fully restart Claude Code. We've confirmed in practice that re-running <code>/plugin install</code> alone can just say "already installed" without pulling the latest content — removing and reinstalling is the reliable way.</li>
 </ol>
 
 <hr>
@@ -514,6 +540,8 @@ You can revert it with <code>git checkout data/graph.json</code>.</p>
 <tr><td>Trademark notice</td><td>See the <code>NOTICE</code> file — third-party names mentioned in the documentation (Claude Code, Anthropic, etc.) are the property of their respective owners, and this project has <strong>no affiliation, sponsorship, or endorsement relationship</strong> with them</td></tr>
 <tr><td>AI-generated content notice</td><td>Most of this project's code and documentation was <strong>written using an AI tool (Claude Code)</strong>. This is disclosed transparently</td></tr>
 </table>
+
+<blockquote>⚠️ <strong>Recommended check before using AI-generated content</strong>: The copyright attribution and potential for substantial-similarity infringement of AI-generated code/documentation is <strong>still an evolving area of law</strong> across jurisdictions and over time. <strong>Before commercial use or delivery to a third party</strong>, we recommend you personally verify copyright status, provenance, whether commercial use is permitted, and the possibility of infringing a similar existing work. This project does not guarantee any outcome on these points.</blockquote>
 
 <h3>What You Can Do (under Apache-2.0)</h3>
 <p>Use · modify · copy/redistribute · <strong>commercial use</strong> · fork · <strong>sell / operate as a service</strong> · use for educational materials · <strong>deliver to companies/clients</strong> · use the patent grant (explicitly granted)</p>

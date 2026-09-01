@@ -75,6 +75,7 @@
 <li><a href="#실행-방법">실행 방법</a></li>
 <li><a href="#사용-방법">사용 방법</a></li>
 <li><a href="#작동-방법원리">작동 방법(원리)</a></li>
+<li><a href="#환경-변수">환경 변수</a></li>
 <li><a href="#명령어-목록">명령어 목록</a></li>
 <li><a href="#업데이트-내용-요약">업데이트 내용 요약</a></li>
 <li><a href="#파일문서-위치">파일·문서 위치</a></li>
@@ -198,6 +199,21 @@ claude plugin install sodam-graph@sodamgraph-marketplace
 
 <hr>
 
+<h2 id="환경-변수">환경 변수</h2>
+<p><strong>몰라도 됩니다 — 전부 선택 사항입니다.</strong> 아래는 특수한 상황(다른 컴퓨터로 옮기거나, 자동 안내를 끄고 싶을 때)에만 필요합니다.</p>
+<table>
+<tr><th>환경 변수</th><th>하는 일</th><th>기본값</th><th>언제 쓰나</th></tr>
+<tr><td><code>SODAM_GRAPH_SILENT</code></td><td><code>1</code>로 설정하면 세션 시작 시 자동 3줄 안내를 끕니다</td><td>없음(안내 켜짐)</td><td>안내가 방해될 때</td></tr>
+<tr><td><code>SODAM_GRAPH_SEARCH_ROOTS</code></td><td>형제 프로젝트를 찾을 폴더 경로를 <code>data/graph.json</code>의 값 대신 여기서 지정합니다(콤마로 여러 경로 구분)</td><td><code>data/graph.json</code>의 <code>config.search_roots</code></td><td>다른 컴퓨터로 옮기거나, 저장소 파일에 실제 PC 경로를 남기고 싶지 않을 때</td></tr>
+<tr><td><code>SODAM_GRAPH_DEBUG</code></td><td><code>1</code>로 설정하면 판정·발행 과정의 상세 로그를 출력합니다</td><td>없음(조용히 실행)</td><td>동작이 이상해서 원인을 봐야 할 때</td></tr>
+<tr><td><code>SODAM_GRAPH_ROOT</code></td><td>🔧 내부 테스트 전용 — 일반 사용자는 쓸 일이 없습니다</td><td>없음</td><td>개발자가 격리 테스트할 때만</td></tr>
+</table>
+<p><strong>설정 방법 (Windows PowerShell 예시)</strong>:</p>
+<pre><code>$env:SODAM_GRAPH_SILENT = "1"</code></pre>
+<p>이렇게 하면 <strong>그 터미널 창에서만</strong> 적용됩니다. 항상 적용하려면 Windows 시스템 환경 변수에 등록하세요.</p>
+
+<hr>
+
 <h2 id="명령어-목록">명령어 목록</h2>
 <table>
 <tr><th>명령</th><th>뭘 하나</th><th>언제 쓰나</th></tr>
@@ -291,6 +307,15 @@ claude plugin install sodam-graph@sodamgraph-marketplace
 <hr>
 
 <h2 id="업데이트-내용-요약">업데이트 내용 요약</h2>
+
+<details>
+<summary><b>v0.2.1 (2026-09-01) — 판정 정확도 버그 수정 + Mermaid 렌더링 실사용 확인 완료</b></summary>
+<ul>
+<li>🔧 <strong>버그 수정</strong>: 형제 6곳 중 5곳(하네스·컨텍스트·에이전틱·루프·리버스)에서 "며칠째 멈춰있나" 판정이 실제 git 활동일이 아니라 최초 측정일에 고정돼 최대 36일까지 틀려있던 문제를 발견·수정했습니다. 각 저장소의 실제 커밋 기록과 직접 대조해 바로잡았습니다. 소담프롬프트엔지니어링은 원래 값이 정확해 손대지 않았습니다.</li>
+<li>✅ <strong><code>/graph-map</code>(Mermaid 그림) 실사용 확인 완료</strong>: GitHub·VS Code 양쪽에서 실제로 그림이 렌더링되는 것을 사람이 직접 눈으로 확인했습니다(이전엔 코드만 확인된 상태였습니다).</li>
+<li>이 두 가지로 <strong>1차 로드맵(Phase 1+2)이 전부 완료</strong>됐습니다. 사용자가 직접 켜고 끄는 명령어(사용법)는 이번 버전에서 바뀐 게 없습니다.</li>
+</ul>
+</details>
 
 <details>
 <summary><b>v0.2.0 (2026-08-21) — 더 정확하게, 사람 몫도 챙기게</b></summary>
@@ -498,6 +523,7 @@ tools/          내부 코드 점검용 스크립트
 <li><strong><code>/graph-block</code>은 뭘 하는 건가요?</strong> → "사람만 할 수 있는 일이라 AI가 대신 못 하는 것"을 기록해두는 기능입니다. 기록하면 <code>/graph-why</code>에 "며칠째 대기 중"으로 자동 표시되고, 풀리면 다시 명령으로 지워야 합니다(안 지우면 계속 대기 중으로 남습니다).</li>
 <li><strong>상업적으로 써도 되나요?</strong> → <strong>됩니다</strong>(Apache-2.0, 아래 <a href="#법률저작권라이선스상업적-용도">법률</a> 참조).</li>
 <li><strong>문제가 생기면 어디에 물어보나요?</strong> → 저장소 이슈로 남겨주세요.</li>
+<li><strong>새 버전이 나왔는데 어떻게 받나요?</strong> → <code>/plugin uninstall sodam-graph@sodamgraph-marketplace</code> 후 <code>/plugin install sodam-graph@sodamgraph-marketplace</code>로 다시 설치하고 Claude Code를 완전히 재시작하세요. <code>/plugin install</code>만 다시 누르면 "이미 설치됨"이라고만 뜨고 최신 내용을 안 받아오는 경우가 실제로 확인됐습니다 — 제거 후 재설치가 확실한 방법입니다.</li>
 </ol>
 
 <hr>
@@ -514,6 +540,8 @@ tools/          내부 코드 점검용 스크립트
 <tr><td>상표 고지</td><td><code>NOTICE</code> 파일 참조 — 문서에 언급된 타사 이름(Claude Code·Anthropic 등)은 각 소유자의 자산이며, 이 프로젝트와 <strong>제휴·후원·인증 관계가 없습니다</strong></td></tr>
 <tr><td>AI 생성물 고지</td><td>이 프로젝트의 코드·문서 대부분은 <strong>AI 도구(Claude Code)를 사용해 작성</strong>됐습니다. 투명하게 밝힙니다</td></tr>
 </table>
+
+<blockquote>⚠️ <strong>AI 생성물 사용 전 확인 권장</strong>: AI 생성 코드·문서의 저작권 귀속·유사 저작물 침해 가능성은 국가·시기별로 <strong>법리가 아직 정립되는 중</strong>입니다. <strong>상업적으로 사용하거나 제3자에게 납품하기 전에는</strong> 저작권·출처·상업적 이용 가능 여부·유사 저작물 침해 가능성을 사용자가 직접 확인하는 것을 권장합니다. 이 프로젝트는 그 결과를 보장하지 않습니다.</blockquote>
 
 <h3>할 수 있는 것 (Apache-2.0 기준)</h3>
 <p>사용 · 수정 · 복제·재배포 · <strong>상업적 사용</strong> · 포크 · <strong>판매·서비스 운영</strong> · 교육 자료 활용 · <strong>회사·고객사 납품</strong> · 특허 사용(명시적 허여)</p>
