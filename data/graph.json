@@ -256,12 +256,12 @@
       "project_id": "sodam-graph-eng",
       "seq": 5,
       "title": "/graph-map 명령 (Mermaid graph LR)",
-      "state": "verified",
+      "state": "done",
       "done_when": "graph LR 규격(노드 ID=Project.id, 라벨=name_ko+state+정지일수, depends_on/next=실선, conflicts/shares=점선, coarse=(추정), 순환=:::cycle)대로 출력되고 GitHub 프리뷰·VS Code 미리보기 둘 다에서 렌더링됨",
       "verify_cmd": null,
-      "evidence": "2026-08-02 커밋 a33573b · 규격 10/10 · 순환 경고 5/5(픽스처) · 문법 자체검사 0건. GitHub·VS Code 실제 렌더링은 사람 눈 확인 대기. 🆕 2026-08-17 Playwright(격리 브라우저) DOM 검증 — GitHub 쪽 렌더링 성공 확인(mermaid rendered output container 존재 + GitHub 전용 다이어그램 컨트롤(확대·축소·리셋·이동·코드복사) + 노드 라벨 텍스트 정상 확인). 단 이는 AI 도구 검증이며 done_when 이 요구하는 '사람 눈확인'의 대체로 보지 않기로 사용자 결정(2026-08-17) — state 는 verified 로 유지. VS Code 미리보기는 여전히 미확인",
+      "evidence": "2026-08-02 커밋 a33573b · 규격 10/10 · 순환 경고 5/5(픽스처) · 문법 자체검사 0건. 🆕 2026-08-17 Playwright(격리 브라우저) DOM 검증 — GitHub 쪽 렌더링 성공 확인. 단 이는 AI 도구 검증이며 done_when 이 요구하는 '사람 눈확인'의 대체로 보지 않기로 사용자 결정(2026-08-17) — state 는 verified 로 유지. | 2026-09-01 최종 완료 — 사용자가 직접 GitHub·VS Code 두 화면을 스크린샷(D:\\ScreenShot\\1.png=GitHub, 2.png=VS Code)으로 촬영해 제공, 둘 다 실제 노드·연결선·라벨(예: '소담하네스엔지니어링 coarse · 1일')이 정상 렌더링된 것을 육안으로 확인·확정. done_when 4개 조건(규격·GitHub·VS Code·둘 다) 전부 진짜 사람 눈확인으로 충족 — state verified → done 승격",
       "owner": "ai",
-      "last_moved_at": "2026-08-02"
+      "last_moved_at": "2026-09-01"
     },
     {
       "id": "sodam-graph-eng.M6",
