@@ -1,7 +1,7 @@
 {
   "name": "sodam-graph",
   "description": "소담 7형제의 위치·진행 단계·의존 관계를 지도로 만들어 다음 할 일을 판정합니다. 형제 저장소는 100% 읽기 전용.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": {
     "name": "SoDam AI Studio"
   },
