@@ -69,8 +69,10 @@ sodam-graph-eng/
 │   └── FAMILY_INCONSISTENCY_REPORT.md # 불일치 7건 보고서
 ├── tools/
 │   ├── make-fixture.sh      # _test_fixture/ 생성 (아래 §테스트 방법 참조)
-│   └── family-read-test.mjs # 🆕 M8-A 읽는 쪽 실증 — 규약 F 조각(readFamilyState·isFamilyAlive) 실행 검증
-│                            #    (_test_fixture/ 는 .gitignore 대상이라 여기 둠 — 위 §.gitignore 참조)
+│   ├── family-read-test.mjs # 🆕 M8-A 읽는 쪽 실증 — 규약 F 조각(readFamilyState·isFamilyAlive) 실행 검증
+│   │                        #    (_test_fixture/ 는 .gitignore 대상이라 여기 둠 — 위 §.gitignore 참조)
+│   └── verify-prd.sh        # 🆕 2026-09-12 — 03_PHASES.md §M-V(A·B·D·E) 실행파일 추출본. 읽기 전용,
+│                            #    .PRD/*.md 만 grep. 로직 변경 없음 — 매번 문서에서 복붙 안 해도 됨
 ├── _test_fixture/           # 개명 테스트용 더미 저장소 (스크립트로 생성, 실제 형제 대신)
 ├── .PRD/                    # 이 설계 문서들
 ├── .gitignore
