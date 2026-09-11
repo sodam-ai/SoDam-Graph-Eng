@@ -69,8 +69,10 @@ sodam-graph-eng/
 │   └── FAMILY_INCONSISTENCY_REPORT.md # 불일치 7건 보고서
 ├── tools/
 │   ├── make-fixture.sh      # _test_fixture/ 생성 (아래 §테스트 방법 참조)
-│   └── family-read-test.mjs # 🆕 M8-A 읽는 쪽 실증 — 규약 F 조각(readFamilyState·isFamilyAlive) 실행 검증
-│                            #    (_test_fixture/ 는 .gitignore 대상이라 여기 둠 — 위 §.gitignore 참조)
+│   ├── family-read-test.mjs # 🆕 M8-A 읽는 쪽 실증 — 규약 F 조각(readFamilyState·isFamilyAlive) 실행 검증
+│   │                        #    (_test_fixture/ 는 .gitignore 대상이라 여기 둠 — 위 §.gitignore 참조)
+│   └── verify-prd.sh        # 🆕 2026-09-12 — 03_PHASES.md §M-V(A·B·D·E) 실행파일 추출본. 읽기 전용,
+│                            #    .PRD/*.md 만 grep. 로직 변경 없음 — 매번 문서에서 복붙 안 해도 됨
 ├── _test_fixture/           # 개명 테스트용 더미 저장소 (스크립트로 생성, 실제 형제 대신)
 ├── .PRD/                    # 이 설계 문서들
 ├── .gitignore
@@ -421,15 +423,17 @@ claude plugin install sodam-graph@sodamgraph-marketplace
 
 ## 환경변수
 
-API 키·토큰·계정은 **하나도 없습니다.** 동작 제어용 2개만 있습니다.
+API 키·토큰·계정은 **하나도 없습니다.** 동작 제어용 4개가 있습니다.
 
 | 변수 | 용도 | 기본값 |
 |------|------|-------|
 | `SODAM_GRAPH_SILENT` | `1` 이면 세션 시작 출력 끔 | 미설정(=출력함) |
-| `SODAM_GRAPH_ROOT` | `search_roots` 덮어쓰기 (Phase 2 이식성 · **테스트 시 `_test_fixture` 로 격리**) | 미설정 |
+| `SODAM_GRAPH_ROOT` | `search_roots` 덮어쓰기 (**테스트 전용** · S-13.7 · `_test_fixture` 로 격리) | 미설정 |
+| 🆕 `SODAM_GRAPH_SEARCH_ROOTS` | `search_roots` 덮어쓰기 (**운영용**, M14 다른 PC 이식성 · 콤마 구분 다중 경로 · `SODAM_GRAPH_ROOT`와 동시 설정 시 `SODAM_GRAPH_ROOT`가 우선 — S-13.9 테스트 격리 최우선) | 미설정 |
 | `SODAM_GRAPH_DEBUG` | `1` 이면 디버그 출력 (**시크릿 마스킹은 그대로 적용**) | **꺼짐** |
 
 > 접두사는 **`SODAM_GRAPH_*`** 로 고정합니다 (`07_FAMILY_COEXIST.md` §3). ~~`SODAM_ROOT`~~ 는 형제와 충돌할 수 있어 폐기했습니다.
+> 🔴 **2026-09-11 정정**: `SODAM_GRAPH_SEARCH_ROOTS`는 M14(2026-08-20, 커밋 `88d0a69`)에서 이미 코드(`lib/loadGraph.mjs`)에 구현·검증됐으나 이 표에 누락돼 있었습니다(실제 코드·`data/graph.json`·README 4종에는 있었음). 서술만 추가 — 동작·스키마 변경 없음.
 
 ---
 

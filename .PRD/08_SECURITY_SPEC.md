@@ -222,7 +222,8 @@ Secure by Design의 첫 단계는 **공격면을 정직하게 그리는 것**입
 | 변수 | 용도 | 기본값 | 위험 |
 |------|------|-------|------|
 | `SODAM_GRAPH_SILENT` | 세션 시작 출력 끔 | 꺼짐(=출력함) | 없음 |
-| `SODAM_GRAPH_ROOT` | `search_roots` 덮어쓰기 | 미설정 | **존재하는 디렉터리인지 검증**(S-7) |
+| `SODAM_GRAPH_ROOT` | `search_roots` 덮어쓰기(테스트 전용, S-13.7) | 미설정 | **존재하는 디렉터리인지 검증**(S-7) |
+| 🆕 `SODAM_GRAPH_SEARCH_ROOTS` | `search_roots` 덮어쓰기(**운영용**, M14 · 콤마 구분 다중 경로) | 미설정 | `SODAM_GRAPH_ROOT`와 **동일한 검증 경로**(`lib/loadGraph.mjs:239` 확인 — 존재 확인은 별도로 하지 않고 둘 다 `resolve` 단계에 위임, 주석에 명시됨). 단, 이 문서가 지금까지 이 변수를 다루지 않아 **정본 표에서만 빠져 있었음** — 코드 자체의 검증 로직은 정상 |
 | `SODAM_GRAPH_DEBUG` | 디버그 출력 | **꺼짐** | S-13.2~4 적용 |
 
 **수용 기준**
