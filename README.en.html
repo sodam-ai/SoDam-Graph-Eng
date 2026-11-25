@@ -180,7 +180,7 @@ claude plugin install sodam-graph@sodamgraph-marketplace
 <hr>
 
 <h2 id="how-to-use">How to Use</h2>
-<p><strong>Scenario 1 — When you open a new session</strong>: You don't need to do anything. If you open a session inside a sibling project folder, a 3-line notice appears automatically.</p>
+<p><strong>Scenario 1 — When you open a new session</strong>: You don't need to do anything. If you open a session inside a sibling project folder, a 3-line notice appears automatically. (Right after an install/update, the notice may not appear <strong>in the first session only</strong>; it appears from the second session on.)</p>
 <p><strong>Scenario 2 — When you're curious which project you're in, or where it is</strong>: <code>/graph-where &lt;name&gt;</code></p>
 <p><strong>Scenario 3 — When you don't know what to do first today</strong>: <code>/graph-next</code> (all 7 siblings) or <code>/graph-why</code> (just the one thing to do right now)</p>
 <p><strong>Scenario 4 — When there isn't enough info and you only get a "rough judgment"</strong>: <code>/graph-shadow</code> to fill it in once</p>
@@ -311,6 +311,15 @@ Failed — no such milestone "no-such-milestone"</code></pre>
 <h2 id="update-summary">Update Summary</h2>
 
 <details>
+<summary><b>v0.2.2 (2026-11-26) — Fixed slow session start right after a fresh install</b></summary>
+<ul>
+<li>🔧 <strong>Bug fix</strong>: Right after a first install (or a version upgrade) there is no cached scan result yet, so every time Claude Code opened (in any folder) the tool re-scanned the sibling folders from scratch — taking several seconds each time — and never saved the result, so it repeated forever. Now <strong>the first session passes silently and a background process quietly builds the cache.</strong> From the second session on, the 3-line notice shows immediately. (In an isolated test on this PC: session-start delay with no cache went from several seconds to about 0.1 s.)</li>
+<li>As a result, the 3-line notice may <strong>not appear once, in the first session after install/update.</strong> That is expected.</li>
+<li>No commands or usage changed. To get the new version, see FAQ 15 below.</li>
+</ul>
+</details>
+
+<details>
 <summary><b>v0.2.1 (2026-09-01) — Fixed a staleness-tracking bug + confirmed Mermaid rendering in real use</b></summary>
 <ul>
 <li>🔧 <strong>Bug fix</strong>: For 5 of the 6 siblings (Harness, Context, Agentic, Loop, Reverse), the "how many days has it been stuck" judgment was pinned to the date it was first measured instead of the actual last git activity date — off by up to 36 days in some cases. Found and corrected by comparing directly against each repository's real commit history. SoDam-Prompt-Eng's value was already accurate and was left unchanged.</li>
@@ -375,7 +384,7 @@ tools/          Scripts for internal code checks
 
 <h2 id="workflow">Workflow</h2>
 <pre><code>Start Claude Code in the morning
-  → if you're inside a sibling folder, an automatic 3-line notice appears
+  → if you're inside a sibling folder, an automatic 3-line notice appears (except the first session right after install — from the second one on)
   → if you don't know what to do, use /graph-why (human-only blockers show up here too)
   → if you want to see everything, use /graph-next
   → if a "done" condition can be checked automatically, use /graph-verify
@@ -455,7 +464,7 @@ Cause: the sibling folder is outside the search range. Fix: edit <code>config.se
 Cause: ① you opened it outside a sibling folder (normal) ② <code>SODAM_GRAPH_SILENT=1</code> is turned on. Fix: check the environment variable.</p>
 
 <p><strong>17-9. Session startup got slower</strong><br>
-Cause: too many folders to scan. Fix: narrow the scope with <code>config.scan_filter</code>.</p>
+Cause: too many folders to scan. Fix: narrow the scope with <code>config.scan_filter</code>. (v0.2.1 and earlier can be slow on every session right after an install/update → update to v0.2.2 or later; see FAQ 15.)</p>
 
 <p><strong>17-10. Korean text is garbled as <code>???</code></strong><br>
 Cause: terminal encoding is not UTF-8. Fix: run <code>chcp 65001</code> in PowerShell, then retry.</p>
