@@ -313,6 +313,15 @@ A recorded blocker automatically shows up at the end of `/graph-why`'s output, *
 ## Update Summary
 
 <details>
+<summary><b>v0.2.8 (2026-11-26) — Corrected guidance that was not true</b></summary>
+
+- 🔧 **Guidance fix**: several places said that recording with `/graph-shadow` gets a sibling judged automatically or out of "coarse judgment". That was not true. Recording **only fills in the "next task" text**; stage tracking, ranking, stall days and mismatch warnings stay as they are. Command instructions, on-screen text and this feature list are corrected (on-screen text is in Korean).
+- 🔧 **Display fix**: `/graph-why` called every blocked item a human task. It now says so **only when a human blocker is recorded**, and when it is waiting on another sibling it **names that sibling**.
+- ⚠ A record is not shown for a sibling that cannot be located. **The tool does not yet tell you when a record has gone stale** (the stale warning mentioned earlier was never actually wired up). Records you create from the installed plugin may not carry over when the plugin is updated (not solved yet). Ranking and score calculation are unchanged.
+
+</details>
+
+<details>
 <summary><b>v0.2.7 (2026-11-26) — Siblings that cannot be located are no longer hidden</b></summary>
 
 - 🔧 **Bug fix**: a sibling that cannot be located has no measurable stall count, yet `/graph-why` treated it as **0 days (score 0)** and silently picked another one as "the one to fix". It even picked one when all 7 were missing. It now **says first that N siblings could not be located and were left out of the ranking**, and picks nothing when there is nothing it can rank (on-screen text is in Korean).
@@ -393,7 +402,7 @@ A recorded blocker automatically shows up at the end of `/graph-why`'s output, *
 - Automatic 3-line notice when a session opens
 - The problem of "marked done but still stuck in place" — once enough evidence accumulates, "done" is auto-suggested; a human only needs to say "no"
 - Points out the single thing to solve right now if you can only do one
-- A project lacking information only needs to be asked once, then it's judged automatically from then on
+- For a project lacking information, answering two questions fills in its "next task" text (only for a located sibling under coarse judgment; stage tracking and ranking stay as they are)
 - Fixed the problem of siblings being unable to read each other — a summary is saved to a shared location so other siblings can read it too
 
 </details>
