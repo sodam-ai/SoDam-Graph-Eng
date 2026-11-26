@@ -315,7 +315,7 @@ Failed — no such milestone "no-such-milestone"</code></pre>
 <summary><b>v0.2.9 (2026-11-27) — When duplicate folders block detection, show which folders they are</b></summary>
 <ul>
 <li>🔧 <strong>Better guidance</strong>: when several folders look like the same sibling (for example <code>git worktree</code> folders), the tool does not pick one and marks it "location lost". But it <strong>did not say which folders collided</strong>, and told you to check settings that were not the cause. <code>/graph-where</code> and <code>/graph-next</code> now <strong>list the colliding folders</strong> (on-screen text is in Korean).</li>
-<li>🔴 <strong>The AI does not delete or move those folders.</strong> Other work may be using them, so check for yourself which ones are no longer needed before cleaning up. If the folder scan was cut off, the list only contains the folders seen up to that point.</li>
+<li>🔴 <strong>The AI does not delete or move those folders.</strong> Other work may be using them, so check for yourself which ones are no longer needed before cleaning up. The list only contains folders the scan actually saw. Full paths are shown by <code>/graph-where &lt;name&gt;</code>; <code>/graph-next</code> shows folder names (full paths when names collide). The no-argument <code>/graph-where</code> overview does not list candidates.</li>
 <li>The format of the shared file siblings read, ranking and score calculation, and the rule "never pick one of several" are unchanged.</li>
 </ul>
 </details>

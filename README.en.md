@@ -316,7 +316,7 @@ A recorded blocker automatically shows up at the end of `/graph-why`'s output, *
 <summary><b>v0.2.9 (2026-11-27) — When duplicate folders block detection, show which folders they are</b></summary>
 
 - 🔧 **Better guidance**: when several folders look like the same sibling (for example `git worktree` folders), the tool does not pick one and marks it "location lost". But it **did not say which folders collided**, and told you to check settings that were not the cause. `/graph-where` and `/graph-next` now **list the colliding folders** (on-screen text is in Korean).
-- 🔴 **The AI does not delete or move those folders.** Other work may be using them, so check for yourself which ones are no longer needed before cleaning up. If the folder scan was cut off, the list only contains the folders seen up to that point.
+- 🔴 **The AI does not delete or move those folders.** Other work may be using them, so check for yourself which ones are no longer needed before cleaning up. The list only contains folders the scan actually saw. Full paths are shown by `/graph-where <name>`; `/graph-next` shows folder names (full paths when names collide). The no-argument `/graph-where` overview does not list candidates.
 - The format of the shared file siblings read, ranking and score calculation, and the rule "never pick one of several" are unchanged.
 
 </details>
