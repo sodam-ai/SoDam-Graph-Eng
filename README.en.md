@@ -313,6 +313,15 @@ A recorded blocker automatically shows up at the end of `/graph-why`'s output, *
 ## Update Summary
 
 <details>
+<summary><b>v0.2.7 (2026-11-26) — Siblings that cannot be located are no longer hidden</b></summary>
+
+- 🔧 **Bug fix**: a sibling that cannot be located has no measurable stall count, yet `/graph-why` treated it as **0 days (score 0)** and silently picked another one as "the one to fix". It even picked one when all 7 were missing. It now **says first that N siblings could not be located and were left out of the ranking**, and picks nothing when there is nothing it can rank (on-screen text is in Korean).
+- The third line of the session-start notice now also shows how many siblings could not be located. It is still 3 lines. If the folder you opened is itself the one that cannot be located, no notice appears, as before.
+- The score formula, commands and usage are unchanged.
+
+</details>
+
+<details>
 <summary><b>v0.2.6 (2026-11-26) — Fixed: one duplicated folder made all 7 siblings show as "location lost"</b></summary>
 
 - 🔧 **Bug fix**: when a copy of a sibling repository appeared (for example a `git worktree` folder), the tool re-scanned every folder. That scan stops at the 500-folder cap, and **its partial result overwrote the siblings that had already been found, so all 7 showed as "location lost".** Siblings already found are now kept.

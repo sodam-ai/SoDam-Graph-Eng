@@ -115,6 +115,9 @@ try {
   // 거친 판정은 그 일수를 줄일 경로가 없으므로, "정체"에 섞여 있다는 사실을 함께 말한다
   const untracked = stalledRows.filter((x) => x.state === 'coarse').length;
   const untrackedTag = untracked > 0 ? ` (${untracked}곳은 단계 추적 안 됨)` : '';
+  // 못 찾은 곳은 정체 수에 들어갈 수 없다 — 말하지 않으면 정상처럼 읽힌다
+  const unresolved = snapshot.projects.filter((x) => !x.repo_root).length;
+  const unresolvedTag = unresolved > 0 ? ` · ${unresolved}곳은 위치 못 찾음` : '';
 
   // 자기 저장소에서 열면 이름이 두 번 나오므로 접두사만 남긴다
   const head =
@@ -131,7 +134,7 @@ try {
   const act = activityLabel(here.days_since_activity);
   const line2 = `  현재: ${stateText}${act ? ` · ${act}` : ''} → ${j.text}`;
   const line3 =
-    `  7형제 중 정체 ${stalledRows.length}곳${untrackedTag} · /graph-next 로 전체 보기` +
+    `  7형제 중 정체 ${stalledRows.length}곳${untrackedTag}${unresolvedTag} · /graph-next 로 전체 보기` +
     `   [${stamp} 기준${stale ? ' · 갱신 중' : ''}]`;
 
   if (stale) rescanDetached();
