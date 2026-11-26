@@ -316,7 +316,7 @@ A recorded blocker automatically shows up at the end of `/graph-why`'s output, *
 <summary><b>v0.2.6 (2026-11-26) — Fixed: one duplicated folder made all 7 siblings show as "location lost"</b></summary>
 
 - 🔧 **Bug fix**: when a copy of a sibling repository appeared (for example a `git worktree` folder), the tool re-scanned every folder. That scan stops at the 500-folder cap, and **its partial result overwrote the siblings that had already been found, so all 7 showed as "location lost".** Siblings already found are now kept.
-- When two or more folders of the same repository are visible, only that sibling is "location lost" and **no copy is picked arbitrarily.** This also covers the case where a cut-off scan saw just one of the copies and treated it as confirmed.
+- When two or more folders of the same repository are visible, only that sibling is "location lost" and **no copy is picked arbitrarily.** If a copy matching the name filter was already seen, a cut-off scan that sees only another one no longer confirms it. **Limitation:** a copy that was never seen because of the 500-folder cap cannot be detected, so the one that was seen may still be picked (same as before this fix).
 - To have that sibling found again, remove the extra copy. **The screen does not yet show which folders collide.** No commands or usage changed.
 
 </details>

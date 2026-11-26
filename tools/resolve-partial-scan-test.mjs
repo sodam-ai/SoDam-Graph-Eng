@@ -15,7 +15,7 @@
  */
 
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, rmSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, join } from 'node:path';
 import { resolveAll } from '../lib/resolve.mjs';
@@ -29,6 +29,9 @@ function check(name, ok, detail = '') {
 
 const work = mkdtempSync(join(tmpdir(), 'sodam-graph-resolve-'));
 const url = (n) => `https://github.com/test-owner/${n}.git`;
+
+// GIT_DIR 같은 상속 변수가 있으면 -C 만으로는 임시 폴더에 갇히지 않는다 — 걷어낸다
+for (const k of Object.keys(process.env)) if (/^GIT_/i.test(k)) delete process.env[k];
 
 /** root 아래 folder 에 원격이 name 인 가짜 저장소를 만든다 */
 function repo(root, folder, name) {
@@ -70,6 +73,12 @@ function run(label, repos, { noise = true } = {}) {
 const foundAt = (r, folder) => Boolean(r.repo_root) && basename(r.repo_root) === folder;
 
 try {
+  // T0 — 아래 시나리오는 "폴더 목록이 이름순"(NTFS)일 때 상한 앞뒤가 정해진다. 아니면 검사가 헛돌 수 있다
+  const probe = join(work, 'probe');
+  for (const n of ['y-noise', 'b-x', 'z-x', 'a-x']) mkdirSync(join(probe, n), { recursive: true });
+  const order = readdirSync(probe).join(',');
+  check('T0 전제: 폴더 열거 순서가 이름순이다', order === 'a-x,b-x,y-noise,z-x', order);
+
   // T1 — 실제로 터진 상황: c 만 중복, 전수 탐색은 상한에서 끊김
   const t1 = run('t1', [
     ['b-SoDam-A-Eng', 'a'],
