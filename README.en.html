@@ -316,7 +316,7 @@ Failed — no such milestone "no-such-milestone"</code></pre>
 <ul>
 <li>🔧 <strong>Guidance fix</strong>: several places said that recording with <code>/graph-shadow</code> gets a sibling judged automatically or out of "coarse judgment". That was not true. Recording <strong>only fills in the "next task" text</strong>; stage tracking, ranking, stall days and mismatch warnings stay as they are. Command instructions, on-screen text and this feature list are corrected (on-screen text is in Korean).</li>
 <li>🔧 <strong>Display fix</strong>: <code>/graph-why</code> called every blocked item a human task. It now says so <strong>only when a human blocker is recorded</strong>, and when it is waiting on another sibling it <strong>names that sibling</strong>.</li>
-<li>⚠ Records you create from the installed plugin may not carry over when the plugin is updated (not solved yet). Ranking and score calculation are unchanged.</li>
+<li>⚠ A record is not shown for a sibling that cannot be located. <strong>The tool does not yet tell you when a record has gone stale</strong> (the stale warning mentioned earlier was never actually wired up). Records you create from the installed plugin may not carry over when the plugin is updated (not solved yet). Ranking and score calculation are unchanged.</li>
 </ul>
 </details>
 
@@ -401,7 +401,7 @@ Failed — no such milestone "no-such-milestone"</code></pre>
 <li>Automatic 3-line notice when a session opens</li>
 <li>The problem of "marked done but still stuck in place" — once enough evidence accumulates, "done" is auto-suggested; a human only needs to say "no"</li>
 <li>Points out the single thing to solve right now if you can only do one</li>
-<li>For a project lacking information, answering two questions fills in its "next task" text (stage tracking and ranking stay as they are)</li>
+<li>For a project lacking information, answering two questions fills in its "next task" text (only for a located sibling under coarse judgment; stage tracking and ranking stay as they are)</li>
 <li>Fixed the problem of siblings being unable to read each other — a summary is saved to a shared location so other siblings can read it too</li>
 </ul>
 </details>

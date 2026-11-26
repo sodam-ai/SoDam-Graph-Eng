@@ -55,6 +55,21 @@ check('P3 graph-next 안내가 "기록해도 그대로인 것"을 말한다', li
 check('P4 graph-shadow 안내가 바뀌는 것과 그대로인 것을 말한다', shadowDoc.includes('다음 할 일') && shadowDoc.includes('그대로'));
 check('P5 graph-shadow 안내가 "업데이트 때 기록이 따라오지 않을 수 있음"을 알린다', /업데이트[^\n]*따라오지 않을 수/.test(shadowDoc));
 
+const shadowSrc = read('lib', 'shadow.mjs');
+check(
+  'P6 뜰 수 없는 "낡음" 경고를 안내하지 않는다 (낡음 감지는 판정에 연결돼 있지 않음)',
+  !shadowDoc.includes('형제 쪽 기록이 그 뒤에 바뀌었습니다') && shadowDoc.includes('자동으로 알려주지 않')
+);
+check(
+  'P7 "형제 기록을 읽게 되면 그쪽이 우선"이라고 약속하지 않는다 (안내문·기록 파일 꼬리말)',
+  !/그쪽이 우선/.test(shadowDoc) && !shadowSrc.split(/\r?\n/).some((l) => l.includes('`>') && l.includes('그쪽이 우선'))
+);
+check('P8 위치를 못 찾은 형제는 기록해도 안 보인다고 알린다', /위치를 못 찾[^.]*보이지 않/.test(shadowDoc));
+check(
+  'P9 graph-next 의 🟡 설명이 모든 급하지 않은 알림에 맞는다',
+  linesOf(nextDoc).some((l) => l.startsWith('| 🟡 |') && l.includes('급하지 않은 알림'))
+);
+
 // ── 2. 새 안내가 사실인지 — 실제 코드로 확인 ──
 const work = mkdtempSync(join(tmpdir(), 'sodam-graph-truth-'));
 try {
@@ -121,6 +136,15 @@ try {
   check('F1 기록하면 /graph-next 의 판정 종류는 바뀐다 (coarse → shadow, 기호 🟡 → ▶)', before.kind === 'coarse' && after.kind === 'shadow', `${before.kind} → ${after.kind}`);
   check('F2 점수·지도 (추정)·어긋남 경고는 그대로다', after.score === before.score && after.node === before.node && after.node.includes('(추정)') && after.warn === before.warn && after.warn > 0, JSON.stringify({ before, after }));
 
+  const aged = structuredClone(snap);
+  aged.projects.find((s) => s.project_id === LOOP).coarse = { checkpoint_mtime: '2999-01-01', open_items: [], open_checkboxes: 0 };
+  const agedJudge = judgeProject(loadGraph(), aged, LOOP);
+  check(
+    'F3 형제 기록이 더 새것이어도 낡음 경고는 뜨지 않는다 (안내문이 그렇게 말해야 하는 이유)',
+    agedJudge.kind === 'shadow' && !String(agedJudge.detail).includes('바뀌었습니다'),
+    `${agedJudge.kind} / ${agedJudge.detail}`
+  );
+
   // ── 3. /graph-why 의 "걸린 것" ──
   const stuck = (mutate) => {
     const g = JSON.parse(original);
@@ -142,6 +166,17 @@ try {
     g.blockers.push({ id: 'blk-901', milestone_id: M16, kind: 'legal', description: '시험', since: '2026-01-01' });
   });
   check('K3 사람 블로커가 기록돼 있으면 "사람 몫"이라 말한다 (숨기지 않음)', human.line.includes('사람 몫'), human.line);
+
+  const internal = stuck((g) => {
+    const m16 = g.milestones.find((m) => m.id === M16);
+    g.milestones.push({ ...m16, id: `${GRAPH}.T9`, seq: 999, title: '시험 앞 단계', state: 'todo' });
+    for (const e of g.edges) if (e.from === M16 && e.type === 'depends_on') e.to = `${GRAPH}.T9`;
+  });
+  check(
+    'K5 같은 프로젝트의 앞 단계를 기다리면 "이유 없음"이라 하지 않는다',
+    internal.head.includes(nameOf(GRAPH)) && internal.line.includes('앞 단계 대기') && internal.line.includes('시험 앞 단계') && !internal.line.includes('사람 몫'),
+    internal.line
+  );
 
   const unknown = stuck((g) => {
     g.edges = g.edges.filter((e) => !(e.from === M16 && e.type === 'depends_on'));

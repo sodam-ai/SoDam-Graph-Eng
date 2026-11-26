@@ -317,7 +317,7 @@ A recorded blocker automatically shows up at the end of `/graph-why`'s output, *
 
 - 🔧 **Guidance fix**: several places said that recording with `/graph-shadow` gets a sibling judged automatically or out of "coarse judgment". That was not true. Recording **only fills in the "next task" text**; stage tracking, ranking, stall days and mismatch warnings stay as they are. Command instructions, on-screen text and this feature list are corrected (on-screen text is in Korean).
 - 🔧 **Display fix**: `/graph-why` called every blocked item a human task. It now says so **only when a human blocker is recorded**, and when it is waiting on another sibling it **names that sibling**.
-- ⚠ Records you create from the installed plugin may not carry over when the plugin is updated (not solved yet). Ranking and score calculation are unchanged.
+- ⚠ A record is not shown for a sibling that cannot be located. **The tool does not yet tell you when a record has gone stale** (the stale warning mentioned earlier was never actually wired up). Records you create from the installed plugin may not carry over when the plugin is updated (not solved yet). Ranking and score calculation are unchanged.
 
 </details>
 
@@ -402,7 +402,7 @@ A recorded blocker automatically shows up at the end of `/graph-why`'s output, *
 - Automatic 3-line notice when a session opens
 - The problem of "marked done but still stuck in place" — once enough evidence accumulates, "done" is auto-suggested; a human only needs to say "no"
 - Points out the single thing to solve right now if you can only do one
-- For a project lacking information, answering two questions fills in its "next task" text (stage tracking and ranking stay as they are)
+- For a project lacking information, answering two questions fills in its "next task" text (only for a located sibling under coarse judgment; stage tracking and ranking stay as they are)
 - Fixed the problem of siblings being unable to read each other — a summary is saved to a shared location so other siblings can read it too
 
 </details>
