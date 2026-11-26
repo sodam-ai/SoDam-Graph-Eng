@@ -312,6 +312,15 @@ Failed — no such milestone "no-such-milestone"</code></pre>
 <h2 id="update-summary">Update Summary</h2>
 
 <details>
+<summary><b>v0.2.7 (2026-11-26) — Siblings that cannot be located are no longer hidden</b></summary>
+<ul>
+<li>🔧 <strong>Bug fix</strong>: a sibling that cannot be located has no measurable stall count, yet <code>/graph-why</code> treated it as <strong>0 days (score 0)</strong> and silently picked another one as "the one to fix". It even picked one when all 7 were missing. It now <strong>says first that N siblings could not be located and were left out of the ranking</strong>, and picks nothing when there is nothing it can rank (on-screen text is in Korean).</li>
+<li>The third line of the session-start notice now also shows how many siblings could not be located. It is still 3 lines. If the folder you opened is itself the one that cannot be located, no notice appears, as before.</li>
+<li>The score formula, commands and usage are unchanged.</li>
+</ul>
+</details>
+
+<details>
 <summary><b>v0.2.6 (2026-11-26) — Fixed: one duplicated folder made all 7 siblings show as "location lost"</b></summary>
 <ul>
 <li>🔧 <strong>Bug fix</strong>: when a copy of a sibling repository appeared (for example a <code>git worktree</code> folder), the tool re-scanned every folder. That scan stops at the 500-folder cap, and <strong>its partial result overwrote the siblings that had already been found, so all 7 showed as "location lost".</strong> Siblings already found are now kept.</li>
