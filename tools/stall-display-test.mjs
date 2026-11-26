@@ -46,6 +46,14 @@ for (const d of ['hooks', 'lib', '.claude-plugin', 'data']) {
   });
 }
 
+// ── 합성 shadow 기록 — 저장소의 실제 기록 유무에 기대지 않는다 (B3 전제) ──
+mkdirSync(join(plugin, 'data', 'shadow'), { recursive: true });
+writeFileSync(
+  join(plugin, 'data', 'shadow', `${LOOP}.md`),
+  `---\nproject_id: ${LOOP}\nsource: user_input\nrecorded_at: 2026-01-01\n---\n\n` +
+    '## 시험용 다음 할 일\n- state: todo\n- done_when: 시험\n- owner: human\n- evidence: 시험\n'
+);
+
 // ── 합성 스캔 결과 ──
 const DAYS = { [LOOP]: [97, 0], [PROMPT]: [122, null], [GRAPH]: [116, 3] };
 const graph = JSON.parse(readFileSync(join(plugin, 'data', 'graph.json'), 'utf8'));
@@ -111,7 +119,11 @@ try {
   const loop = banner(LOOP);
   check('B1 coarse 배너: "단계 추적 안 됨" + 기록 일수', loop[1]?.includes('단계 추적 안 됨') && loop[1]?.includes('97일'), loop[1]);
   check('B2 coarse 배너: "마지막 활동 오늘"', loop[1]?.includes('마지막 활동 오늘'), loop[1]);
-  check('B3 shadow 가 있어도 영문 coarse 라벨이 새지 않는다', !loop[1]?.includes('coarse'), loop[1]);
+  check(
+    'B3 shadow 가 있어도 영문 coarse 라벨이 새지 않는다',
+    loop[1]?.includes('시험용 다음 할 일') && !loop[1]?.includes('coarse'),
+    loop[1]
+  );
   check('B4 배너 3줄 이내 (E1)', loop.length <= 3, `${loop.length}줄`);
   check('B5 3번째 줄: 정체 7곳 중 6곳은 추적 안 됨', loop[2]?.includes('정체 7곳 (6곳은 단계 추적 안 됨)'), loop[2]);
 
