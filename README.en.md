@@ -147,7 +147,7 @@ There is no separate "run" step. Inside Claude Code, it activates when you type 
 
 ## How to Use
 
-**Scenario 1 — When you open a new session**: You don't need to do anything. If you open a session inside a sibling project folder, a 3-line notice appears automatically.
+**Scenario 1 — When you open a new session**: You don't need to do anything. If you open a session inside a sibling project folder, a 3-line notice appears automatically. (Right after an install/update, the notice may not appear **in the first session only**; it appears from the second session on.)
 
 **Scenario 2 — When you're curious which project you're in, or where it is**: `/graph-where <name>`
 
@@ -311,6 +311,15 @@ A recorded blocker automatically shows up at the end of `/graph-why`'s output, *
 ## Update Summary
 
 <details>
+<summary><b>v0.2.2 (2026-11-26) — Fixed slow session start right after a fresh install</b></summary>
+
+- 🔧 **Bug fix**: Right after a first install (or a version upgrade) there is no cached scan result yet, so every time Claude Code opened (in any folder) the tool re-scanned the sibling folders from scratch — taking several seconds each time — and never saved the result, so it repeated forever. Now **the first session passes silently and a background process quietly builds the cache.** From the second session on, the 3-line notice shows immediately. (In an isolated test on this PC: session-start delay with no cache went from several seconds to about 0.1 s.)
+- As a result, the 3-line notice may **not appear once, in the first session after install/update.** That is expected.
+- No commands or usage changed. To get the new version, see FAQ 15 below.
+
+</details>
+
+<details>
 <summary><b>v0.2.1 (2026-09-01) — Fixed a staleness-tracking bug + confirmed Mermaid rendering in real use</b></summary>
 
 - 🔧 **Bug fix**: For 5 of the 6 siblings (Harness, Context, Agentic, Loop, Reverse), the "how many days has it been stuck" judgment was pinned to the date it was first measured instead of the actual last git activity date — off by up to 36 days in some cases. Found and corrected by comparing directly against each repository's real commit history. SoDam-Prompt-Eng's value was already accurate and was left unchanged.
@@ -386,7 +395,7 @@ tools/          Scripts for internal code checks
 
 ```
 Start Claude Code in the morning
-  → if you're inside a sibling folder, an automatic 3-line notice appears
+  → if you're inside a sibling folder, an automatic 3-line notice appears (except the first session right after install — from the second one on)
   → if you don't know what to do, use /graph-why (human-only blockers show up here too)
   → if you want to see everything, use /graph-next
   → if a "done" condition can be checked automatically, use /graph-verify
@@ -474,7 +483,7 @@ Cause: the sibling folder is outside the search range. Fix: edit `config.search_
 Cause: ① you opened it outside a sibling folder (normal) ② `SODAM_GRAPH_SILENT=1` is turned on. Fix: check the environment variable.
 
 **17-9. Session startup got slower**
-Cause: too many folders to scan. Fix: narrow the scope with `config.scan_filter`.
+Cause: too many folders to scan. Fix: narrow the scope with `config.scan_filter`. (v0.2.1 and earlier can be slow on every session right after an install/update → update to v0.2.2 or later; see FAQ 15.)
 
 **17-10. Korean text is garbled as `???`**
 Cause: terminal encoding is not UTF-8. Fix: run `chcp 65001` in PowerShell, then retry.

@@ -76,14 +76,16 @@ try {
 
   const graph = loadGraph();
 
-  // 캐시 우선 — 스캔은 캐시가 아예 없을 때만 (E5)
+  // 캐시 우선 — 세션 시작에서는 절대 스캔하지 않는다 (E5)
   let snapshot = readSnapshot();
   let stale = false;
 
   if (!snapshot) {
-    if (overBudget()) silent();
-    const { scanAll } = await import('../lib/scan.mjs');
-    snapshot = scanAll(graph).snapshot;
+    // 캐시가 없으면(새 설치·업데이트 직후) 여기서 스캔하지 않는다.
+    // 예전에는 그 자리에서 스캔만 하고 저장하지 않아, 세션을 열 때마다(형제 밖 폴더에서도)
+    // 수 초씩 붙잡았다(2026-11-26 실측). 백그라운드가 캐시를 만들고, 이번 세션은 침묵한다.
+    rescanDetached();
+    silent();
   } else if (isStale(snapshot, new Date(), STALE_MIN)) {
     stale = true; // 낡은 값으로 즉시 답하고, 갱신은 백그라운드로
   }
