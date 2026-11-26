@@ -312,6 +312,15 @@ claude plugin install sodam-graph@sodamgraph-marketplace
 <h2 id="업데이트-내용-요약">업데이트 내용 요약</h2>
 
 <details>
+<summary><b>v0.2.4 (2026-11-26) — 설치한 플러그인이 직접 적은 "다음 할 일" 기록을 못 읽던 문제 수정</b></summary>
+<ul>
+<li>🔧 <strong>버그 수정</strong>: Windows에서 설치하면 기록 파일(<code>data/shadow/</code>)의 줄바꿈이 Windows 방식(CRLF)이 될 수 있는데, 읽는 코드가 이를 알아보지 못해 <strong>오류 메시지 없이 기록을 무시</strong>했습니다. 이제 두 방식 모두 읽습니다.</li>
+<li>수정 후에는 이미 저장돼 있던 기록이 "다음 할 일"로 다시 보입니다. 내용이 낡았다면 <code>/graph-shadow</code>로 다시 정리하세요.</li>
+<li>⚠ <strong>알려진 한계</strong>: 설치한 플러그인에서 새로 남긴 기록은 버전별 설치 폴더에 저장됩니다. 플러그인을 업데이트하면 새 버전 폴더로 자동으로 옮겨지지 않습니다. 아직 고치지 않았습니다.</li>
+</ul>
+</details>
+
+<details>
 <summary><b>v0.2.3 (2026-11-26) — 정체 일수를 더 정직하게 표시</b></summary>
 <ul>
 <li>🔧 <strong>표시 수정</strong>: "거친 판정"인 곳은 이 도구가 단계 완료를 추적하지 못해 정체 일수가 줄어들 길이 없는데, 정확히 잰 값처럼 보였습니다(오늘 커밋한 곳도 "97일 정지"). 이제 <strong>"단계 추적 안 됨 — 기록이 N일째 그대로"</strong>라고 말합니다.</li>

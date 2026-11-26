@@ -313,6 +313,15 @@ A recorded blocker automatically shows up at the end of `/graph-why`'s output, *
 ## Update Summary
 
 <details>
+<summary><b>v0.2.4 (2026-11-26) — Fixed: the installed plugin could not read hand-written "next task" records</b></summary>
+
+- 🔧 **Bug fix**: when installed on Windows, record files (`data/shadow/`) can get Windows line endings (CRLF). The reader did not recognize them and **silently ignored the record, with no error.** Both line-ending styles are now read.
+- After this fix, records that were already saved show up again as the "next task". If one is out of date, record it again with `/graph-shadow`.
+- ⚠ **Known limitation**: records you create from the installed plugin are saved inside that version's install folder. They are not carried over automatically when the plugin is updated. Not fixed yet.
+
+</details>
+
+<details>
 <summary><b>v0.2.3 (2026-11-26) — Stall days are now shown more honestly</b></summary>
 
 - 🔧 **Display fix**: for siblings under "coarse judgment" the tool cannot track whether a stage was finished, so their stall count has no way to go down — yet it looked like a measured value (a sibling committed today still read "stalled 97 days"). It now says **"stage not tracked — record unchanged for N days"** (the on-screen text is in Korean).
