@@ -316,7 +316,7 @@ A recorded blocker automatically shows up at the end of `/graph-why`'s output, *
 <summary><b>v0.2.4 (2026-11-26) — Fixed: the installed plugin could not read hand-written "next task" records</b></summary>
 
 - 🔧 **Bug fix**: when installed on Windows, record files (`data/shadow/`) can get Windows line endings (CRLF). The reader did not recognize them and **silently ignored the record, with no error.** Both line-ending styles are now read.
-- After this fix, records that were already saved show up again as the "next task". If one is out of date, record it again with `/graph-shadow`.
+- One bundled SoDam-Loop-Eng record was **out of date and has been removed.** That sibling is shown as "coarse judgment"; record the current state again with `/graph-shadow`.
 - ⚠ **Known limitation**: records you create from the installed plugin are saved inside that version's install folder. They are not carried over automatically when the plugin is updated. Not fixed yet.
 
 </details>

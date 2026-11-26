@@ -92,6 +92,17 @@ try {
     JSON.stringify(extractOpenItems(md.replace(/\n/g, '\r\n'))) === JSON.stringify(extractOpenItems(md)),
     JSON.stringify(extractOpenItems(md.replace(/\n/g, '\r\n')))
   );
+
+  // 배포본에 기록이 하나도 없으면 data/shadow/ 폴더 자체가 없다 — 그래도 새 기록이 저장돼야 한다
+  rmSync(shadowDir, { recursive: true, force: true });
+  const { writeShadow, listShadows } = await lib('shadow.mjs');
+  const before = listShadows().length;
+  writeShadow(ID, { last: '이전 일', next: '새 할 일' });
+  check(
+    'C5 data/shadow/ 폴더가 없어도 목록은 비고, 새 기록은 저장·판독된다',
+    before === 0 && readShadow(ID)?.title === '새 할 일',
+    `before=${before} title=${readShadow(ID)?.title}`
+  );
 } finally {
   // 이 테스트가 방금 만든 임시 폴더만 정리 (실패해도 결과에 영향 없음)
   try {
