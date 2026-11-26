@@ -312,6 +312,15 @@ claude plugin install sodam-graph@sodamgraph-marketplace
 <h2 id="업데이트-내용-요약">업데이트 내용 요약</h2>
 
 <details>
+<summary><b>v0.2.9 (2026-11-27) — 폴더가 겹쳐 못 찾을 때, 어느 폴더들인지 알려주기</b></summary>
+<ul>
+<li>🔧 <strong>안내 보완</strong>: 같은 형제로 보이는 폴더가 여러 개면(예: <code>git worktree</code>) 이 도구는 임의로 고르지 않고 "위치 유실"로 둡니다. 그런데 <strong>어느 폴더들이 겹치는지는 알려주지 않았고</strong>, 원인과 상관없는 설정을 확인하라고 안내했습니다. 이제 <code>/graph-where</code>와 <code>/graph-next</code>가 <strong>겹친 폴더 목록</strong>을 보여 줍니다.</li>
+<li>🔴 <strong>AI는 겹친 폴더를 지우거나 옮기지 않습니다.</strong> 다른 작업이 쓰는 중일 수 있으니, 어느 것이 필요 없는지는 직접 확인한 뒤 정리하세요. 폴더 탐색이 중간에 끊긴 경우, 목록은 그때까지 본 폴더만 담습니다.</li>
+<li>형제 프로젝트가 함께 읽는 공유 파일의 형식, 순위·점수 계산, "겹치면 고르지 않는다"는 규칙은 바뀌지 않았습니다.</li>
+</ul>
+</details>
+
+<details>
 <summary><b>v0.2.8 (2026-11-26) — 사실과 다른 안내 바로잡기</b></summary>
 <ul>
 <li>🔧 <strong>안내 정정</strong>: 여러 곳에서 "<code>/graph-shadow</code>로 정리하면 자동 판정된다 / 거친 판정에서 벗어난다"고 안내했지만 사실이 아니었습니다. 기록하면 <strong>"다음 할 일" 문구만 채워지고</strong>, 단계 추적 상태 · 순위 · 정체 일수 · 어긋남 경고는 그대로입니다. 명령 안내문, 화면 문구, 이 문서의 기능 설명을 고쳤습니다.</li>

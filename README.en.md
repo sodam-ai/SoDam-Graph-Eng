@@ -313,6 +313,15 @@ A recorded blocker automatically shows up at the end of `/graph-why`'s output, *
 ## Update Summary
 
 <details>
+<summary><b>v0.2.9 (2026-11-27) — When duplicate folders block detection, show which folders they are</b></summary>
+
+- 🔧 **Better guidance**: when several folders look like the same sibling (for example `git worktree` folders), the tool does not pick one and marks it "location lost". But it **did not say which folders collided**, and told you to check settings that were not the cause. `/graph-where` and `/graph-next` now **list the colliding folders** (on-screen text is in Korean).
+- 🔴 **The AI does not delete or move those folders.** Other work may be using them, so check for yourself which ones are no longer needed before cleaning up. If the folder scan was cut off, the list only contains the folders seen up to that point.
+- The format of the shared file siblings read, ranking and score calculation, and the rule "never pick one of several" are unchanged.
+
+</details>
+
+<details>
 <summary><b>v0.2.8 (2026-11-26) — Corrected guidance that was not true</b></summary>
 
 - 🔧 **Guidance fix**: several places said that recording with `/graph-shadow` gets a sibling judged automatically or out of "coarse judgment". That was not true. Recording **only fills in the "next task" text**; stage tracking, ranking, stall days and mismatch warnings stay as they are. Command instructions, on-screen text and this feature list are corrected (on-screen text is in Korean).
