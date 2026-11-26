@@ -44,6 +44,8 @@ try {
   delete env.SODAM_GRAPH_SILENT;
   delete env.SODAM_GRAPH_SEARCH_ROOTS;
   delete env.SODAM_GRAPH_DEBUG;
+  delete env.NODE_OPTIONS; // 상속하면 임시 홈 밖을 건드리는 사전 로드·커버리지 쓰기가 가능하다
+  delete env.NODE_V8_COVERAGE;
   env.SODAM_GRAPH_ROOT = join(work, 'repos'); // 다시 스캔해도 실제 형제 폴더는 안 읽는다 (S-13.7)
 
   const graph = JSON.parse(readFileSync(join(plugin, 'data', 'graph.json'), 'utf8'));
@@ -105,14 +107,42 @@ try {
   // ── 지목할 수 있는 곳이 못 찾은 곳 때문에 하나만 남음 → 2위 자리에 못 찾은 곳이 오지 않는다 ──
   setSnapshot(all.filter((id) => id !== LOOP));
   const only = why();
-  check('W4 못 찾은 곳은 2위로도 올리지 않는다', !/2위/.test(only), only.slice(0, 400));
+  check('W4 못 찾은 곳은 2위로도 올리지 않는다', only.includes('[지금 딱 하나만') && !/2위/.test(only), only.slice(0, 400));
   check('W5 못 찾은 수를 정확히 센다 (6곳)', /6곳/.test(only.split(/\r?\n/).find((l) => l.includes('위치를 못 찾')) ?? ''), only.slice(0, 200));
 
   // ── 전부 못 찾음 ──
   setSnapshot(all);
   const none = why();
-  check('W6 전부 못 찾으면 아무 곳도 지목하지 않는다', !none.includes('[지금 딱 하나만'), none.slice(0, 200));
+  check('W6 전부 못 찾으면 아무 곳도 지목하지 않는다', !none.includes('[지금 딱 하나만') && none.includes('지금 지목할 것이 없습니다'), none.slice(0, 200));
   check('W7 그 이유를 "위치를 못 찾음"으로 말한다 ("전부 완료"라고 하지 않는다)', none.includes('위치를 못 찾') && !none.includes('전부 완료'), none.slice(0, 200));
+
+  // ── 순위에서 이미 빠지는 상태(전부 완료 · 순환)여도, 못 찾았다는 사실은 말한다 ──
+  const graphPath = join(plugin, 'data', 'graph.json');
+  const original = readFileSync(graphPath, 'utf8');
+  const withGraph = (mutate) => {
+    const g = JSON.parse(original);
+    mutate(g);
+    writeFileSync(graphPath, JSON.stringify(g, null, 2));
+  };
+  const warnOf = (out) => out.split(/\r?\n/).find((l) => l.includes('위치를 못 찾')) ?? '';
+
+  withGraph((g) => {
+    for (const m of g.milestones) if (m.project_id === AGENTIC) m.state = 'done';
+  });
+  setSnapshot([AGENTIC]);
+  const doneLost = why();
+  check('W8 모든 단계가 끝난 형제도 못 찾으면 이름을 말한다', warnOf(doneLost).includes(nameOf(AGENTIC)), doneLost.slice(0, 200));
+
+  withGraph((g) => {
+    const a = `${AGENTIC}.current`;
+    const b = 'sodam-prompt-eng.current';
+    g.edges.push({ from: a, to: b, type: 'depends_on', note: '시험' }, { from: b, to: a, type: 'depends_on', note: '시험' });
+  });
+  setSnapshot([AGENTIC]);
+  const cycleLost = why();
+  check('W9 전제: 순환이 감지된다', cycleLost.includes('순환 의존 발견'), cycleLost.slice(0, 200));
+  check('W10 순환에 속한 형제도 못 찾으면 이름을 말한다', warnOf(cycleLost).includes(nameOf(AGENTIC)), cycleLost.slice(0, 300));
+  writeFileSync(graphPath, original);
 
   // ── 못 찾은 곳 없음 → 예전과 같음 ──
   setSnapshot([]);
@@ -123,7 +153,11 @@ try {
 
   // ── 명령 안내문 ──
   const doc = readFileSync(join(REPO, 'commands', 'graph-why.md'), 'utf8');
-  check('D1 graph-why 안내가 못 찾음 경고를 먼저 전하게 한다', doc.includes('위치를 못 찾'));
+  check(
+    'D1 graph-why 안내가 못 찾음 경고를 먼저 전하게 한다',
+    doc.split(/\r?\n/).some((l) => l.includes('위치를 못 찾') && l.includes('지목 결과보다 먼저'))
+  );
+  check('D2 2위 배율을 "순위에 든 곳 안에서"로 한정한다', /순위에 든 곳 안에서/.test(doc));
 } finally {
   // 이 테스트가 방금 만든 임시 폴더만 정리 (실패해도 결과에 영향 없음)
   try {
