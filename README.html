@@ -312,6 +312,15 @@ claude plugin install sodam-graph@sodamgraph-marketplace
 <h2 id="업데이트-내용-요약">업데이트 내용 요약</h2>
 
 <details>
+<summary><b>v0.2.6 (2026-11-26) — 폴더 하나가 중복되면 7곳이 전부 "위치 유실"이 되던 문제 수정</b></summary>
+<ul>
+<li>🔧 <strong>버그 수정</strong>: 형제 저장소의 복사본(예: <code>git worktree</code>로 만든 작업 폴더)이 생기면, 이 도구가 전체 폴더를 다시 훑습니다. 그 탐색이 폴더 500개 상한에서 중간에 끊기는데, <strong>끊긴 결과가 정상으로 찾았던 형제까지 덮어써서 7곳이 모두 "위치 유실"</strong>이 됐습니다. 이제 이미 찾은 형제는 그대로 둡니다.</li>
+<li>같은 저장소 폴더가 둘 이상 보이면 그 형제만 "위치 유실"로 두고 <strong>임의로 고르지 않습니다.</strong> 중간에 끊긴 탐색이 복사본 하나만 봤을 때 그것을 확정해 버리던 경우도 함께 막았습니다.</li>
+<li>그 형제를 다시 찾게 하려면 겹치는 복사본 폴더를 정리하면 됩니다. <strong>어느 폴더들이 겹치는지는 아직 화면에 보여 주지 않습니다.</strong> 명령어와 사용법은 바뀌지 않았습니다.</li>
+</ul>
+</details>
+
+<details>
 <summary><b>v0.2.5 (2026-11-26) — 명령 안내 정정 · 2위 표시 보완 · 파일 맨 앞 BOM 처리</b></summary>
 <ul>
 <li>🔧 <strong>안내 정정</strong>: <code>/graph-map</code> 명령의 안내문이 AI에게 "<code>/graph-shadow</code>로 정리하면 <code>(추정)</code>이 사라진다"고 말하게 했는데 사실이 아니었습니다. v0.2.3에서 화면 범례는 고쳤지만 이 안내문은 빠뜨렸습니다. <code>/graph-why</code> 안내문도 "단계 추적 안 됨"을 그대로 전하도록 고쳤습니다.</li>

@@ -313,6 +313,15 @@ A recorded blocker automatically shows up at the end of `/graph-why`'s output, *
 ## Update Summary
 
 <details>
+<summary><b>v0.2.6 (2026-11-26) — Fixed: one duplicated folder made all 7 siblings show as "location lost"</b></summary>
+
+- 🔧 **Bug fix**: when a copy of a sibling repository appeared (for example a `git worktree` folder), the tool re-scanned every folder. That scan stops at the 500-folder cap, and **its partial result overwrote the siblings that had already been found, so all 7 showed as "location lost".** Siblings already found are now kept.
+- When two or more folders of the same repository are visible, only that sibling is "location lost" and **no copy is picked arbitrarily.** This also covers the case where a cut-off scan saw just one of the copies and treated it as confirmed.
+- To have that sibling found again, remove the extra copy. **The screen does not yet show which folders collide.** No commands or usage changed.
+
+</details>
+
+<details>
 <summary><b>v0.2.5 (2026-11-26) — Corrected command guidance, labelled the runner-up, handled a leading BOM</b></summary>
 
 - 🔧 **Guidance fix**: the `/graph-map` command instructions told the AI to say that recording with `/graph-shadow` makes `(추정)` (estimate) disappear. That was not true. v0.2.3 fixed the on-screen legend but missed these instructions. The `/graph-why` instructions now tell the AI to pass on "stage not tracked" as is.
