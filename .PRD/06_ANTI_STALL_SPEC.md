@@ -160,6 +160,8 @@ Anthropic 공식 에이전트 설계 패턴 중 **Evaluator–Optimizer** (`RESE
 
 답을 `data/shadow/<id>.md` 에 적으면 그 뒤로는 자동 판정됩니다.
 
+> 🔴 **2026-11-26 (v0.2.8) 실측 — 위 약속은 아직 일부만 구현됐습니다.** 기록하면 `judgeProject` 의 "다음 할 일" 문구만 그 답으로 채워집니다(`kind=shadow`). `graph.json` 의 `state` 는 `coarse` 그대로라 `/graph-why` 점수·정체 일수·지도 `(추정)`·`resolvable_coarse` 경고는 바뀌지 않습니다. 화면과 명령 안내는 실제 동작에 맞춰 고쳤습니다. 약속대로 구현할지(정본 쓰기 필요)는 **미결 — 사람 결정**입니다.
+
 ### 그림자 파일 형식
 
 ```markdown
