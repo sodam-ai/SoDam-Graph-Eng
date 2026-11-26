@@ -174,7 +174,7 @@ claude plugin install sodam-graph@sodamgraph-marketplace → ✔ Successfully in
 |------|----------------------|------|
 | **플러그인 이름** | **`sodam-graph`** | 형제 6/6이 `sodam-{X}` 형식 (실측). 정본 §5 2026-08-02 정정 — **형제마다 고유 이름 필수** |
 | **마켓플레이스 이름** | **`sodamgraph-marketplace`** ⬜ | 실측 관례 3갈래 중 **다수파**(하네스·컨텍스트·리버스). 사용자 확정 대기 — 변경 시 `marketplace.json` `name` 한 줄 |
-| 명령어 | `graph-where` `graph-next` `graph-map` `graph-why` `graph-shadow` `graph-reject` `graph-undo` | **전부 `graph-` 접두사.** 짧은 일반명(`status`·`start`·`log`) **절대 금지** |
+| 명령어 | `graph-where` `graph-next` `graph-map` `graph-why` `graph-shadow` `graph-reject` `graph-undo` + 🆕 `graph-verify` `graph-block`(M12·M13, 2026-08-20/21 추가 — 현재 9개) | **전부 `graph-` 접두사.** 짧은 일반명(`status`·`start`·`log`) **절대 금지** |
 | 호출 형태 | `/sodam-graph:graph-where` (플러그인 네임스페이스) | 정본 §6 예시(`/sodam-agentic:start`)와 동일 방식 |
 | 데이터 폴더 | `data/` (자기 저장소 안) | 형제 저장소에 파일 안 만듦 |
 | 공유 발행 | `~/.sodam/graph-state.json` (**읽기 전용 요약본**) | 정본 §4 공유 인터페이스 계약에 편입 (§5 참조) |
@@ -248,6 +248,24 @@ SessionStart도 **동일한 병렬 실행 구조**입니다. 6형제가 각자 �
 | B — `bypassPermissions` 권유 금지 | ✅ 권유하지 않습니다 |
 | C — 입력 변조 금지 | ✅ 훅에서 입력을 고치지 않습니다 |
 | D — Harness 감지 위임 + 치명은 자체 deny | **해당 없음** — 읽기 전용이라 `deny`/`ask` 판정을 아예 내리지 않습니다 |
+
+### 🆕 4-B. 형제 PreToolUse deny 가드 동시 활성 현황 (2026-08-23 형제 전수 조사 기록 — G-P4 반영)
+
+> ⚠️ **출처·한계**: 아래는 2026-08-23에 형제 저장소를 **읽기 전용**으로 조사한 기록입니다. 형제들은 그 뒤에도 갱신됐으므로(예: 소담루프엔지니어링 v0.1.3, 2026-09-03 — 가드 보강 커밋 포함) **현재 상태는 미재검증**입니다. 소담그래프엔지니어링은 이 가드들을 고치지 않습니다(형제 저장소 읽기 전용, S-3).
+
+| 형제 | 가드 파일 | 훅 이벤트 | 차단 성격 | 비고 |
+|------|----------|----------|----------|------|
+| 소담그래프엔지니어링 | `hooks/session-start.mjs` | **SessionStart만** | **차단 없음** | 이 문서 규약 A·D 준수 |
+| 소담하네스엔지니어링 | `hooks/guard.mjs` | PreToolUse(Bash·PowerShell·Write·Edit·MultiEdit·NotebookEdit) | 민감경로·위험명령 | 훅 이중 등록 확인(2026-08-23) |
+| 소담루프엔지니어링 | `hooks/safety-gate.mjs` | PreToolUse(Bash·PowerShell·Write·Edit·NotebookEdit) | 자기보호·위험명령·폴더밖 | 보호 목록의 일반 단어 `"hooks"` 때문에 `hooks/` 폴더를 가진 다른 형제의 파일 수정도 막힘(2026-08-31 실측) |
+| 소담에이전틱엔지니어링 | `hooks/guard.mjs` | PreToolUse 동일 6종 | 키 노출·민감경로·설정 | 사본 중복 |
+| 소담리버스엔지니어링 | `hooks/re-deny-guard.mjs` | PreToolUse(Bash·Write·Edit·MultiEdit) | 금지 범위 키워드 | 문서에 금지 단어를 적기만 해도 차단된 이력 |
+| 소담컨텍스트엔지니어링 | `lib/prevent-write.mjs` | PreToolUse(Write·Edit) | 비밀키·파일 크기 | 쓰기 전용 |
+| 소담프롬프트엔지니어링 | (훅 없음) | — | 없음 | — |
+
+- **deny 가능한 PreToolUse 가드가 동시에 5곳 활성** — 어느 하나만 deny해도 명령이 막힙니다. 그래프와 프롬프트만 여기에 속하지 않습니다.
+- **토큰 이름 충돌 사례**: 소담루프엔지니어링 보호 목록의 `"checkup"`이 소담컨텍스트엔지니어링의 명령명과 겹친다고 기록됨(2026-08-23, 미재검증). **이름이 일반 단어일수록 다른 형제의 정상 작업까지 막힙니다** — 07 §3(이름공간 규칙)을 가드 보호 목록에도 적용해야 한다는 뜻입니다.
+- **그래프에 주는 의미**: 이 문서의 규약 A("새 PreToolUse 훅 금지")를 지키는 것은 형제 가드와의 충돌 면적을 늘리지 않기 위함이며, 그래프 자신은 피해자입니다(`hooks/session-start.mjs` 수정이 루프 가드에 막힌 사례, 2026-08-31).
 
 ---
 

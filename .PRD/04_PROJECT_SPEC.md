@@ -9,7 +9,7 @@
 
 | 영역 | 선택 | 이유 |
 |------|------|------|
-| 형태 | Claude Code 플러그인 (+ PRIVATE 마켓플레이스) | 형제 6개 전부 동일 형태 — 설치·관리 방식을 통일해야 "7형제 조화"가 성립 |
+| 형태 | Claude Code 플러그인 (+ 마켓플레이스 · 2026-08-02 당시 PRIVATE, 2026-08-13부터 PUBLIC) | 형제 6개 전부 동일 형태 — 설치·관리 방식을 통일해야 "7형제 조화"가 성립 |
 | 실행 언어 | Node.js (`.mjs`) | 형제들이 hooks에 `.mjs` 를 이미 사용 (실측). 새 런타임을 들이면 형제 간 이질성이 늘어남 |
 | 저장소 | **파일 6개** — `data/` 안 5개(`graph.json`·`snapshot.json`·`rejected.json`·`.lock`·`shadow/`) + 공유 발행 `~/.sodam/graph-state.json` | 7형제 규모에 DB는 과함. 설치 0, git 버전관리, AI가 즉시 읽음 (결정 확정) |
 | 그림 | Mermaid | 마크다운·터미널에서 바로 보임. 외부 렌더러 불필요 |
@@ -19,7 +19,7 @@
 | 라이선스 | **Apache License, Version 2.0** | **2026-08-02 실측 — 형제 6/6 전부 Apache-2.0.** 저작권자 `Copyright 2026 SoDam AI Studio` ([`09_LEGAL_LICENSE_SPEC.md`](./09_LEGAL_LICENSE_SPEC.md)) |
 
 > ⚠️ 가정 3·5·6: 플러그인 형태 / Node.js / Apache-2.0 — 형제 관례를 따른 기본값입니다. 다르게 가고 싶으시면 알려주세요.
-> ✅ **가정 4 확정: 저장소 = `sodam-ai/SoDam-Graph-Eng` (PRIVATE)** — 2026-08-02 실측상 6형제 전부 `sodam-ai/SoDam-{X}-Eng` 형식입니다.
+> ✅ **가정 4 확정: 저장소 = `sodam-ai/SoDam-Graph-Eng` (2026-08-02 당시 PRIVATE → 2026-08-13 사용자 확정으로 PUBLIC, 2026-11-26 재확인)** — 2026-08-02 실측상 6형제 전부 `sodam-ai/SoDam-{X}-Eng` 형식입니다.
 > 🔴 **소문자로 만들지 마십시오.** `03_PHASES.md` M0의 `done_when` 이 `https://github.com/sodam-ai/SoDam-Graph-Eng.git` 반환이라 **소문자로 만들면 M0가 즉시 실패**하고, GitHub 저장소는 만든 뒤 이름 변경이 번거롭습니다.
 
 ---
@@ -38,7 +38,9 @@ sodam-graph-eng/
 │   ├── graph-why.md         # 지금 딱 하나만 푼다면 이것
 │   ├── graph-shadow.md      # 그림자 추적 입력
 │   ├── graph-reject.md      # done 승격 거부 (승격 전)
-│   └── graph-undo.md        # done 되돌리기 (승격 후)
+│   ├── graph-undo.md        # done 되돌리기 (승격 후)
+│   ├── graph-verify.md      # 🆕 M12 done_when 자동 검증 (verify_cmd 실행 → verified 승격)
+│   └── graph-block.md       # 🆕 M13 사람 몫 블로커 기록/해제 (/graph-why 에 며칠째 대기 표시)
 ├── hooks/
 │   ├── hooks.json           # 🆕 훅 등록 파일 (이게 없으면 M6 세션훅이 등록조차 안 됨)
 │   └── session-start.mjs    # 세션 시작 자동 주입 (끌 수 있음, 1초 예산)
@@ -54,6 +56,7 @@ sodam-graph-eng/
 │   ├── shadow.mjs           # 그림자 추적 읽기·쓰기 (M10, 06 §2 규칙 B)
 │   ├── rejected.mjs         # 🆕 data/rejected.json 승격 거부 이력 (M11)
 │   ├── critical.mjs         # 순환 탐지 → 사이클 제외 → 임계 경로
+│   ├── verify.mjs           # 🆕 M12 verify_cmd 안전 실행 (canVerify 경계 + 실행파일 화이트리스트)
 │   ├── lock.mjs             # data/.lock 파일 잠금 (동시 세션, M11 에서 실사용 시작)
 │   └── mermaid.mjs          # 관계도 생성
 ├── data/
@@ -94,7 +97,7 @@ node_modules/
 > `data/shadow/` 와 `data/rejected.json` 은 **추적합니다.** 사람이 준 정보·결정이라 잃어버리면 안 됩니다.
 > ✅ **`.PRD/` 추적 여부 — 결정 완료: 추적함** (사용자 결정, 2026-08-02 · 커밋 `a02f7cf` 로 실행 완료, `.PRD/*.md` 12개).
 > 근거: 형제 관례는 2:2로 갈렸으나(하네스 14개·프롬프트 8개 추적 / 컨텍스트·리버스 0), **설계 근거 12문서를 잃으면 왜 그렇게 만들었는지 복구할 수 없습니다.**
-> 🔴 **단, `.PRD` 에는 실제 경로(`D:\AI_Dev_Work\...`)와 커밋 해시가 들어 있습니다.** PRIVATE인 동안은 영향이 작지만 **PUBLIC 전환 시 마스킹 재검토**가 필요합니다 (`09_LEGAL_LICENSE_SPEC.md` L-6.4 · §10 게이트 2번).
+> 🔴 **단, `.PRD` 에는 실제 경로(`D:\AI_Dev_Work\...`)와 커밋 해시가 들어 있습니다.** PRIVATE인 동안은 영향이 작지만 **PUBLIC 전환 시 마스킹 재검토**가 필요합니다(🔄 2026-11-26: 이미 PUBLIC 전환됨 — 실경로는 현재도 추적 파일 8곳에 남아 있고, 처리 방향은 사용자 결정 대기 `CHECKPOINT.md` H8) (`09_LEGAL_LICENSE_SPEC.md` L-6.4 · §10 게이트 2번).
 > 도구 부산물 `.omc/`·`.remember/` 는 **제외**합니다 — 세션 ID·로그라 설계 근거가 아니고, 형제(하네스·프롬프트)도 동일하게 `.gitignore` 합니다(실측).
 
 ### `lib/` 의존성 원칙
