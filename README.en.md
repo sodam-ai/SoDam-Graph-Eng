@@ -317,7 +317,7 @@ A recorded blocker automatically shows up at the end of `/graph-why`'s output, *
 
 - 🔧 **Guidance fix**: the `/graph-map` command instructions told the AI to say that recording with `/graph-shadow` makes `(추정)` (estimate) disappear. That was not true. v0.2.3 fixed the on-screen legend but missed these instructions. The `/graph-why` instructions now tell the AI to pass on "stage not tracked" as is.
 - The **runner-up** line in `/graph-why` is now marked "stage not tracked" too when that sibling is untracked. Score calculation is unchanged.
-- 🔧 **Bug fix**: when a file started with the invisible BOM character some editors add, a hand-written record could not be read, and the first open item in a sibling's `CHECKPOINT.md` was dropped.
+- 🔧 **Bug fix**: when a file started with the invisible BOM character some editors add, a hand-written record could not be read, and an open item on the very first line of a sibling's `CHECKPOINT.md` was dropped.
 
 </details>
 

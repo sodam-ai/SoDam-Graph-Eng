@@ -316,7 +316,7 @@ Failed — no such milestone "no-such-milestone"</code></pre>
 <ul>
 <li>🔧 <strong>Guidance fix</strong>: the <code>/graph-map</code> command instructions told the AI to say that recording with <code>/graph-shadow</code> makes <code>(추정)</code> (estimate) disappear. That was not true. v0.2.3 fixed the on-screen legend but missed these instructions. The <code>/graph-why</code> instructions now tell the AI to pass on "stage not tracked" as is.</li>
 <li>The <strong>runner-up</strong> line in <code>/graph-why</code> is now marked "stage not tracked" too when that sibling is untracked. Score calculation is unchanged.</li>
-<li>🔧 <strong>Bug fix</strong>: when a file started with the invisible BOM character some editors add, a hand-written record could not be read, and the first open item in a sibling's <code>CHECKPOINT.md</code> was dropped.</li>
+<li>🔧 <strong>Bug fix</strong>: when a file started with the invisible BOM character some editors add, a hand-written record could not be read, and an open item on the very first line of a sibling's <code>CHECKPOINT.md</code> was dropped.</li>
 </ul>
 </details>
 

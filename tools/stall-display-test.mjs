@@ -92,7 +92,7 @@ writeFileSync(join(plugin, 'data', 'snapshot.json'), JSON.stringify(snapshot));
 
 const env = { ...process.env, HOME: home, USERPROFILE: home };
 delete env.SODAM_GRAPH_SILENT;
-delete env.SODAM_GRAPH_ROOT;
+env.SODAM_GRAPH_ROOT = join(work, 'repos'); // 혹시 다시 스캔해도 실제 형제 폴더는 안 읽는다 (S-13.7)
 delete env.SODAM_GRAPH_SEARCH_ROOTS;
 delete env.SODAM_GRAPH_DEBUG;
 

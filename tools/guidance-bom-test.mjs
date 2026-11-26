@@ -37,7 +37,7 @@ for (const d of ['lib', 'data']) {
   });
 }
 const env = { ...process.env, HOME: home, USERPROFILE: home };
-delete env.SODAM_GRAPH_ROOT;
+env.SODAM_GRAPH_ROOT = join(work, 'repos'); // 혹시 다시 스캔해도 실제 형제 폴더는 안 읽는다 (S-13.7)
 delete env.SODAM_GRAPH_SEARCH_ROOTS;
 delete env.SODAM_GRAPH_DEBUG;
 
@@ -77,6 +77,7 @@ function why(daysById) {
     encoding: 'utf8',
     timeout: 120_000,
   });
+  if (r.status !== 0) throw new Error(`critical.mjs 비정상 종료 exit=${r.status} ${r.error ?? ''} ${r.stderr}`);
   return r.stdout.split(/\r?\n/);
 }
 const secondLine = (lines) => lines.find((l) => l.trim().startsWith('2위')) ?? '';
@@ -85,7 +86,7 @@ try {
   // ── 명령 안내문 (AI 가 사용자에게 전하는 말) ──
   const mapDoc = readFileSync(join(REPO, 'commands', 'graph-map.md'), 'utf8');
   const whyDoc = readFileSync(join(REPO, 'commands', 'graph-why.md'), 'utf8');
-  check('G1 graph-map 안내가 "정리하면 (추정)이 사라진다"고 시키지 않는다', !/정리하면\s*사라짐/.test(mapDoc));
+  check('G1 graph-map 안내가 "정리하면 (추정)이 사라진다"고 시키지 않는다', !/정리하면[^\n]{0,20}사라(짐|집니다|져요)/.test(mapDoc));
   check(
     'G2 graph-map 안내가 coarse 날수의 한계와 "마지막 활동"을 설명한다',
     mapDoc.includes('실제로 멈췄는지는 알 수 없') && mapDoc.includes('마지막 활동')
@@ -110,7 +111,7 @@ try {
     return JSON.stringify(readShadow('x'));
   };
   const plain = shadow(md);
-  check('B0 전제: BOM 없는 그림자는 읽힌다', plain !== 'null');
+  check('B0 전제: BOM 없는 그림자는 읽힌다', plain?.includes('"title":"할 일"'), plain);
   check('B1 BOM 있는 그림자 = 없는 것과 같은 결과', shadow(`﻿${md}`) === plain);
   check('B2 BOM + CRLF 도 같은 결과', shadow(`﻿${md.replace(/\n/g, '\r\n')}`) === plain);
 
