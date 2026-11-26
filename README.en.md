@@ -206,6 +206,8 @@ This only applies to **that one terminal window**. To make it permanent, registe
 
 ### Actual Output Examples
 
+> The examples below are **real output from an earlier version**. From v0.2.3, "last activity" appears next to the stall count, and untracked siblings are marked "stage not tracked".
+
 <details><summary><code>/graph-next</code> (actual output, sibling name and judgment only — no paths)</summary>
 
 ```
@@ -309,6 +311,15 @@ A recorded blocker automatically shows up at the end of `/graph-why`'s output, *
 ---
 
 ## Update Summary
+
+<details>
+<summary><b>v0.2.3 (2026-11-26) — Stall days are now shown more honestly</b></summary>
+
+- 🔧 **Display fix**: for siblings under "coarse judgment" the tool cannot track whether a stage was finished, so their stall count has no way to go down — yet it looked like a measured value (a sibling committed today still read "stalled 97 days"). It now says **"stage not tracked — record unchanged for N days"** (the on-screen text is in Korean).
+- Next to the stall count you now see **last activity** (when commits/files last changed), in the 3-line session notice, `/graph-why`, and `/graph-map`. The notice is still 3 lines.
+- **Ranking and score calculation are unchanged.** So are the commands. To get the new version, see FAQ 15 below.
+
+</details>
 
 <details>
 <summary><b>v0.2.2 (2026-11-26) — Fixed slow session start right after a fresh install</b></summary>

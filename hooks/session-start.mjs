@@ -72,7 +72,7 @@ try {
   if (process.env.SODAM_GRAPH_SILENT === '1') silent();
 
   const { loadGraph } = await import('../lib/loadGraph.mjs');
-  const { readSnapshot, isStale, judgeProject } = await import('../lib/judge.mjs');
+  const { readSnapshot, isStale, judgeProject, activityLabel } = await import('../lib/judge.mjs');
 
   const graph = loadGraph();
 
@@ -109,9 +109,12 @@ try {
   const stamp = String(snapshot.scanned_at).slice(11, 16);
 
   // 정체 형제 수 (활동 축이 아니라 정체 축 — 12차)
-  const stalled = snapshot.projects.filter(
+  const stalledRows = snapshot.projects.filter(
     (x) => x.days_in_state !== null && x.days_in_state >= graph.config.stall_days
-  ).length;
+  );
+  // 거친 판정은 그 일수를 줄일 경로가 없으므로, "정체"에 섞여 있다는 사실을 함께 말한다
+  const untracked = stalledRows.filter((x) => x.state === 'coarse').length;
+  const untrackedTag = untracked > 0 ? ` (${untracked}곳은 단계 추적 안 됨)` : '';
 
   // 자기 저장소에서 열면 이름이 두 번 나오므로 접두사만 남긴다
   const head =
@@ -119,11 +122,16 @@ try {
   const line1 = `${head} ${shortPath(here.repo_root)}`;
 
   // j.text 가 이미 "시작: …" 처럼 동사로 시작하므로 "다음:" 을 덧붙이지 않는다
-  const stateLabel = j.kind === 'coarse' ? '거친 판정' : (here.state ?? '-');
-  const days = here.days_in_state !== null ? ` (${here.days_in_state}일)` : '';
-  const line2 = `  현재: ${stateLabel}${days} → ${j.text}`;
+  // 추적 여부는 판정 종류(j.kind)가 아니라 정본 상태로 본다 — shadow 는 문구만 바꾼다
+  const d = here.days_in_state;
+  const stateText =
+    here.state === 'coarse'
+      ? `단계 추적 안 됨${d !== null ? ` (기록 ${d}일째 그대로)` : ''}`
+      : `${here.state ?? '-'}${d !== null ? ` (${d}일)` : ''}`;
+  const act = activityLabel(here.days_since_activity);
+  const line2 = `  현재: ${stateText}${act ? ` · ${act}` : ''} → ${j.text}`;
   const line3 =
-    `  7형제 중 정체 ${stalled}곳 · /graph-next 로 전체 보기` +
+    `  7형제 중 정체 ${stalledRows.length}곳${untrackedTag} · /graph-next 로 전체 보기` +
     `   [${stamp} 기준${stale ? ' · 갱신 중' : ''}]`;
 
   if (stale) rescanDetached();
