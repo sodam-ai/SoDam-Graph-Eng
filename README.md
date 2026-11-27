@@ -92,7 +92,7 @@ Claude Code 안에서 아래 순서 그대로 따라 하세요.
 /plugin marketplace add sodam-ai/SoDam-Graph-Eng
 /plugin install sodam-graph@sodamgraph-marketplace
 
-# 제거 (재설치 테스트용)
+# 제거 (재설치 테스트용 — 업데이트에는 쓰지 마세요. 데이터 폴더가 삭제될 수 있습니다. FAQ 15 참고)
 /plugin uninstall sodam-graph@sodamgraph-marketplace
 /plugin marketplace remove sodamgraph-marketplace
 ```
@@ -542,10 +542,10 @@ tools/          내부 코드 점검용 스크립트
 원인: PRIVATE 저장소 권한 또는 주소 오타. 해결: `gh auth status` 로 로그인 확인.
 
 **17-5. 설치는 됐는데 명령이 반만 보인다**
-원인: 옛 버전 캐시. 해결: 제거 → 재설치 → 완전 재시작.
+원인: 옛 버전 캐시. 해결: FAQ 15의 업데이트 명령을 실행하고 Claude Code를 완전히 재시작하세요. 그래도 같으면 `claude plugin uninstall sodam-graph@sodamgraph-marketplace --keep-data`로 제거한 뒤 다시 설치하세요.
 
 **17-20. 마켓플레이스는 추가됐는데 `sodam-graph` 가 목록에 없다**
-원인: 매니페스트 이름 불일치(제작자 측 문제). 해결: 재설치 시도 후 안 되면 이슈로 보고.
+원인: 매니페스트 이름 불일치(제작자 측 문제). 해결: `claude plugin marketplace update sodamgraph-marketplace` 후 설치를 다시 시도하고, 안 되면 이슈로 보고.
 
 **17-21. `이미 존재하는 마켓플레이스` 류 메시지**
 원인: 다른 소담 형제와 마켓플레이스 이름이 겹침. 해결: 이 도구는 `sodamgraph-marketplace` 를 씁니다. 겹치면 그 이름을 바꿔 다시 추가.
@@ -647,7 +647,7 @@ tools/          내부 코드 점검용 스크립트
 12. **`/graph-block`은 뭘 하는 건가요?** → "사람만 할 수 있는 일이라 AI가 대신 못 하는 것"을 기록해두는 기능입니다. 기록하면 `/graph-why`에 "며칠째 대기 중"으로 자동 표시되고, 풀리면 다시 명령으로 지워야 합니다(안 지우면 계속 대기 중으로 남습니다).
 13. **상업적으로 써도 되나요?** → **됩니다**(Apache-2.0, 아래 [법률](#법률저작권라이선스상업적-용도) 참조).
 14. **문제가 생기면 어디에 물어보나요?** → 저장소 이슈로 남겨주세요.
-15. **새 버전이 나왔는데 어떻게 받나요?** → `/plugin uninstall sodam-graph@sodamgraph-marketplace` 후 `/plugin install sodam-graph@sodamgraph-marketplace`로 다시 설치하고 Claude Code를 완전히 재시작하세요. `/plugin install`만 다시 누르면 "이미 설치됨"이라고만 뜨고 최신 내용을 안 받아오는 경우가 실제로 확인됐습니다 — 제거 후 재설치가 확실한 방법입니다.
+15. **새 버전이 나왔는데 어떻게 받나요?** → 터미널(PowerShell)에서 `claude plugin marketplace update sodamgraph-marketplace`를 실행하고, 이어서 `claude plugin update sodam-graph@sodamgraph-marketplace`를 실행한 뒤 Claude Code 창을 새로 여세요. 제거하지 않아도 갱신됩니다(2026-11-27 이 방법으로 0.2.9→0.2.12 갱신 확인). `/plugin install`만 다시 누르면 "이미 설치됨"이라고만 뜨고 최신 내용을 안 받아오는 경우가 있었습니다. **업데이트하려고 제거하지 마세요** — `--keep-data` 없이 마지막 설치를 제거하면 플러그인 데이터 폴더가 삭제됩니다. ⚠ 지금 버전은 `/graph-verify`·`/graph-block`·`/graph-reject`·`/graph-undo`·`/graph-shadow`로 남긴 기록을 **버전별 설치 폴더**에 저장해서, 이 방법으로 업데이트해도 새 버전에 이어지지 않습니다. 필요한 기록은 업데이트 뒤에 다시 남기세요.
 
 ---
 
