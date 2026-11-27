@@ -105,6 +105,11 @@ try {
   check('E4 판정 화면이 미완료 개수와 "인용 안 함"을 알린다', screen.includes('미완료 2건') && screen.includes('문장은 인용 안 함'), screen.slice(0, 500));
   check('E5 공유 파일에도 문장이 없다', !readFileSync(join(home, '.sodam', 'graph-state.json'), 'utf8').includes(SECRET_LINE));
 
+  // ── F. /graph-shadow 목록도 같은 기록을 "있음"으로 안다 ──
+  const list = run('shadow.mjs');
+  check('F1 .PRD 에 기록이 있으면 "파일이 아예 없어"라고 안내하지 않는다', !list.includes('진행 기록 파일이 아예 없어') && list.includes('미완료 2건'), list.slice(0, 600));
+  check('F2 그림자 목록에도 문장이 없다', !list.includes(SECRET_LINE));
+
   check('Z 실제 저장소의 data/graph.json 은 그대로', md5(join(REPO, 'data', 'graph.json')) === canonicalBefore);
 } catch (err) {
   check('실행 중 오류 없음', false, String(err.message).slice(0, 400));

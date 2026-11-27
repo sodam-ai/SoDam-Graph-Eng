@@ -314,8 +314,8 @@ claude plugin install sodam-graph@sodamgraph-marketplace
 <details>
 <summary><b>v0.2.11 (2026-11-27) — .PRD 폴더에 있는 진행 기록도 읽기</b></summary>
 <ul>
-<li>🔧 <strong>버그 수정</strong>: 형제 프로젝트가 진행 기록 <code>CHECKPOINT.md</code>를 <code>.PRD</code> 폴더 안에 두면 읽지 못했습니다. 오류 표시 없이 미완료 개수가 0이 되고 "진행 기록 파일 없음"으로 안내됐습니다. 이제 저장소 맨 위에 파일이 없으면 <code>.PRD/CHECKPOINT.md</code>를 읽습니다.</li>
-<li><code>.PRD</code>에서 읽을 때는 <strong>줄 수·표시 개수·수정일만</strong> 씁니다. 그 안의 문장은 화면, 저장본, 공유 파일 어디에도 옮기지 않습니다. 저장소 맨 위의 <code>CHECKPOINT.md</code>는 예전과 같이 동작합니다(남은 일 원문 인용 포함).</li>
+<li>🔧 <strong>버그 수정</strong>: 형제 프로젝트가 진행 기록 <code>CHECKPOINT.md</code>를 <code>.PRD</code> 폴더 안에 두면 읽지 못했습니다. 오류 표시 없이 미완료 개수가 0이 되고 "진행 기록 파일 없음"으로 안내됐습니다. 이제 저장소 맨 위에 파일이 없으면 <code>.PRD/CHECKPOINT.md</code>를 읽고, <code>/graph-shadow</code> 목록도 이 기록을 "있음"으로 봅니다.</li>
+<li><code>.PRD</code>에서 읽을 때는 <strong>줄 수·표시 개수·수정일, 그리고 완료 조건 표기가 있는지(예/아니오)만</strong> 씁니다. 그 안의 문장은 화면, 저장본, 공유 파일 어디에도 옮기지 않습니다. 저장소 맨 위의 <code>CHECKPOINT.md</code>는 예전과 같이 동작합니다(남은 일 원문 인용 포함).</li>
 <li>한계: <code>.PRD</code>가 바로 가기이면 읽지 않습니다. <code>.PRD</code>가 저장소 폴더 바깥(상위 폴더)에 있는 경우도 읽지 않습니다.</li>
 </ul>
 </details>

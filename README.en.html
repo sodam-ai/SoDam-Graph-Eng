@@ -314,8 +314,8 @@ Failed — no such milestone "no-such-milestone"</code></pre>
 <details>
 <summary><b>v0.2.11 (2026-11-27) — Also read progress logs kept in the .PRD folder</b></summary>
 <ul>
-<li>🔧 <strong>Bug fix</strong>: a progress log (<code>CHECKPOINT.md</code>) kept inside a sibling’s <code>.PRD</code> folder was not read. With no error, the open-item count became 0 and the guidance said there was no progress log. Now <code>.PRD/CHECKPOINT.md</code> is read when there is no file at the repository root.</li>
-<li>When read from <code>.PRD</code>, <strong>only line count, marker counts and the modified date</strong> are used. No sentence from it is copied to the screen, the cached snapshot or the shared file. A <code>CHECKPOINT.md</code> at the repository root behaves as before, including quoting open items.</li>
+<li>🔧 <strong>Bug fix</strong>: a progress log (<code>CHECKPOINT.md</code>) kept inside a sibling’s <code>.PRD</code> folder was not read. With no error, the open-item count became 0 and the guidance said there was no progress log. Now <code>.PRD/CHECKPOINT.md</code> is read when there is no file at the repository root, and the <code>/graph-shadow</code> list also counts it as present.</li>
+<li>When read from <code>.PRD</code>, <strong>only line count, marker counts, the modified date and a yes/no for a done-criteria marker</strong> are used. No sentence from it is copied to the screen, the cached snapshot or the shared file. A <code>CHECKPOINT.md</code> at the repository root behaves as before, including quoting open items.</li>
 <li>Limits: a <code>.PRD</code> that is a shortcut (link or junction) is not read, and neither is a <code>.PRD</code> located outside the repository folder (in a parent folder).</li>
 </ul>
 </details>
