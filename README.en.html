@@ -312,6 +312,15 @@ Failed — no such milestone "no-such-milestone"</code></pre>
 <h2 id="update-summary">Update Summary</h2>
 
 <details>
+<summary><b>v0.2.11 (2026-11-27) — Also read progress logs kept in the .PRD folder</b></summary>
+<ul>
+<li>🔧 <strong>Bug fix</strong>: a progress log (<code>CHECKPOINT.md</code>) kept inside a sibling’s <code>.PRD</code> folder was not read. With no error, the open-item count became 0 and the guidance said there was no progress log. Now <code>.PRD/CHECKPOINT.md</code> is read when there is no file at the repository root.</li>
+<li>When read from <code>.PRD</code>, <strong>only line count, marker counts and the modified date</strong> are used. No sentence from it is copied to the screen, the cached snapshot or the shared file. A <code>CHECKPOINT.md</code> at the repository root behaves as before, including quoting open items.</li>
+<li>Limits: a <code>.PRD</code> that is a shortcut (link or junction) is not read, and neither is a <code>.PRD</code> located outside the repository folder (in a parent folder).</li>
+</ul>
+</details>
+
+<details>
 <summary><b>v0.2.10 (2026-11-27) — Fix old state lingering in the shared file siblings read</b></summary>
 <ul>
 <li>🔧 <strong>Bug fix</strong>: the shared file that sibling projects read could contain the <strong>state from before a change</strong>. This happened in the same <code>/graph-next</code> run that confirmed or proposed completion, and when <code>/graph-next</code> or <code>/graph-why</code> ran within 10 minutes after reject or undo. The state is now calculated from the map re-read just before sharing. If the map cannot be read then, this share is skipped and the previous file is kept.</li>
