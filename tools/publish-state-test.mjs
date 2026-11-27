@@ -89,8 +89,12 @@ try {
     }
   };
 
+  // 확정·승격의 필수 증거(E1)는 done_when 에 적힌 파일이 저장소에 실제로 있는 것
+  mkdirSync(join(repoDir(TARGET), 'docs'), { recursive: true });
+  writeFileSync(join(repoDir(TARGET), 'docs', 'proof.md'), 'ok\n', 'utf8');
+
   // ── A. 확정: done_candidate → /graph-next 가 done 으로 확정 ──
-  reset({ state: 'done_candidate' });
+  reset({ state: 'done_candidate', done_when: 'docs/proof.md 가 있다', evidence: '시험 전제' });
   run('refresh.mjs'); // 10분 이내 저장본을 만든다
   const out = run('judge.mjs');
   check('A0 전제: 이번 실행이 확정을 했다', out.includes('자동 확정됨') && mileState() === 'done', mileState());
@@ -101,9 +105,6 @@ try {
   check('A4 못 찾은 형제의 state 는 비어 있다', row(GONE).state === null && row(GONE).repo_root === null, JSON.stringify(row(GONE)));
 
   // ── B. 승격: verified + 증거 → /graph-next 가 done_candidate 로 제안 ──
-  mkdirSync(join(repoDir(TARGET), 'docs'), { recursive: true });
-  writeFileSync(join(repoDir(TARGET), 'docs', 'proof.md'), 'ok\n', 'utf8');
-  // 승격의 필수 증거(E1)는 done_when 에 적힌 파일이 저장소에 실제로 있는 것
   reset({ state: 'verified', done_when: 'docs/proof.md 가 있다', evidence: '시험 전제', last_moved_at: '2026-01-01' });
   run('refresh.mjs');
   run('judge.mjs');
