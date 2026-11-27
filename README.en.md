@@ -315,9 +315,9 @@ A recorded blocker automatically shows up at the end of `/graph-why`'s output, *
 <details>
 <summary><b>v0.2.10 (2026-11-27) — Fix old state lingering in the shared file siblings read</b></summary>
 
-- 🔧 **Bug fix**: the shared file that sibling projects read could contain the **state from before a change**. This happened in the same `/graph-next` run that confirmed or proposed completion, and when `/graph-next` or `/graph-why` ran within 10 minutes after reject or undo. The state is now recalculated from the map at the moment of sharing.
+- 🔧 **Bug fix**: the shared file that sibling projects read could contain the **state from before a change**. This happened in the same `/graph-next` run that confirmed or proposed completion, and when `/graph-next` or `/graph-why` ran within 10 minutes after reject or undo. The state is now calculated from the map re-read just before sharing. If the map cannot be read then, this share is skipped and the previous file is kept.
 - The six fields of the shared file, the moments when it is updated, and score calculation are unchanged. As before, the reject and undo commands do not update the shared file themselves; the next `/graph-next`, `/graph-why` or background rescan picks the change up.
-- Limits: the rule that skips the update when the shared file already has a later scan time is unchanged. Windows opened before the update may still write the old way, so open a new one. The session start message is outside this fix.
+- Limits: if another window changes a state in the short moment between that re-read and the write, the old state can remain until the next share. The rule that skips the update when the shared file already has a later scan time is unchanged. Windows opened before the update may still write the old way, so open a new one. The session start message is outside this fix.
 
 </details>
 

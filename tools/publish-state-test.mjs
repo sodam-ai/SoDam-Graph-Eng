@@ -17,7 +17,7 @@ import { createHash } from 'node:crypto';
 import { cpSync, mkdtempSync, mkdirSync, readFileSync, writeFileSync, rmSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const TARGET = 'sodam-harness-eng';
@@ -48,7 +48,9 @@ try {
   }
   const graphPath = join(plugin, 'data', 'graph.json');
   const original = readFileSync(graphPath, 'utf8');
-  const gitEnv = { ...process.env, HOME: home, USERPROFILE: home, GIT_CONFIG_NOSYSTEM: '1' };
+  // XDG_CONFIG_HOME 도 임시 폴더로 — 물려받으면 git 이 실제 홈의 설정을 읽는다
+  const isolated = { HOME: home, USERPROFILE: home, XDG_CONFIG_HOME: join(home, '.config'), GIT_CONFIG_NOSYSTEM: '1' };
+  const gitEnv = { ...process.env, ...isolated };
   const repoDir = (id) => join(repos, `t_SoDam-${id}-Eng`);
   for (const p of JSON.parse(original).projects) {
     if (p.id === GONE) continue;
@@ -57,7 +59,7 @@ try {
     execFileSync('git', ['-C', repoDir(p.id), 'remote', 'add', 'origin', `https://github.com/${p.repo_remote}.git`], { env: gitEnv });
   }
 
-  const env = { ...process.env, HOME: home, USERPROFILE: home, SODAM_GRAPH_ROOT: repos, CLAUDE_CONFIG_DIR: join(home, 'claude') };
+  const env = { ...process.env, ...isolated, SODAM_GRAPH_ROOT: repos, CLAUDE_CONFIG_DIR: join(home, 'claude') };
   for (const k of ['SODAM_GRAPH_SEARCH_ROOTS', 'SODAM_GRAPH_DEBUG', 'NODE_OPTIONS', 'NODE_V8_COVERAGE']) delete env[k];
   const run = (script, ...args) => {
     const r = spawnSync(process.execPath, [join(plugin, 'lib', script), ...args], { cwd: home, env, encoding: 'utf8', timeout: 180_000 });
@@ -134,6 +136,55 @@ try {
   run('critical.mjs');
   check('E1 블로커 기록 뒤에도 state 는 지도와 같다', blockOut.includes('기록 완료') && row().state === stateBefore && row().state === mileState(), `${blockOut.trim()} / ${row().state}`);
   check('E2 블로커 내용은 공유 파일에 실리지 않는다', !readFileSync(statePath, 'utf8').includes('시험용 막힘'));
+
+  // ── F. 지도를 읽은 뒤, 훑는 동안 다른 세션이 상태를 바꾼 경우 ──
+  /** 옛 지도를 먼저 읽고 → 파일을 바꾼 다음 → 그 옛 지도를 들고 발행하는 임시 실행기 */
+  const staleRun = (call, newState) => {
+    const lib = (f) => JSON.stringify(pathToFileURL(join(plugin, 'lib', f)).href);
+    const runner = join(work, 'stale.mjs');
+    writeFileSync(
+      runner,
+      [
+        "import { readFileSync, writeFileSync } from 'node:fs';",
+        `const { loadGraph } = await import(${lib('loadGraph.mjs')});`,
+        `const { scanAll } = await import(${lib('scan.mjs')});`,
+        `const { publishSnapshot, scanAndPublish } = await import(${lib('refresh.mjs')});`,
+        'const old = loadGraph();',
+        `const p = ${JSON.stringify(graphPath)};`,
+        newState === null
+          ? "writeFileSync(p, '{ 깨진 지도', 'utf8');"
+          : `const g = JSON.parse(readFileSync(p, 'utf8')); g.milestones.find((m) => m.id === ${JSON.stringify(targetId)}).state = ${JSON.stringify(newState)}; writeFileSync(p, JSON.stringify(g), 'utf8');`,
+        call,
+        'console.log(JSON.stringify(res));',
+      ].join('\n'),
+      'utf8'
+    );
+    const r = spawnSync(process.execPath, [runner], { cwd: home, env, encoding: 'utf8', timeout: 180_000 });
+    if (r.status !== 0) throw new Error(`stale 실행기 exit=${r.status} ${r.stderr}`);
+    return JSON.parse(r.stdout.trim().split(/\r?\n/).pop());
+  };
+
+  reset({ state: 'done_candidate' });
+  staleRun('const res = scanAndPublish(old);', 'verified');
+  check('F1 백그라운드 재탐색: 훑는 동안 바뀐 상태가 발행에 반영', row().state === 'verified', String(row().state));
+
+  reset({ state: 'done_candidate' });
+  staleRun('const res = publishSnapshot(old, scanAll(old).snapshot);', 'verified');
+  check('F2 판정 명령 경로: 발행 직전의 지도를 쓴다', row().state === 'verified', String(row().state));
+
+  // 직전 발행본(verified)이 있는 상태에서, 옛 지도(done_candidate)를 든 실행이 최신 지도를 못 읽는 경우
+  reset({ state: 'verified' });
+  run('refresh.mjs');
+  const previous = readFileSync(statePath, 'utf8');
+  const stale = JSON.parse(original);
+  stale.milestones.find((m) => m.id === targetId).state = 'done_candidate';
+  writeFileSync(graphPath, `${JSON.stringify(stale, null, 2)}\n`, 'utf8');
+  const broken = staleRun('const snap = scanAll(old).snapshot; const res = publishSnapshot(old, snap);', null);
+  check(
+    'F3 발행 직전 지도를 못 읽으면 멈추지 않고 발행을 건너뛰며 직전 파일을 둔다',
+    broken.ok === false && typeof broken.reason === 'string' && readFileSync(statePath, 'utf8') === previous,
+    `${JSON.stringify(broken)} / ${row().state}`
+  );
 
   check('Z 실제 저장소의 data/graph.json 은 그대로', md5(join(REPO, 'data', 'graph.json')) === canonicalBefore);
   if (!existsSync(statePath)) check('Z2 발행 파일이 임시 홈에 생겼다', false);
