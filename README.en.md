@@ -92,7 +92,7 @@ Follow these steps exactly, inside Claude Code.
 /plugin marketplace add sodam-ai/SoDam-Graph-Eng
 /plugin install sodam-graph@sodamgraph-marketplace
 
-# Uninstall (for reinstall testing)
+# Uninstall (for reinstall testing — do not use this to update; the data folder may be deleted. See FAQ 15)
 /plugin uninstall sodam-graph@sodamgraph-marketplace
 /plugin marketplace remove sodamgraph-marketplace
 ```
@@ -542,10 +542,10 @@ Cause: Node.js is not installed. Fix: install it, then restart the terminal.
 Cause: no access to the PRIVATE repository, or a typo in the address. Fix: check login status with `gh auth status`.
 
 **17-5. It installed, but only half the commands show up**
-Cause: an old cached version. Fix: uninstall → reinstall → fully restart.
+Cause: an old cached version. Fix: run the update commands in FAQ 15 and fully restart Claude Code. If it is still the same, remove it with `claude plugin uninstall sodam-graph@sodamgraph-marketplace --keep-data` and install again.
 
 **17-20. The marketplace was added, but `sodam-graph` is not in the list**
-Cause: manifest name mismatch (an issue on the maker's side). Fix: try reinstalling; if it still fails, report it as an issue.
+Cause: manifest name mismatch (an issue on the maker's side). Fix: run `claude plugin marketplace update sodamgraph-marketplace`, try installing again, and report it as an issue if it still fails.
 
 **17-21. A message like "marketplace already exists"**
 Cause: the marketplace name collides with another SoDam sibling's. Fix: this tool uses `sodamgraph-marketplace`. If it collides, change that name and add it again.
@@ -647,7 +647,7 @@ You can revert it with `git checkout data/graph.json`.
 12. **What does `/graph-block` do?** → It records "something only a human can do, that AI can't do instead." Once recorded, it automatically shows up in `/graph-why` as "waiting N days," and once it's resolved you have to clear it with a command yourself (if you don't, it keeps showing as waiting).
 13. **Can I use this commercially?** → **Yes** (Apache-2.0, see [Legal](#legal--copyright--license--commercial-use) below).
 14. **Where do I ask if something goes wrong?** → Please leave it as a repository issue.
-15. **A new version came out — how do I get it?** → Run `/plugin uninstall sodam-graph@sodamgraph-marketplace`, then reinstall with `/plugin install sodam-graph@sodamgraph-marketplace`, and fully restart Claude Code. We've confirmed in practice that re-running `/plugin install` alone can just say "already installed" without pulling the latest content — removing and reinstalling is the reliable way.
+15. **A new version came out — how do I get it?** → In a terminal (PowerShell), run `claude plugin marketplace update sodamgraph-marketplace`, then `claude plugin update sodam-graph@sodamgraph-marketplace`, and open a new Claude Code window. No uninstall is needed (confirmed on 2026-11-27 by updating 0.2.9→0.2.12 this way). Re-running `/plugin install` alone has sometimes just said "already installed" without pulling the latest content. **Do not uninstall in order to update** — removing the last installation without `--keep-data` deletes the plugin data folder. ⚠ The current version stores what you record with `/graph-verify`, `/graph-block`, `/graph-reject`, `/graph-undo` and `/graph-shadow` in a **per-version install folder**, so even this update method does not carry it over to the new version. Record anything you still need again after updating.
 
 ---
 
