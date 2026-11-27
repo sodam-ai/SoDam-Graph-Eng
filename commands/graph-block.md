@@ -16,7 +16,7 @@ node "${CLAUDE_PLUGIN_ROOT}/lib/judge.mjs" --block <마일스톤ID> --kind <종�
 
 ## 해제
 
-풀린 블로커는 반드시 해제해야 합니다. 해제 안 하면 이미 끝난 일이 계속 "대기 중"으로 표시되고, `legal`/`purchase`/`external_account` 종류는 자동 완료 승격도 계속 막습니다.
+풀린 블로커는 반드시 해제해야 합니다. 해제 안 하면 이미 끝난 일이 계속 "대기 중"으로 표시되고, **종류와 상관없이** 완료 제안이 `done` 으로 확정되지 않습니다. 반대로 해제하면 이미 제안된 항목은 다음 `/graph-next` 에서 바로 `done` 이 될 수 있습니다 — 아직 안 끝났다면 해제하기 전에 `/graph-reject` 를 안내하세요.
 
 ```
 node "${CLAUDE_PLUGIN_ROOT}/lib/judge.mjs" --resolve-block <블로커ID>
@@ -35,5 +35,5 @@ node "${CLAUDE_PLUGIN_ROOT}/lib/judge.mjs" --resolve-block <블로커ID>
 ## 규칙 (이 명령의 안전 범위)
 
 - 정본(`graph.json`)의 `blockers` 배열에만 씁니다 — 마일스톤 상태는 건드리지 않습니다.
-- `kind`가 `legal`/`purchase`/`external_account`인 블로커는 그 마일스톤의 **자동 완료 승격을 막습니다** (해당 마일스톤 `owner`가 `human`일 때, `06_ANTI_STALL_SPEC.md` §1). 잘못 기록하면 정당하게 끝난 항목이 계속 막힐 수 있으니, 해제를 잊지 마세요.
+- **완료 확정**(`done_candidate` → `done`)은 어떤 종류의 블로커든 막습니다. **완료 제안** 단계에서는 `kind`가 `legal`/`purchase`/`external_account`이고 마일스톤 `owner`가 `human`일 때 제외합니다 (`06_ANTI_STALL_SPEC.md` §1). 잘못 기록하면 정당하게 끝난 항목이 계속 막힐 수 있으니, 해제를 잊지 마세요.
 - 형제 저장소는 여전히 **읽기만** 합니다.

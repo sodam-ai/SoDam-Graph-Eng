@@ -466,7 +466,7 @@ docs/FAMILY_INCONSISTENCY_REPORT.md 형제 간 발견된 불일치 보고서
 ```
 data/snapshot.json    실측 캐시 — 스캔할 때마다 갱신됨, git 으로 관리 안 함
 data/shadow/           /graph-shadow 로 사람이 채워준 정보
-data/rejected.json     /graph-reject 이력 (있을 때만 존재)
+data/rejected.json     /graph-reject·/graph-undo 이력 (있을 때만 존재)
 data/.lock              동시 실행 충돌 방지용 임시 잠금 파일 (있을 때만 존재)
 ```
 

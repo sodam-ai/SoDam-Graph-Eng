@@ -91,6 +91,16 @@ try {
   run('--block', targetId, '--kind', 'decision', '--description', '시험용 막힘');
   const b = run();
   check('B1 막힘이 있으면 확정하지 않고 이유를 알린다', state() === 'done_candidate' && held(b) && b.includes('블로커'), `${state()} / ${b.slice(0, 300)}`);
+  check('B2 보류 안내가 "이유가 사라지면 바로 done"과 거부가 영구임을 알린다', b.includes('바로 done 이 됩니다') && b.includes('자동 제안이 다시 켜지지 않습니다'), b.slice(0, 500));
+  const blockerId = JSON.parse(readFileSync(graphPath, 'utf8')).blockers.find((x) => x.milestone_id === targetId).id;
+  run('--resolve-block', blockerId);
+  run();
+  check('B3 안내대로 블로커를 풀면 다음 판정에서 확정된다', state() === 'done', state());
+
+  // ── H. 완료 제안 안내 ──
+  reset({ state: 'verified' });
+  const h = run();
+  check('H1 완료 제안 안내가 확정 전에 다시 확인한다고 알린다', state() === 'done_candidate' && h.includes('다시 확인해 통과하면 done'), `${state()} / ${h.slice(0, 500)}`);
 
   // ── C. "사람 확인" 문구 ──
   reset({ state: 'done_candidate', evidence: '사람 확인 필요' });

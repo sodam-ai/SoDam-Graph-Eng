@@ -466,7 +466,7 @@ docs/FAMILY_INCONSISTENCY_REPORT.md Report of inconsistencies found among siblin
 ```
 data/snapshot.json    Measurement cache — refreshed on every scan, not tracked by git
 data/shadow/           Information a human filled in via /graph-shadow
-data/rejected.json     History of /graph-reject actions (exists only when present)
+data/rejected.json     History of /graph-reject and /graph-undo actions (exists only when present)
 data/.lock              Temporary lock file to prevent concurrent-run conflicts (exists only when present)
 ```
 
