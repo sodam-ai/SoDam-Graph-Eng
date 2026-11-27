@@ -313,6 +313,15 @@ A recorded blocker automatically shows up at the end of `/graph-why`'s output, *
 ## Update Summary
 
 <details>
+<summary><b>v0.2.11 (2026-11-27) — Also read progress logs kept in the .PRD folder</b></summary>
+
+- 🔧 **Bug fix**: a progress log (`CHECKPOINT.md`) kept inside a sibling’s `.PRD` folder was not read. With no error, the open-item count became 0 and the guidance said there was no progress log. Now `.PRD/CHECKPOINT.md` is read when there is no file at the repository root, and the `/graph-shadow` list also counts it as present.
+- When read from `.PRD`, **only line count, marker counts, the modified date and a yes/no for a done-criteria marker** are used. No sentence from it is copied to the screen, the cached snapshot or the shared file. A `CHECKPOINT.md` at the repository root behaves as before, including quoting open items.
+- Limits: a `.PRD` that is a shortcut (link or junction) is not read, and neither is a `.PRD` located outside the repository folder (in a parent folder).
+
+</details>
+
+<details>
 <summary><b>v0.2.10 (2026-11-27) — Fix old state lingering in the shared file siblings read</b></summary>
 
 - 🔧 **Bug fix**: the shared file that sibling projects read could contain the **state from before a change**. This happened in the same `/graph-next` run that confirmed or proposed completion, and when `/graph-next` or `/graph-why` ran within 10 minutes after reject or undo. The state is now calculated from the map re-read just before sharing. If the map cannot be read then, this share is skipped and the previous file is kept.
