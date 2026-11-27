@@ -251,7 +251,7 @@ Save it as an `.md` file and open it with a GitHub preview or VS Code preview (`
 Rejected — sodam-graph-eng.M-example has returned to verified. It will not be suggested again.
 
 > /graph-undo sodam-graph-eng.M-example
-Undone — sodam-graph-eng.M-example has returned to verified.
+Undone — sodam-graph-eng.M-example has returned to verified. It will not be suggested again automatically.
 ```
 </details>
 
@@ -311,6 +311,15 @@ A recorded blocker automatically shows up at the end of `/graph-why`'s output, *
 ---
 
 ## Update Summary
+
+<details>
+<summary><b>v0.2.12 (2026-11-27) — Fix unfinished work being marked done by itself</b></summary>
+
+- 🔧 **Bug fix**: after a "done" suggestion, the item still became `done` on the next run even if you recorded a blocker with `/graph-block`, the evidence file disappeared or the repository could no longer be found. Right before confirming, **open blockers, "human check" wording, the repository location and the evidence file or commit** are now checked again. If any fails, the item is **held** with the reason shown, and it is confirmed on a later run once the reason is gone.
+- 🔧 **Bug fix**: an item reverted with `/graph-undo` was suggested again on the next run and became `done` again on the one after. A reverted item is now **not suggested again automatically**, the same as `/graph-reject`.
+- Limits: this does not apply to items that had already been suggested again before the update. There is no command yet to turn automatic suggestions back on. This record is stored inside the install folder, so it does not carry over when the plugin is updated (until the storage location is changed).
+
+</details>
 
 <details>
 <summary><b>v0.2.11 (2026-11-27) — Also read progress logs kept in the .PRD folder</b></summary>
@@ -577,7 +586,7 @@ Cause: terminal encoding is not UTF-8. Fix: run `chcp 65001` in PowerShell, then
 Fix: `/graph-reject <item>` — it will not be suggested again.
 
 **17-12. It was already marked done and you want to undo it**
-Fix: `/graph-undo <item>`
+Fix: `/graph-undo <item>` — a reverted item is not suggested again automatically.
 
 **17-13. The `/graph-why` pick seems off**
 Cause: ① the scan is stale ② it's `coarse`, so it's an estimate. Fix: check the scan timestamp, then re-run.
@@ -630,7 +639,7 @@ You can revert it with `git checkout data/graph.json`.
 4. **Does it work on other computers too?** → Right now it's based on this PC. Support for other PCs is a future task.
 5. **Can it see projects that aren't SoDam siblings?** → Right now, only the 7 siblings.
 6. **What is `coarse`?** → It means "roughly known, but not known in detail."
-7. **What happens if I ignore a "done" suggestion?** → It gets marked done on the next scan (actually tested and confirmed — not immediately, but after at least one more judgment run).
+7. **What happens if I ignore a "done" suggestion?** → It gets marked done on the next scan, after the evidence and blockers are checked again (actually tested and confirmed — not immediately, but after at least one more judgment run).
 8. **Can I have multiple windows open?** → Yes. Just check the timestamp shown in the output.
 9. **Can I rename a folder?** → **Yes.** It's found by repository address, not by name.
 10. **Does the stored information include passwords?** → No. That said, the free-text description you type into `/graph-block` (what needs to happen for it to be resolved) is written by a human — if you type a password or personal information into it, it will be stored as-is. Please keep that field to plain text.

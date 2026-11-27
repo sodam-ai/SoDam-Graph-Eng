@@ -71,6 +71,8 @@ Anthropic 공식 에이전트 설계 패턴 중 **Evaluator–Optimizer** (`RESE
 | `/graph-reject <id>` | 승격 **전** (`done_candidate` 상태) | `verified` 로 복귀 + `rejected.json` 기록 → 재제안 안 함 |
 | **`/graph-undo <id>`** ★신규 | 승격 **후** (`done` 상태) | `verified` 로 복귀 |
 
+> 🔧 **2026-11-27 확정 직전 재확인** — `done_candidate` → `done` 직전에 풀리지 않은 블로커(종류 무관)·"사람 확인" 문구·저장소 위치·E1|E2 를 다시 봅니다. 걸리면 `done_candidate` 로 두고 이유를 알립니다. E3~E5 는 확정 때 요구하지 않습니다(제안할 때 `last_moved_at` 이 오늘이 됨). `/graph-undo` 도 `rejected.json` 에 남겨 자동 재제안을 막습니다.
+
 **`/graph-undo` 가 없으면**, "다음 스캔에서 done 처리"라는 시간차 때문에 **지나간 뒤 되돌릴 방법이 없습니다.**
 
 ### 출력 형식 (사람이 거부하기 쉽게)

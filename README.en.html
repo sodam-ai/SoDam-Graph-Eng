@@ -264,7 +264,7 @@ claude plugin install sodam-graph@sodamgraph-marketplace
 Rejected — sodam-graph-eng.M-example has returned to verified. It will not be suggested again.
 
 &gt; /graph-undo sodam-graph-eng.M-example
-Undone — sodam-graph-eng.M-example has returned to verified.</code></pre>
+Undone — sodam-graph-eng.M-example has returned to verified. It will not be suggested again automatically.</code></pre>
 </details>
 
 <details><summary><code>/graph-shadow</code> (list-mode actual output)</summary>
@@ -310,6 +310,15 @@ Failed — no such milestone "no-such-milestone"</code></pre>
 <hr>
 
 <h2 id="update-summary">Update Summary</h2>
+
+<details>
+<summary><b>v0.2.12 (2026-11-27) — Fix unfinished work being marked done by itself</b></summary>
+<ul>
+<li>🔧 <strong>Bug fix</strong>: after a "done" suggestion, the item still became <code>done</code> on the next run even if you recorded a blocker with <code>/graph-block</code>, the evidence file disappeared or the repository could no longer be found. Right before confirming, <strong>open blockers, "human check" wording, the repository location and the evidence file or commit</strong> are now checked again. If any fails, the item is <strong>held</strong> with the reason shown, and it is confirmed on a later run once the reason is gone.</li>
+<li>🔧 <strong>Bug fix</strong>: an item reverted with <code>/graph-undo</code> was suggested again on the next run and became <code>done</code> again on the one after. A reverted item is now <strong>not suggested again automatically</strong>, the same as <code>/graph-reject</code>.</li>
+<li>Limits: this does not apply to items that had already been suggested again before the update. There is no command yet to turn automatic suggestions back on. This record is stored inside the install folder, so it does not carry over when the plugin is updated (until the storage location is changed).</li>
+</ul>
+</details>
 
 <details>
 <summary><b>v0.2.11 (2026-11-27) — Also read progress logs kept in the .PRD folder</b></summary>
@@ -556,7 +565,7 @@ Cause: terminal encoding is not UTF-8. Fix: run <code>chcp 65001</code> in Power
 Fix: <code>/graph-reject &lt;item&gt;</code> — it will not be suggested again.</p>
 
 <p><strong>17-12. It was already marked done and you want to undo it</strong><br>
-Fix: <code>/graph-undo &lt;item&gt;</code></p>
+Fix: <code>/graph-undo &lt;item&gt;</code> — a reverted item is not suggested again automatically.</p>
 
 <p><strong>17-13. The <code>/graph-why</code> pick seems off</strong><br>
 Cause: ① the scan is stale ② it's <code>coarse</code>, so it's an estimate. Fix: check the scan timestamp, then re-run.</p>
@@ -608,7 +617,7 @@ You can revert it with <code>git checkout data/graph.json</code>.</p>
 <li><strong>Does it work on other computers too?</strong> → Right now it's based on this PC. Support for other PCs is a future task.</li>
 <li><strong>Can it see projects that aren't SoDam siblings?</strong> → Right now, only the 7 siblings.</li>
 <li><strong>What is <code>coarse</code>?</strong> → It means "roughly known, but not known in detail."</li>
-<li><strong>What happens if I ignore a "done" suggestion?</strong> → It gets marked done on the next scan (actually tested and confirmed — not immediately, but after at least one more judgment run).</li>
+<li><strong>What happens if I ignore a "done" suggestion?</strong> → It gets marked done on the next scan, after the evidence and blockers are checked again (actually tested and confirmed — not immediately, but after at least one more judgment run).</li>
 <li><strong>Can I have multiple windows open?</strong> → Yes. Just check the timestamp shown in the output.</li>
 <li><strong>Can I rename a folder?</strong> → <strong>Yes.</strong> It's found by repository address, not by name.</li>
 <li><strong>Does the stored information include passwords?</strong> → No. That said, the free-text description you type into <code>/graph-block</code> (what needs to happen for it to be resolved) is written by a human — if you type a password or personal information into it, it will be stored as-is. Please keep that field to plain text.</li>
